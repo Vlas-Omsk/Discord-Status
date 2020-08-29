@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows;
 
-namespace WarfaceStatusGUI.Converters
+namespace DiscordStatusGUI.Converters
 {
     public class PercentageConverter : MarkupExtension, IValueConverter
     {

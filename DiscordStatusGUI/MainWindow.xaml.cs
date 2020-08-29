@@ -26,7 +26,7 @@ using System.Windows.Interop;
 using System.IO;
 using WEBLib;
 
-namespace WarfaceStatusGUI
+namespace DiscordStatusGUI
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml

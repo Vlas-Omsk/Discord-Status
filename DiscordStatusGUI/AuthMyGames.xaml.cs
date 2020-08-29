@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace WarfaceStatusGUI
+namespace DiscordStatusGUI
 {
     /// <summary>
     /// Логика взаимодействия для Window1.xaml

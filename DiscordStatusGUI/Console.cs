@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.IO;
 
-namespace WarfaceStatusGUI
+namespace DiscordStatusGUI
 {
     public class c
     {

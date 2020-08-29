@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
 
-namespace WarfaceStatusGUI
+namespace DiscordStatusGUI
 {
     public class Animations
     {

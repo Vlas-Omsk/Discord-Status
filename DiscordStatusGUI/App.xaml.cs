@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Runtime.InteropServices;
 
-namespace WarfaceStatusGUI
+namespace DiscordStatusGUI
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml

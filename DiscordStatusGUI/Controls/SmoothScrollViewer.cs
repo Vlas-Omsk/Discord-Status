@@ -15,7 +15,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media.Animation;
 using System.Threading;
 
-namespace WarfaceStatusGUI.Controls
+namespace DiscordStatusGUI.Controls
 {
     [TemplatePart(Name = "PART_AniVerticalScrollBar", Type = typeof(ScrollBar))]
     [TemplatePart(Name = "PART_AniHorizontalScrollBar", Type = typeof(ScrollBar))]

@@ -9,7 +9,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Resolvers;
 using System.Drawing;
-using WarfaceStatusGUI;
+using DiscordStatusGUI;
 using System.Text.RegularExpressions;
 using WEBLib;
 

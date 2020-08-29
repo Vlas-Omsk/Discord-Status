@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using WebSocketSharp;
-using WarfaceStatusGUI;
+using DiscordStatusGUI;
 using WEBLib;
 
 namespace WarfaceStatus
