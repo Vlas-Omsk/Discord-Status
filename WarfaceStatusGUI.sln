@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarfaceStatusGUI", "WarfaceStatusGUI\WarfaceStatusGUI.csproj", "{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "websocket-sharp", "websocket-sharp\websocket-sharp.csproj", "{B357BAC7-529E-4D81-A0D2-71041B19C8DE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug_Ubuntu|Any CPU = Debug_Ubuntu|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release_Ubuntu|Any CPU = Release_Ubuntu|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug_Ubuntu|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Debug_Ubuntu|Any CPU.Build.0 = Debug_Ubuntu|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release_Ubuntu|Any CPU.ActiveCfg = Release_Ubuntu|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release_Ubuntu|Any CPU.Build.0 = Release_Ubuntu|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B357BAC7-529E-4D81-A0D2-71041B19C8DE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2DA02151-6FFD-48D7-BBFA-E16E005A1ACC}
+	EndGlobalSection
+EndGlobal
