@@ -25,6 +25,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.IO;
 using WEBLib;
+using DiscordStatusGUI.locales;
 
 namespace DiscordStatusGUI
 {
@@ -36,6 +37,7 @@ namespace DiscordStatusGUI
         public MainWindow()
         {
             Directory.SetCurrentDirectory(CurrentDir);
+            lang.Init();
 
             InitializeComponent();
             TopStatus.Text = "Инициализация";
@@ -45,7 +47,7 @@ namespace DiscordStatusGUI
             Dialogs.Init(this);
             Ni_Init();
 
-            
+            var cuiu = lang.InitForm_initialization;
 
             Icon = Animations.ImageSourceFromBitmap(Properties.Resources.export_small);
 
@@ -73,7 +75,7 @@ namespace DiscordStatusGUI
             GameTimeUpdater.Start();
         }
 
-        public static double AppVer = 0.4;
+        public static double AppVer = 0.5;
         static string CurrentExe = Environment.GetCommandLineArgs()[0];
         static string CurrentDir = System.IO.Path.GetDirectoryName(CurrentExe);
 
@@ -316,6 +318,15 @@ namespace DiscordStatusGUI
                 preferences["AppData"]["MainWindowHeight"].Value = e.NewSize.Height;
         }
 
+        private void WindowLocationChanged(object sender, EventArgs e)
+        {
+            if (IsPreferencesLoaded)
+            {
+                preferences["AppData"]["MainWindowLeft"].Value = window.Left;
+                preferences["AppData"]["MainWindowTop"].Value = window.Top;
+            }
+        }
+
         private void MinimizeWindow(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -354,6 +365,8 @@ namespace DiscordStatusGUI
 
         private void WindowStateChanged(object sender, EventArgs e)
         {
+            if (WindowState != WindowState.Minimized)
+                preferences["AppData"]["MainWindowState"].Value = (int)WindowState;
             if (this.WindowState != WindowState.Minimized)
             {
                 //var opacity = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(100)));
@@ -955,6 +968,11 @@ namespace DiscordStatusGUI
             });
             t.Start();
         }
+
+        private void OpenDocsHow_to_use_pictures(object sender, MouseButtonEventArgs e)
+        {
+            Process.Start("https://vlas-omsk.github.io/documentation.html#how_to_use_pictures");
+        }
         #endregion Visualiser
 
         #region Settings
@@ -1387,7 +1405,7 @@ namespace DiscordStatusGUI
             },
             Visualizer = new
             {
-                def = new
+                ndef = new
                 {
                     VisualiserGameName = "{AppName} ({ServerName}: {PlayerNickname})",
                     VisualiserApplicationID = "{AppID}",
@@ -1402,7 +1420,7 @@ namespace DiscordStatusGUI
                     VisualiserImageSmallKey = "rank{PlayerRank}",
                     VisualiserImageSmallText = "Ранк: {PlayerRank} {PlayerRankName}"
                 },
-                clr = empt
+                nclr = empt
             },
             AppData = new
             {
@@ -1412,7 +1430,10 @@ namespace DiscordStatusGUI
                 Volume = 50,
                 MainWindowWidth = 800,
                 MainWindowHeight = 450,
-                CurrentProfile = "def",
+                MainWindowLeft = 0,
+                MainWindowTop = 0,
+                MainWindowState = 0,
+                CurrentProfile = "ndef",
                 NotifyOnNewCase = false,
                 NotifyOnNewCase_Sound = "NotifyOnNewCase_Sound.mp3",
                 NotifyOnNewVipCase_Sound = "NotifyOnNewVipCase_Sound.mp3",
@@ -1436,9 +1457,24 @@ namespace DiscordStatusGUI
             VisualiserImageSmallText = ""
         };
 
+        string CurrentProfile = "ndef";
+        private void ProfileCheckedChange(object sender, RoutedEventArgs e)
+        {
+            CurrentProfile = (sender as RadioButton).Name as string;
+            if (Dialogs.IsSaveChangesBoxOpened == true)
+                Dialogs.SaveChangesBoxButtonResetClickAction();
+            if (IsInitialized)
+            {
+                Dialogs.DontShowSaveChangesBox = true;
+                LoadVisualizerPreferences();
+                Dialogs.DontShowSaveChangesBox = false;
+            }
+            setStatus();
+        }
+
         public void SaveVisualizerPreferences()
         {
-            if (CurrentProfile == "def" || CurrentProfile == "clr")
+            if (CurrentProfile == "ndef" || CurrentProfile == "nclr")
                 return;
 
             if (preferences["Visualizer"].Value.IndexByKey(CurrentProfile) == -1)
@@ -1462,7 +1498,7 @@ namespace DiscordStatusGUI
         {
             var tmp = CurrentProfile;
             if (preferences["Visualizer"].Value.IndexByKey(CurrentProfile) == -1)
-                tmp = "def";
+                tmp = "ndef";
 
             VisualiserGameName.Text =         preferences["Visualizer"][tmp]["VisualiserGameName"].Value;
             VisualiserApplicationID.Text =    preferences["Visualizer"][tmp]["VisualiserApplicationID"].Value;
@@ -1484,8 +1520,11 @@ namespace DiscordStatusGUI
             MatchesSave();
             File.WriteAllText("preferences.json", preferences.Stringify());
         }
+
+        bool IsPreferencesLoaded = false;
         public bool PreferencesLoad()
         {
+            IsPreferencesLoaded = false;
             var ShowLogin = true;
 
             Dialogs.DontShowSaveChangesBox = true;
@@ -1525,24 +1564,33 @@ namespace DiscordStatusGUI
                 }
                 new Thread(() =>
                 {
-                    Thread.Sleep(1000);
-                    MatchesLoad();
                     Dispatcher.Invoke(() =>
                     {
                         window.Width = preferences["AppData"]["MainWindowWidth"].Value;
                         window.Height = preferences["AppData"]["MainWindowHeight"].Value;
+                        if (preferences["AppData"]["MainWindowTop"].Value != 0)
+                            Top = preferences["AppData"]["MainWindowTop"].Value;
+                        if (preferences["AppData"]["MainWindowLeft"].Value != 0)
+                            Left = preferences["AppData"]["MainWindowLeft"].Value;
+                        WindowState = (WindowState)preferences["AppData"]["MainWindowState"].Value;
+                    });
+                    Thread.Sleep(1000);
+                    MatchesLoad();
+                    Dispatcher.Invoke(() =>
+                    {
                         NotifyOnNewCase.IsChecked = preferences["AppData"]["NotifyOnNewCase"].Value.Value;
                         StreamStatusDiscord.IsChecked = preferences["AppData"]["StreamStatusDiscord"].Value.Value;
                         Volume.Value = preferences["AppData"]["Volume"].Value;
                         AutoRun.IsChecked = preferences["AppData"]["AutoRun"].Value.Value;
-                        if (CurrentProfile != "def")
-                            (FindName("n" + CurrentProfile) as RadioButton).IsChecked = true;
+                        if (CurrentProfile != "ndef")
+                            (FindName(CurrentProfile) as RadioButton).IsChecked = true;
 
                         LoadVisualizerPreferences();
                         //GamePath.Text = preferences["AppData"]["GamePath"].Value;
 
                         Dialogs.DontShowSaveChangesBox = false;
                     });
+                    IsPreferencesLoaded = true;
                 }).Start();
             //}
             //catch { }
@@ -1816,66 +1864,10 @@ namespace DiscordStatusGUI
         #endregion Other
 
         #region Temp
-        private void Visualiser_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            /*var sv = (sender as ScrollViewer);
-
-            sv.ScrollToVerticalOffset(e.VerticalChange - e.VerticalOffset);
-
-            double a = e.VerticalOffset, b = e.VerticalOffset - e.VerticalChange, tmp = 0, min = 0, max = 0;
-
-            if (a < b)
-            {
-                min = a;
-                max = b;
-            }
-            else
-            {
-                min = b;
-                max = a;
-            }
-
-            new Thread(() =>
-            {
-                for (var i = min; i <= max; i++)
-                {
-                    Thread.Sleep(50);
-                    Dispatcher.Invoke(() =>
-                        sv.ScrollToVerticalOffset(i));
-                }
-            }).Start();
-
-            e.Handled = true;*/
-        }
-
         private void HideNotifyMenu(object sender, MouseButtonEventArgs e)
         {
             NotifyPopup.IsOpen = false;
         }
         #endregion Temp
-
-        string CurrentProfile = "def";
-        private void ProfileCheckedChange(object sender, RoutedEventArgs e)
-        {
-            CurrentProfile = (sender as RadioButton).Content as string;
-            if (CurrentProfile == "Default")
-            {
-                CurrentProfile = "def";
-            }
-            if (CurrentProfile == "Clear")
-            {
-                clearStatus();
-                CurrentProfile = "clr";
-            }
-            if (Dialogs.IsSaveChangesBoxOpened == true)
-                Dialogs.SaveChangesBoxButtonResetClickAction();
-            if (IsInitialized)
-            {
-                Dialogs.DontShowSaveChangesBox = true;
-                LoadVisualizerPreferences();
-                Dialogs.DontShowSaveChangesBox = false;
-            }
-            setStatus();
-        }
     }
 }

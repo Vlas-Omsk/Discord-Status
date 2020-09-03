@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Runtime.InteropServices;
+using System.Collections;
 
 namespace DiscordStatusGUI
 {
@@ -53,13 +54,19 @@ namespace DiscordStatusGUI
 
         void crit (Exception ex)
         {
+            var result = "";
+            foreach (DictionaryEntry obj in ex.Data)
+            {
+                result += "  " + obj.Key;
+            }
+
             c.crit($"\r\n-----------------------BEGIN-------------------------" +
                    $"\r\n[MESSAGE]\r\n{ex.Message}" +
                    $"\r\n[STACK TRACE]\r\n{ex.StackTrace}" +
                    $"\r\n[SOURCE]\r\n{ex.Source}" +
                    $"\r\n[TARGET SITE]\r\n{ex.TargetSite}" +
                    $"\r\n[HRESULT]\r\n{ex.HResult}" +
-                   $"\r\n[DATA]\r\n{string.Join("\r\n", ex.Data)}" +
+                   $"\r\n[DATA]\r\n{result}" +
                    $"\r\n[HELP LINK]\r\n{ex.HelpLink}" +
                    $"\r\n-------------------------END-------------------------");
         }

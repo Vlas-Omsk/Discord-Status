@@ -2,3 +2,6 @@ G:\CSharp\WarfaceStatusGUI\websocket-sharp\bin\Release\websocket-sharp.dll
 G:\CSharp\WarfaceStatusGUI\websocket-sharp\obj\Release\websocket-sharp.csprojAssemblyReference.cache
 G:\CSharp\WarfaceStatusGUI\websocket-sharp\obj\Release\websocket-sharp.csproj.CoreCompileInputs.cache
 G:\CSharp\WarfaceStatusGUI\websocket-sharp\obj\Release\websocket-sharp.dll
+G:\GitBuh\Discord_Status\websocket-sharp\bin\Release\websocket-sharp.dll
+G:\GitBuh\Discord_Status\websocket-sharp\obj\Release\websocket-sharp.csproj.CoreCompileInputs.cache
+G:\GitBuh\Discord_Status\websocket-sharp\obj\Release\websocket-sharp.dll

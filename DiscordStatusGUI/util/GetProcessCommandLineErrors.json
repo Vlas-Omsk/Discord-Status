@@ -1,0 +1,14 @@
+[
+  "Errors",
+  "  Err-11 OpenThreadTokenErr",
+  "  Err-12 ImpersonateSelf(SecurityImpersonation)",
+  "  Err-13 ERROR_NO_TOKEN",
+  "  Err-14 SetPrivilegeErr",
+  "  Err-15 Could not open process!",
+  "  Err-16 Could not read the address of ProcessParameters!",
+  "  Err-17 Could not read CommandLine!",
+  "  Err-18 Could not read the command line string!",
+  "  Err-19 LookupPrivilegeValueErr",
+  "  Err-20 AdjustTokenPrivilegesErr",
+  "  Err-21 The token does not have the specified privilege."
+]

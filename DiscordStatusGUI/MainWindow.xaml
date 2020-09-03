@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
         xmlns:local="clr-namespace:DiscordStatusGUI"
+        xmlns:locales="clr-namespace:DiscordStatusGUI.locales"
         xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
         xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
-        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" x:Name="window" x:Class="DiscordStatusGUI.MainWindow"
+        x:Name="window" x:Class="DiscordStatusGUI.MainWindow"
         mc:Ignorable="d"
         Title="Discord Status" Height="450" Width="800" ResizeMode="CanResize"
         MinHeight="420" MinWidth="560"
@@ -16,7 +17,8 @@
         StateChanged="WindowStateChanged"
         SizeChanged="WindowSizeChanged"
         WindowStartupLocation="CenterScreen"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        LocationChanged="WindowLocationChanged">
 
     <Window.Resources>
         <Style x:Key="TopButtonMinimizeStyle" TargetType="{x:Type Button}">
@@ -1773,8 +1775,8 @@
             <Grid Height="300" Width="260">
                 <Rectangle HorizontalAlignment="Left" Margin="0,1,0,-1" VerticalAlignment="Top" Height="300" Width="260" RadiusX="7" RadiusY="7" Fill="#FF36393F"/>
                 <Image Source="Resources/export_big_new.png" HorizontalAlignment="Center" VerticalAlignment="Top" Width="130" Margin="75,30,55,0" />
-                <TextBlock Text="Инициализация" Margin="0,189,0,88" Foreground="White" FontSize="18" FontFamily="/WarfaceStatusGUI;component/Resources/#New_Zelek" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="Пожалуйста, подождите..." Margin="0,229,0,47" Foreground="#FF8A8E93" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Static locales:lang.InitForm_initialization}" Margin="0,189,0,88" Foreground="White" FontSize="18" FontFamily="/DiscordStatusGUI;component/Resources/#New_Zelek" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{x:Static locales:lang.InitForm_wait}" Margin="0,229,0,47" Foreground="#FF8A8E93" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
         </Canvas>
 
@@ -1783,13 +1785,13 @@
                 <Rectangle HorizontalAlignment="Left" Height="380" Margin="0,1,0,-1" VerticalAlignment="Top" Width="420" Fill="#FF36393F" RadiusX="7" RadiusY="7"/>
                 <TextBox x:Name="Email" Height="37" Margin="22,135,22,0" TextWrapping="Wrap" Width="376" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" TextChanged="Email_TextChanged" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 <TextBox x:Name="Passw" HorizontalAlignment="Center" Height="37" Margin="22,205,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="376" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" TextChanged="Passw_TextChanged"/>
-                <Label x:Name="EmailLabel" Content="E-MAIL" HorizontalAlignment="Left" Margin="23,110,0,0" VerticalAlignment="Top" Height="22" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
-                <Label x:Name="PasswLabel" Content="ПАРОЛЬ" HorizontalAlignment="Left" Margin="23,180,0,0" VerticalAlignment="Top" Height="22" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
-                <Button x:Name="ButtonLogin" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="Вход" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="22,279,22,0" VerticalAlignment="Top" Width="376" Height="42" Style="{DynamicResource ButtonStyleBlue}" Click="ButtonLoginClick"/>
+                <Label x:Name="EmailLabel" Content="{x:Static locales:lang.LoginForm_email}" HorizontalAlignment="Left" Margin="23,110,0,0" VerticalAlignment="Top" Height="22" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
+                <Label x:Name="PasswLabel" Content="{x:Static locales:lang.LoginForm_password}" HorizontalAlignment="Left" Margin="23,180,0,0" VerticalAlignment="Top" Height="22" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
+                <Button x:Name="ButtonLogin" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="{x:Static locales:lang.LoginForm_signIn}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="22,279,22,0" VerticalAlignment="Top" Width="376" Height="42" Style="{DynamicResource ButtonStyleBlue}" Click="ButtonLoginClick"/>
                 <Label x:Name="PasswLabelInfo" Content="" HorizontalAlignment="Left" Margin="78,180,0,0" VerticalAlignment="Top" Height="22" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
                 <Label x:Name="EmailLabelInfo" Content="" Margin="78,110,0,0" VerticalAlignment="Top" Height="22" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic" HorizontalAlignment="Left"/>
-                <TextBlock HorizontalAlignment="Center" Margin="22,69,22,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="376" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="Войдите или создайте свой дискор аккаунт, чтобы приложение смогло установить вам статус."/>
-                <TextBlock Text="Забыли пароль?" HorizontalAlignment="Left" Margin="29,244,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="98" Height="16" FontWeight="Bold" MouseLeftButtonUp="ForgotPasswordClick" >
+                <TextBlock HorizontalAlignment="Center" Margin="22,69,22,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="376" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.LoginForm_header}"/>
+                <TextBlock Text="{x:Static locales:lang.LoginForm_forgotPassword}" HorizontalAlignment="Left" Margin="29,244,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="98" Height="16" FontWeight="Bold" MouseLeftButtonUp="ForgotPasswordClick" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -1802,8 +1804,8 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <TextBlock Text="Нужна учётная запись?" HorizontalAlignment="Left" Margin="29,328,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6B6F76" Width="140" Height="16" FontWeight="Bold"/>
-                <TextBlock Text="Зарегестрироваться" HorizontalAlignment="Left" Margin="174,328,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="120" Height="16" FontWeight="Bold" MouseLeftButtonUp="RegistrationClick" >
+                <TextBlock Text="{x:Static locales:lang.LoginForm_needAccount}" HorizontalAlignment="Left" Margin="29,328,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6B6F76" Width="140" Height="16" FontWeight="Bold"/>
+                <TextBlock Text="{x:Static locales:lang.LoginForm_signUp}" HorizontalAlignment="Left" Margin="174,328,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="120" Height="16" FontWeight="Bold" MouseLeftButtonUp="RegistrationClick" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -1816,7 +1818,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <TextBlock Text="Пропустить" HorizontalAlignment="Left" Margin="339,10,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="71" Height="16" FontWeight="Bold" MouseLeftButtonUp="SkipClick" >
+                <TextBlock Text="{x:Static locales:lang.LoginForm_skip}" HorizontalAlignment="Left" Margin="339,10,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="71" Height="16" FontWeight="Bold" MouseLeftButtonUp="SkipClick" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -1829,7 +1831,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <TextBlock x:Name="cat_emotion_login" HorizontalAlignment="Center" Margin="51,20,182,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="187" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="Мррр..." FontSize="18" FontWeight="Bold"/>
+                <TextBlock x:Name="cat_emotion_login" HorizontalAlignment="Center" Margin="51,20,182,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="187" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.CatEmotion_login_default}" FontSize="18" FontWeight="Bold"/>
                 <Image x:Name="cat_login" Source="/Resources/pixel_cat_reversed.png" Margin="42,19,0,0" HorizontalAlignment="Left" Width="66" Height="60" VerticalAlignment="Top" Cursor="Hand" MouseUp="CatLoginClick" />
             </Grid>
         </Canvas>
@@ -1838,11 +1840,11 @@
             <Grid Height="380" Width="420">
                 <Rectangle HorizontalAlignment="Left" Height="380" Margin="0" VerticalAlignment="Top" Width="420" Fill="#FF36393F" RadiusX="7" RadiusY="7"/>
                 <TextBox x:Name="Code"  HorizontalAlignment="Center" Height="37" Margin="22,225,22,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="376" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" TextChanged="Code_TextChanged"/>
-                <Label x:Name="CodeLabel" Content="ВВЕДИТЕ КОД АУТЕНТИФИКАЦИИ ИЛИ РЕЗЕРВНЫЙ КОД DISCORD" HorizontalAlignment="Center" Margin="23,181,23,0" VerticalAlignment="Top" Height="25" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
+                <Label x:Name="CodeLabel" Content="{x:Static locales:lang.CodeForm_header}" HorizontalAlignment="Center" Margin="23,181,23,0" VerticalAlignment="Top" Height="25" Foreground="#FF8A8E93" FontSize="11" FontWeight="Bold"/>
                 <Label x:Name="CodeLabelInfo" Content="" HorizontalAlignment="Left" Margin="29,200,0,0" VerticalAlignment="Top" Height="22" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
-                <Button x:Name="ButtonLoginCode" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="Вход" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="22,276,22,0" VerticalAlignment="Top" Width="376" Height="42" Style="{DynamicResource ButtonStyleBlue}" Click="ButtonLoginCodeClick"/>
-                <TextBlock x:Name="FormCaption" HorizontalAlignment="Center" Margin="22,144,22,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="376" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="Вы можете использовать резервный код или своё мобильное приложение двухфакторной аутентификации."/>
-                <TextBlock Text="Получить код авторизации по SMS" HorizontalAlignment="Left" Margin="26,325,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="210" Height="16" FontWeight="Bold" MouseLeftButtonUp="MFAuthSendSMS" >
+                <Button x:Name="ButtonLoginCode" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="{x:Static locales:lang.CodeForm_signIn}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="22,276,22,0" VerticalAlignment="Top" Width="376" Height="42" Style="{DynamicResource ButtonStyleBlue}" Click="ButtonLoginCodeClick"/>
+                <TextBlock x:Name="FormCaption" HorizontalAlignment="Center" Margin="22,144,22,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="376" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.CodeForm_header2}"/>
+                <TextBlock Text="{x:Static locales:lang.CodeForm_sendSMS}" HorizontalAlignment="Left" Margin="26,325,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="210" Height="16" FontWeight="Bold" MouseLeftButtonUp="MFAuthSendSMS" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -1855,7 +1857,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <TextBlock Text="Вернуться ко входу" HorizontalAlignment="Left" Margin="26,346,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="119" Height="16" FontWeight="Bold" MouseLeftButtonUp="BackToLoginClick" >
+                <TextBlock Text="{x:Static locales:lang.CodeForm_backToLoginForm}" HorizontalAlignment="Left" Margin="26,346,0,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FF6A7EC5" Width="119" Height="16" FontWeight="Bold" MouseLeftButtonUp="BackToLoginClick" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -1869,7 +1871,7 @@
                     </TextBlock.Style>
                 </TextBlock>
                 <Image Height="84" Margin="148,24,148,0" VerticalAlignment="Top" Width="124" Source="Resources/ImageCode.png" HorizontalAlignment="Center"/>
-                <TextBlock x:Name="cat_emotion_code" HorizontalAlignment="Center" Margin="0,113,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="368" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="Двухфакторная аутентификация" FontSize="20" FontWeight="Bold"/>
+                <TextBlock x:Name="cat_emotion_code" HorizontalAlignment="Center" Margin="0,113,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" Width="368" Height="36" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.CodeForm_caption}" FontSize="20" FontWeight="Bold"/>
                 <Image x:Name="cat_code" Source="/Resources/pixel_cat_sit.png" Margin="318,69,0,0" HorizontalAlignment="Left" Width="66" Height="60" VerticalAlignment="Top" Cursor="Hand" MouseUp="CatCodeClick"/>
             </Grid>
         </Canvas>
@@ -1881,7 +1883,7 @@
             <Rectangle Fill="#36393f" Width="5" Height="9" Canvas.Left="72" StrokeThickness="5" Canvas.Top="6"/>
             <!-- Костыль для круглого угла END-->
 
-            <controls:SmoothScrollViewer Visibility="Hidden" x:Name="Visualiser" Margin="0" Style="{DynamicResource ScrollViewerControlTemplateDiscord}" Width="{Binding ActualWidth, ElementName=ActualSize}" Height="{Binding ActualHeight, ConverterParameter=20, Converter={converters:MinusConverter}, ElementName=ActualSize}" HorizontalAlignment="Left" ScrollChanged="Visualiser_ScrollChanged">
+            <controls:SmoothScrollViewer Visibility="Hidden" x:Name="Visualiser" Margin="0" Style="{DynamicResource ScrollViewerControlTemplateDiscord}" Width="{Binding ActualWidth, ElementName=ActualSize}" Height="{Binding ActualHeight, ConverterParameter=20, Converter={converters:MinusConverter}, ElementName=ActualSize}" HorizontalAlignment="Left">
                 <Grid Width="{Binding ActualWidth, ElementName=ActualSize, Mode=OneWay}" Height="Auto" SizeChanged="VisualizerSizeChanged">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="72"/>
@@ -1896,11 +1898,11 @@
                         <RowDefinition Height="72"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Margin="5" Grid.ColumnSpan="2" Grid.Column="1" Foreground="White" TextWrapping="Wrap" TextAlignment="Center" Text="Статус визуализатор" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <TextBlock Margin="5,35,5,5" Grid.ColumnSpan="2" Grid.Column="1"  Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="Здесь вы може увидеть как будет выглядеть ваш статус." FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Margin="5" Grid.ColumnSpan="2" Grid.Column="1" Foreground="White" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.ContentForm_Visualizer_caption}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Margin="5,35,5,5" Grid.ColumnSpan="2" Grid.Column="1"  Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.ContentForm_Visualizer_header}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                     <TabControl x:Name="VisualiserTabControl" Grid.Row="1" Margin="10,10,10,10" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF18191C" Grid.Column="1" Grid.ColumnSpan="2">
-                        <TabItem Header="Full Profile" Background="#FF18191C" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" BorderBrush="#FF7289DA">
+                        <TabItem Header="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem1}" Background="#FF18191C" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" BorderBrush="#FF7289DA">
                             <Grid Background="#FF18191C">
                                 <Canvas Width="510" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center">
                                     <Grid>
@@ -1944,7 +1946,7 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
                                             <Rectangle Fill="#FF6C82CF" VerticalAlignment="Top" Height="{Binding ActualHeight, ElementName=grid1, Mode=OneWay}" Margin="0,-1,0,0" Grid.ColumnSpan="2" Grid.RowSpan="6"/>
-                                            <TextBlock Text="Играет в игру" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Height="16" Grid.Row="0" Width="87"/>
+                                            <TextBlock Text="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem1_Playing}" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Height="16" Grid.Row="0" Width="87"/>
 
                                             <!-- LargeImage -->
 
@@ -1999,9 +2001,9 @@
                                         <!-- ZONE 3 -->
                                         <Border Background="#FF2F3136" Grid.Row="2" Width="510" CornerRadius="0,0,10,10"/>
                                         <TabControl Grid.Row="2" Margin="0,-4,0,0" Padding="0,0,0,0" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF2F3136" Foreground="#FF6C82CF" BorderBrush="White">
-                                            <TabItem Header="User info" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
-                                            <TabItem Header="Mutual Servers" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
-                                            <TabItem Header="Mutual Friends" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
+                                            <TabItem Header="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1}" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
+                                            <TabItem Header="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
+                                            <TabItem Header="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Background="#FF2F3136" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" IsSelected="True" Foreground="White" FontWeight="Normal" Margin="80,0,-80,-6" BorderBrush="White" Height="42"/>
                                         </TabControl>
                                         <Rectangle Fill="#FF7289DA" VerticalAlignment="Top" Height="1" Margin="0" Grid.ColumnSpan="2" Grid.RowSpan="22" Grid.Row="2"/>
                                     </Grid>
@@ -2017,7 +2019,7 @@
                             </Grid>
                         </TabItem>
 
-                        <TabItem Header="User Popout" Background="#FF18191C" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" BorderBrush="#FF7289DA">
+                        <TabItem Header="{x:Static locales:lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Width="Auto" Style="{DynamicResource TabItemStyleDiscord}" BorderBrush="#FF7289DA">
                             <Grid Background="#FF18191C">
                                 <Image Source="/Resources/ImageCode.png" />
                             </Grid>
@@ -2053,7 +2055,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Text="Профили:" Margin="20,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                            <TextBlock Text="{x:Static locales:lang.ContentForm_Visualizer_Options_Profiles}" Margin="20,0,10,0" VerticalAlignment="Center" HorizontalAlignment="Center" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
                             <RadioButton x:Name="ndef" Content="Default" FontWeight="Bold" Foreground="White" Style="{DynamicResource RadioButtonStyleBlueGreen}" GroupName="Profiles" Grid.Column="1" Checked="ProfileCheckedChange" IsChecked="True"/>
                             <RadioButton x:Name="n1" Content="1" FontWeight="Bold" Foreground="White" Style="{DynamicResource RadioButtonStyleBlueGreen}" GroupName="Profiles" Grid.Column="2" Checked="ProfileCheckedChange"/>
                             <RadioButton x:Name="n2" Content="2" FontWeight="Bold" Foreground="White" Style="{DynamicResource RadioButtonStyleBlueGreen}" GroupName="Profiles" Grid.Column="3" Checked="ProfileCheckedChange"/>
@@ -2067,6 +2069,7 @@
                         <TextBox x:Name="VisualiserGameName" Grid.Column="0" Grid.Row="1" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10" TextChanged="AutoUpdateDiscord"/>
                         <!-- 0, 1 -->
                         <TextBlock Text="APPLICATION ID" Grid.Column="1" Grid.Row="1" Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                        <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Grid.Column="1" Grid.Row="1" Fill="#FF72767D" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,12,0" Height="11" Width="12" Stretch="Fill" Cursor="Hand" MouseLeftButtonUp="OpenDocsHow_to_use_pictures"/>
                         <TextBox x:Name="VisualiserApplicationID" Grid.Column="1" Grid.Row="1" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10" TextChanged="VisualiserApplicationIDTextChanged"/>
                         <!-- 1, 0 -->
                         <TextBlock Text="STATE" Grid.Column="0" Grid.Row="2" Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
@@ -2088,12 +2091,14 @@
                         <TextBox x:Name="VisualiserPartyMax" Grid.Column="1" Grid.Row="4" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10"  TextChanged="VisualizerStateTextChanged"/>
                         <!-- 4, 0 -->
                         <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5"  Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                        <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Grid.Column="0" Grid.Row="5" Fill="#FF72767D" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,12,0" Height="11" Width="12" Stretch="Fill" Cursor="Hand" MouseLeftButtonUp="OpenDocsHow_to_use_pictures"/>
                         <TextBox x:Name="VisualiserImageLargeKey" Grid.Column="0" Grid.Row="5" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10"  TextChanged="VisualiserApplicationIDTextChanged"/>
                         <!-- 4, 1 -->
                         <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5"  Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
                         <TextBox x:Name="VisualiserImageLargeText" Grid.Column="1" Grid.Row="5" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10"  TextChanged="VisualiserApplicationIDTextChanged"/>
                         <!-- 5, 0 -->
                         <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6"  Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                        <Path Data="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" Grid.Column="0" Grid.Row="6" Fill="#FF72767D" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,12,12,0" Height="11" Width="12" Stretch="Fill" Cursor="Hand" MouseLeftButtonUp="OpenDocsHow_to_use_pictures"/>
                         <TextBox x:Name="VisualiserImageSmallKey" Grid.Column="0" Grid.Row="6" Height="37" TextWrapping="Wrap" VerticalAlignment="Bottom" FontSize="14" Padding="7" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" Margin="10,28,10,10"  TextChanged="VisualiserApplicationIDTextChanged"/>
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6"  Margin="20,10,10,0" VerticalAlignment="Top" Background="#00000000" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
@@ -2131,8 +2136,8 @@
                         <RowDefinition Height="72"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Основные" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2"/>
-                    <TextBlock Text="Громкость звуков" Margin="0,5,0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_MainBlock}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2"/>
+                    <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_Volume}" Margin="0,5,0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center"/>
                     <Slider x:Name="Volume" Grid.Row="2" Grid.Column="2" Margin="0,0,0,0" Maximum="100" Minimum="0" Value="50" ValueChanged="VolumeChanged" PreviewMouseUp="Volume_MouseUp" Style="{DynamicResource SliderStyleDiscord}"/>
 
                     <Grid Grid.Row="3" Grid.Column="2">
@@ -2142,7 +2147,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Rectangle Fill="#FF42454A" Height="1" Grid.Row="0" Margin="0,15" VerticalAlignment="Center"/>
-                        <CheckBox x:Name="AutoRun" Content="Открыть при загрузке Windows" VerticalAlignment="Top" Grid.Row="1" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Checked="AutoRunChecked" Click="AutoRunClick"/>
+                        <CheckBox x:Name="AutoRun" Content="{x:Static locales:lang.ContentForm_Settings_AutoRun}" VerticalAlignment="Top" Grid.Row="1" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Checked="AutoRunChecked" Click="AutoRunClick"/>
                         <Rectangle Fill="#FF42454A" Height="1" Grid.Row="2" Margin="0,15" VerticalAlignment="Center"/>
                     </Grid>
 
@@ -2152,15 +2157,15 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <CheckBox x:Name="StreamStatusDiscord" Content="Транслировать статус в Discord" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Checked="StreamStatusDiscordChecked" Click="StreamStatusDiscordClick"/>
+                        <CheckBox x:Name="StreamStatusDiscord" Content="{x:Static locales:lang.ContentForm_Settings_StreamStatusDiscord}" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Checked="StreamStatusDiscordChecked" Click="StreamStatusDiscordClick"/>
                         <Rectangle Fill="#FF42454A" Height="1" Grid.Row="2" Margin="0,15" VerticalAlignment="Center"/>
                     </Grid>
 
-                    <TextBlock Text="Обновление статуса" Margin="0,5,0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="6" VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_StatusUpdate}" Margin="0,5,0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="6" VerticalAlignment="Center"/>
                     <ComboBox Grid.Column="2" Grid.Row="7" x:Name="UpdateType" Margin="0,5,0,0" Width="660"  HorizontalAlignment="Left" SelectedIndex="0" VerticalContentAlignment="Center" SelectionChanged="UpdateTypeSelectionChanged" >
-                        <TextBlock Text="Автоматически" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
-                        <TextBlock Text="Вручную" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
-                        <TextBlock Text="Каждые N секунд" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
+                        <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_StatusUpdate_Automatically}" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
+                        <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_StatusUpdate_Manually}" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
+                        <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_StatusUpdate_EveryNSeconds}" Foreground="Black" FontSize="12" FontWeight="Bold" Grid.Column="2"/>
                     </ComboBox>
                     <TextBox x:Name="UpdateN" Margin="0,5,0,0" Grid.Column="2" Width="660" HorizontalAlignment="Left" Text="1000" TextWrapping="Wrap" Padding="5" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" VerticalAlignment="Bottom" FontSize="11" Grid.Row="8"/>
                     <!--
@@ -2169,7 +2174,7 @@
                     <TextBox x:Name="GamePath" IsReadOnly="True" Grid.Column="2" Width="640" HorizontalAlignment="Left" Text="" TextWrapping="Wrap" Padding="5" Background="#FF313339" Foreground="LightGray" Style="{DynamicResource TextBoxRounded}" VerticalAlignment="Bottom" FontSize="11" Grid.Row="11" TextChanged="GamePathTextChanged" Margin="0,5,0,0"/>
                     <Button Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="↻" FontSize="14" FontWeight="Bold" HorizontalAlignment="Right" Width="20" Style="{DynamicResource ButtonStyleBlue}" Grid.Column="2" Grid.Row="11" Click="RefindGameClick" Margin="0,5,0,0"/>
                     -->
-                    <TextBlock Text="Подключенные аккаунты" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="15"/>
+                    <TextBlock Text="{x:Static locales:lang.ContentForm_Settings_ConnectedAccounts}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="15"/>
                     <Grid Grid.Row="16" Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -2203,7 +2208,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Margin="5" Foreground="White" TextWrapping="Wrap" TextAlignment="Center" Text="Warface" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                        <TextBlock Margin="15,35,5,5" Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="Используйте эти строки, чтобы транслировать ваш статус из игры:" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                        <TextBlock Margin="15,35,5,5" Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:lang.ContentForm_WarfaceScr_header}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                         <DataGrid Grid.Column="1" Grid.ColumnSpan="3" Margin="10" IsReadOnly="True" ColumnWidth="*" Grid.Row="1" Loaded="WarfacePropDataGrid_Loaded" Style="{DynamicResource DataGridStyleDiscord}"/>
                     </Grid>
                     <Grid Grid.Column="2" Grid.Row="2">
@@ -2211,15 +2216,15 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Cобытие &quot;Темные самураи&quot;" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
-                        <CheckBox x:Name="NotifyOnNewCase" Content="Получать звуковые уведомления, если доступны кейсы" Margin="0,0,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Click="NotifyOnNewCaseClick" Checked="NotifyOnNewCaseChecked"/>
+                        <TextBlock Text="{x:Static locales:lang.ContentForm_WarfaceScr_BlackSamurai}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
+                        <CheckBox x:Name="NotifyOnNewCase" Content="{x:Static locales:lang.ContentForm_WarfaceScr_BlackSamurai_NotifyOnNewCase}" Margin="0,0,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Click="NotifyOnNewCaseClick" Checked="NotifyOnNewCaseChecked"/>
                     </Grid>
                     <Grid Grid.Column="2" Grid.Row="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="Аналитика матчей" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
+                        <TextBlock Text="{x:Static locales:lang.ContentForm_WarfaceScr_Analytics}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
                         <DataGrid x:Name="AnalyticsDataGrid" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" Loaded="AnalyticsDataGrid_Loaded" IsReadOnly="True" ColumnWidth="*" Grid.Row="1" Style="{DynamicResource DataGridStyleDiscord}"/>
                     </Grid>
                 </Grid>
@@ -2253,7 +2258,7 @@
                             <RowDefinition Height="58"/>
                         </Grid.RowDefinitions>
 
-                        <RadioButton x:Name="MenuVisualiser" IsChecked="True" Content="Статус визуализатор"  Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="VisualiserCheck" >
+                        <RadioButton x:Name="MenuVisualiser" IsChecked="True" Content="{x:Static locales:lang.ContentForm_ScrollMenu_MenuVisualizer}"  Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="VisualiserCheck" >
                             <RadioButton.Background>
                                 <ImageBrush ImageSource="Resources/vizualizer_hi_no_bg.png">
                                     <ImageBrush.RelativeTransform>
@@ -2267,7 +2272,7 @@
                                 </ImageBrush>
                             </RadioButton.Background>
                         </RadioButton>
-                        <RadioButton x:Name="MenuSettings" Content="Настройки" Grid.Row="1" Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="SettindsCheck" >
+                        <RadioButton x:Name="MenuSettings" Content="{x:Static locales:lang.ContentForm_ScrollMenu_MenuSettings}" Grid.Row="1" Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="SettindsCheck" >
                             <RadioButton.Background>
                                 <ImageBrush ImageSource="Resources/settings_hi_no_bg.png">
                                     <ImageBrush.RelativeTransform>
@@ -2295,7 +2300,7 @@
                                 </ImageBrush>
                             </RadioButton.Background>
                         </RadioButton>
-                        <RadioButton x:Name="MenuConsole" Content="Консоль разработчика" Grid.Row="3" Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="ConsoleCheck" >
+                        <RadioButton x:Name="MenuConsole" Content="{x:Static locales:lang.ContentForm_ScrollMenu_MenuConsole}" Grid.Row="3" Width="50" Height="50" Style="{DynamicResource RadioButtonStyleRounded}" GroupName="GroupMenu" Checked="ConsoleCheck" >
                             <RadioButton.Background>
                                 <ImageBrush ImageSource="Resources/cmd-png.png">
                                     <ImageBrush.RelativeTransform>
@@ -2325,9 +2330,9 @@
             </Canvas.RenderTransform>
             <Grid Width="{Binding ActualWidth, ElementName=SaveChangesBox}" Height="{Binding ActualHeight, ElementName=SaveChangesBox}">
                 <Border Background="Black" Opacity="0.7" CornerRadius="5,5,5,5" Grid.ColumnSpan="2"/>
-                <TextBlock Text="Вы забыли сохранить изменения!" Margin="20,17,0,16" Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
-                <Button x:Name="SaveChangesBoxButtonSave" Background="#4f8754" Foreground="White" BorderBrush="Transparent" Content="Сохранить изменения" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,10,10,10" Width="168" Style="{DynamicResource ButtonStyleGreen}"/>
-                <TextBlock x:Name="SaveChangesBoxButtonReset" Text="Сброс" HorizontalAlignment="Right" Margin="0,17,189,17" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="13" >
+                <TextBlock Text="{x:Static locales:lang.SaveChangesBox_header}" Margin="20,17,0,16" Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                <Button x:Name="SaveChangesBoxButtonSave" Background="#4f8754" Foreground="White" BorderBrush="Transparent" Content="{x:Static locales:lang.SaveChangesBox_SaveChanges}" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,10,10,10" Width="168" Style="{DynamicResource ButtonStyleGreen}"/>
+                <TextBlock x:Name="SaveChangesBoxButtonReset" Text="{x:Static locales:lang.SaveChangesBox_Reset}" HorizontalAlignment="Right" Margin="0,17,189,17" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="13" >
                     <TextBlock.Style>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property= "Foreground" Value="{x:Null}"/>
@@ -2350,10 +2355,10 @@
                     <Grid x:Name="MessageBoxBody" Height="162" Width="440">
                         <Rectangle HorizontalAlignment="Left" Height="162" Margin="0" VerticalAlignment="Top" Width="440" Fill="#FF36393F" RadiusX="7" RadiusY="7"/>
                         <Rectangle HorizontalAlignment="Left" Height="44" Margin="0" VerticalAlignment="Bottom" Width="440" Fill="#FF2F3136" RadiusX="7" RadiusY="7"/>
-                        <Button x:Name="MessageBoxButtonOk" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="Ок" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,6" VerticalAlignment="Bottom" Width="75" Height="29" Style="{DynamicResource ButtonStyleBlue}"/>
-                        <Label x:Name="MessageBoxCaption" Content="Заголовок" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Foreground="White" Width="420" FontSize="16" FontWeight="Bold" Height="33"/>
+                        <Button x:Name="MessageBoxButtonOk" Background="#7289da" Foreground="White" BorderBrush="Transparent" Content="{x:Static locales:lang.MessageBox_DftButtonOk}" FontSize="11" HorizontalAlignment="Right" Margin="0,0,16,6" VerticalAlignment="Bottom" Width="75" Height="29" Style="{DynamicResource ButtonStyleBlue}"/>
+                        <Label x:Name="MessageBoxCaption" Content="{x:Static locales:lang.MessageBox_DftCaption}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Foreground="White" Width="420" FontSize="16" FontWeight="Bold" Height="33"/>
                         <controls:SmoothScrollViewer Style="{DynamicResource ScrollViewerControlTemplateDiscord}" CanContentScroll="False" Height="76" Margin="10,33,10,53">
-                            <TextBlock TextWrapping="Wrap" Padding="3"  x:Name="MessageBoxContent" Text="Контент" HorizontalAlignment="Center" VerticalAlignment="Top" Height="Auto" Width="420" Foreground="#FFD0D1D3" FontSize="13"/>
+                            <TextBlock TextWrapping="Wrap" Padding="3"  x:Name="MessageBoxContent" Text="{x:Static locales:lang.MessageBox_DftContent}" HorizontalAlignment="Center" VerticalAlignment="Top" Height="Auto" Width="420" Foreground="#FFD0D1D3" FontSize="13"/>
                         </controls:SmoothScrollViewer>
                     </Grid>
                 </Canvas>
@@ -2364,7 +2369,7 @@
             <Grid Height="20" Width="{Binding ActualWidth, ElementName=ActualSize, Mode=OneWay}">
                 <Border Background="#FF202225" Width="{Binding ActualWidth, ElementName=ActualSize, Mode=OneWay}" RenderTransformOrigin="0.5,0.5" VerticalAlignment="Top" MouseLeftButtonDown="WindowDragMove" HorizontalAlignment="Left" Margin="0">
                     <Canvas Height="20">
-                        <Label Content="DISCORD STATUS" Margin="10,-2,0,0" FontFamily="/WarfaceStatusGUI;component/Resources/#New_Zelek" Background="#00000000" Foreground="#FF72767D" VerticalAlignment="Center" Height="22" Width="126" HorizontalAlignment="Left"/>
+                        <Label Content="DISCORD STATUS" Margin="10,-2,0,0" FontFamily="/DiscordStatusGUI;component/Resources/#New_Zelek" Background="#00000000" Foreground="#FF72767D" VerticalAlignment="Center" Height="22" Width="126" HorizontalAlignment="Left"/>
                         <TextBlock x:Name="TopStatus" Margin="140,0,0,0" Foreground="#FF515151" FontSize="10" VerticalAlignment="Center"/>
                     </Canvas>
                 </Border>
@@ -2399,9 +2404,9 @@
                     </Grid.ColumnDefinitions>
 
                     <Button Grid.Row="0" HorizontalContentAlignment="Left" Style="{DynamicResource ButtonStyleDiscordNotify}" Padding="30,3,5,3" IsEnabled="False" Content="Discord Status"/>
-                    <Button Grid.Row="1" HorizontalContentAlignment="Left" Style="{DynamicResource ButtonStyleDiscordNotify}" Padding="30,3,5,3" PreviewMouseLeftButtonUp="HideNotifyMenu" Content="Hide this menu..."/>
+                    <Button Grid.Row="1" HorizontalContentAlignment="Left" Style="{DynamicResource ButtonStyleDiscordNotify}" Padding="30,3,5,3" PreviewMouseLeftButtonUp="HideNotifyMenu" Content="{x:Static locales:lang.NotifyPopup_Hide}"/>
                     <Rectangle Margin="0,5,0,5" Height="1" Grid.Row="2" Fill="#FFDADCE0"/>
-                    <Button Grid.Row="3" HorizontalContentAlignment="Left" Style="{DynamicResource ButtonStyleDiscordNotify}" Padding="30,3,5,3" PreviewMouseLeftButtonUp="Button_PreviewMouseLeftButtonUp" Content="Выйти из Warface Status"/>
+                    <Button Grid.Row="3" HorizontalContentAlignment="Left" Style="{DynamicResource ButtonStyleDiscordNotify}" Padding="30,3,5,3" PreviewMouseLeftButtonUp="Button_PreviewMouseLeftButtonUp" Content="{x:Static locales:lang.NotifyPopup_Exit}"/>
                 </Grid>
             </Border>
         </Popup>
