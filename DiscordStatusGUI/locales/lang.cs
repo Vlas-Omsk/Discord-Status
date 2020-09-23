@@ -25,7 +25,11 @@ namespace DiscordStatusGUI.locales
 
     class lang
     {
-        public static Json DefaultLanguage = new Json(File.ReadAllText("locales\\default.json"));
+#if DEBUG
+        public static Json DefaultLanguage = new Json(File.ReadAllText(@"G:\GitBuh\Discord_Status\DiscordStatusGUI\locales\default.json"));
+#else
+        public static Json DefaultLanguage = new Json(File.ReadAllText(@"locales\default.json"));
+#endif
         public static CultureInfo DefaultCultureInfo = CultureInfo.GetCultureInfo("en");
         public static Json CurrentLanguage = null;
         public static CultureInfo CurrentCultureInfo = CultureInfo.CurrentCulture;

@@ -52,7 +52,9 @@ namespace DiscordStatusGUI
             Icon = Animations.ImageSourceFromBitmap(Properties.Resources.export_small);
 
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-tray") != -1)
+            {
                 this.Hide();
+            }
 
             bool IsWindows10or8()
             {
@@ -1386,6 +1388,12 @@ namespace DiscordStatusGUI
         private void console_TextChanged(object sender, TextChangedEventArgs e)
         {
             console.ScrollToEnd();
+
+            if (console.Text.Length > 512000)
+            {
+                console.Text = "";
+                c.i("The latter information has been removed to avoid overloading the TextBox.");
+            }
         }
         #endregion Console
 
@@ -1708,7 +1716,7 @@ namespace DiscordStatusGUI
                 if (!string.IsNullOrEmpty(End) && End != "0")
                     statusJson["d"]["activities"][0]["timestamps"].Value.Add(new JsonObject("end", End));
 
-                if (discord.WebSocket != null)
+                if (discord != null && discord.WebSocket != null && discord.WebSocket.ReadyState == WebSocketSharp.WebSocketState.Open)
                     discord.WebSocket.Send(statusJson.ToString());
             }).Start();
         }
