@@ -77,7 +77,7 @@ namespace DiscordStatusGUI
             GameTimeUpdater.Start();
         }
 
-        public static double AppVer = 0.5;
+        public static double AppVer = 0.51;
         static string CurrentExe = Environment.GetCommandLineArgs()[0];
         static string CurrentDir = System.IO.Path.GetDirectoryName(CurrentExe);
 
