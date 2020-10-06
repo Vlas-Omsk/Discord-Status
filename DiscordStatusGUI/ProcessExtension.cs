@@ -16,8 +16,7 @@ namespace WarfaceStatus
 {
     class ProcessExtension
     {
-        const string FUCKING_GAME = "Congratulations, you found my massage. My English is very bad. Know me, i trying to found a once imposible method to get a game process command line, i use C++ and Read process memory and no way to found command line, but process hacker getting the command line, i see source code, and NOTHING, i FUCK this GAME. One of simple methods is simply read log file of FUCKING LAUNCHER, im using it, no another methods, FUCK im NOOB.";
-
+        
         public static string[] GetCommandLine(int id)
         {
             if (!string.IsNullOrEmpty(Process.GetProcessById(id).StartInfo.Arguments))
