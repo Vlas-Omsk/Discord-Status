@@ -1,0 +1,64 @@
+﻿{
+	"Language": "en",
+
+	"InitForm_initialization": "Initialization",
+	"InitForm_wait": "Please, wait...",
+
+	"LoginForm_email": "E-MAIL",
+	"LoginForm_forgotPassword": "Forgot password?",
+	"LoginForm_header": "Login or create your own Discord account so that the application can set your status.",
+	"LoginForm_needAccount": "Need an account?",
+	"LoginForm_password": "PASSWORD",
+	"LoginForm_signIn": "Login",
+	"LoginForm_signUp": "Sign Up",
+	"LoginForm_skip": "Skip",
+
+	"CodeForm_backToLoginForm": "Back to login",
+	"CodeForm_caption": "Two-factor authentication",
+	"CodeForm_header": "ENTER AUTHENTICATION CODE OR BACKUP CODE DISCORD",
+	"CodeForm_header2": "You can use a backup code or your two-factor authentication mobile app.",
+	"CodeForm_sendSMS": "Get authorization code by SMS",
+	"CodeForm_signIn": "Login",
+
+	"ContentForm_Visualizer_caption": "Status Visualizer",
+	"ContentForm_Visualizer_header": "Here you can see how your status will look like.",
+	"ContentForm_Visualizer_TabControl_TabItem1": "Full Profile",
+	"ContentForm_Visualizer_TabControl_TabItem2": "User Popout",
+	"ContentForm_Visualizer_TabControl_TabItem1_Playing": "Playing a game",
+	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1": "User info",
+	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2": "Mutual Servers",
+	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3": "Mutual Friends",
+	"ContentForm_Visualizer_Options_Profiles": "Profiles:",
+
+	"ContentForm_Settings_MainBlock": "Main",
+	"ContentForm_Settings_Volume": "Volume",
+	"ContentForm_Settings_AutoRun": "Open at Windows startup",
+	"ContentForm_Settings_StreamStatusDiscord": "Broadcast status to Discord",
+	"ContentForm_Settings_StatusUpdate": "Status update",
+	"ContentForm_Settings_StatusUpdate_Automatically": "Automatically",
+	"ContentForm_Settings_StatusUpdate_Manually": "Manually",
+	"ContentForm_Settings_StatusUpdate_EveryNSeconds": "Every N seconds",
+	"ContentForm_Settings_ConnectedAccounts": "Connected accounts",
+
+	"ContentForm_WarfaceScr_header": "Use these lines to broadcast your game status:",
+	"ContentForm_WarfaceScr_BlackSamurai": "Event \"Dark Samurai\"",
+	"ContentForm_WarfaceScr_BlackSamurai_NotifyOnNewCase": "Receive sound notifications if cases are available",
+	"ContentForm_WarfaceScr_Analytics": "Match analytics",
+
+	"ContentForm_ScrollMenu_MenuVisualizer": "Status Visualizer",
+	"ContentForm_ScrollMenu_MenuSettings": "Settings",
+	"ContentForm_ScrollMenu_MenuConsole": "Developer Console",
+
+	"SaveChangesBox_header": "You forgot to save your changes!",
+	"SaveChangesBox_SaveChanges": "Save changes",
+	"SaveChangesBox_Reset": "Reset",
+
+	"MessageBox_DftButtonOk": "Ok",
+	"MessageBox_DftCaption": "Caption",
+	"MessageBox_DftContent": "Content",
+
+	"NotifyPopup_Hide": "Hide this menu...",
+	"NotifyPopup_Exit": "Quit Warface Status",
+
+	"CatEmotion_login_default": "Mrrr..."
+}
