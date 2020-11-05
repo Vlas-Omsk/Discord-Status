@@ -47,6 +47,8 @@ namespace DiscordStatusGUI.Locales
 
         public static void Init()
         {
+            Static.Discord.Language = string.Format("{0}, {1};q=0.9, en-US;q=0.8, en;q=0.7, *;q=0.6", CurrentCultureInfo.Name, CurrentCultureInfo.Parent.Name);
+            
             if (Directory.Exists("Locales"))
             {
 #if DEBUG
@@ -58,7 +60,7 @@ namespace DiscordStatusGUI.Locales
                 {
                     CurrentLanguage = LoadLocale("locales\\" + CurrentCultureInfo.Name + ".json");
                 }
-                else if (File.Exists("locales\\" + CurrentCultureInfo.Parent + ".json"))
+                else if (File.Exists("locales\\" + CurrentCultureInfo.Parent.Name + ".json"))
                 {
                     CurrentLanguage = LoadLocale("locales\\" + CurrentCultureInfo.Parent.Name + ".json");
                 }

@@ -86,7 +86,7 @@ namespace DiscordStatusGUI
                 {
                     var propjson = new Json(File.ReadAllText("preferences.json"));
 
-                    Discord_Token = propjson["Accounts"]["Discord"]["token"].Value.ToString();
+                    Discord_Token = propjson["Accounts"]["Discord"]["token"].Value?.ToString();
                     CurrentUserStatus = (int)propjson["CurrentUserStatus"].Value;
                     CurrentActivityIndex = (int)propjson["CurrentActivityIndex"].Value;
                     FastGameClientClose = (bool)propjson["FastGameClientClose"].Value;

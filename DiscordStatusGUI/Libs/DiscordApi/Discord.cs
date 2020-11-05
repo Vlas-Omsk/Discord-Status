@@ -21,6 +21,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         //private static readonly string _TempFolder = ProcessEx.GetOutput("cmd", "/c echo %TEMP%").Trim();
         private const string _DiscordAppUserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36";
         public const string DiscordApiVersion = "6";
+        public string Language = "en-US, en;q=0.9, *;q=0.8";
 
         public struct AppImages
         {
@@ -123,7 +124,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             try
             {
-                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/login", new string[] { "Content-Type: application/json" }, Encoding.UTF8.GetBytes(authJson.ToString()));
+                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/login", new string[] { "Content-Type: application/json", "accept-language: " + Language }, Encoding.UTF8.GetBytes(authJson.ToString()));
                 var respJson = new Json(resp);
                 if (respJson.IndexByKey("email") != -1 || respJson.IndexByKey("password") != -1)
                 {
@@ -172,9 +173,9 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             {
                 var resp = "";
                 if (type == MFAuthType.Code)
-                    resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/totp", new string[] { "Content-Type: application/json" }, Encoding.UTF8.GetBytes(codeJson.ToString()));
+                    resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/totp", new string[] { "Content-Type: application/json", "accept-language: " + Language }, Encoding.UTF8.GetBytes(codeJson.ToString()));
                 else if (type == MFAuthType.SMS)
-                    resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/sms", new string[] { "Content-Type: application/json" }, Encoding.UTF8.GetBytes(codeJson.ToString()));
+                    resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/sms", new string[] { "Content-Type: application/json", "accept-language: " + Language }, Encoding.UTF8.GetBytes(codeJson.ToString()));
                 var respJson = new Json(resp);
                 if (respJson.IndexByKey("token") == -1)
                 {
@@ -201,7 +202,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             try
             {
-                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/sms/send", new string[] { "Content-Type: application/json" }, Encoding.UTF8.GetBytes(codeJson.ToString()));
+                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/mfa/sms/send", new string[] { "Content-Type: application/json", "accept-language: " + Language }, Encoding.UTF8.GetBytes(codeJson.ToString()));
                 var respJson = new Json(resp);
                 if (respJson.IndexByKey("phone") == -1)
                 {
@@ -227,7 +228,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             try
             {
-                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/forgot", new string[] { "Content-Type: application/json" }, Encoding.UTF8.GetBytes(forgotJson.ToString()));
+                var resp = WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/auth/forgot", new string[] { "Content-Type: application/json", "accept-language: " + Language }, Encoding.UTF8.GetBytes(forgotJson.ToString()));
                 if (!string.IsNullOrEmpty(resp))
                 {
                     LastError = resp;

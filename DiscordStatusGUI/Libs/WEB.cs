@@ -13,9 +13,9 @@ namespace WEBLib
     {
         public const string DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.118 Safari/537.36";
 
-        public static string Get(string url, string userAgent = DefaultUserAgent)
+        public static string Get(string url, string userAgent = DefaultUserAgent, string accept_language = "en-US,en;q=0.9")
         {
-            return Post(url, new string[] { "User-Agent: " + userAgent }, null, "GET");
+            return Post(url, new string[] { "User-Agent: " + userAgent, "accept-language: " + accept_language }, null, "GET");
         }
 
         //public static string Post(string url, string[] headers = null, string stringData = "", string method = "POST")
