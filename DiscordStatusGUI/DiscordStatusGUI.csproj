@@ -330,5 +330,8 @@
   <ItemGroup>
     <Resource Include="Resources\Tabs\GameStatus.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Tabs\Windows.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

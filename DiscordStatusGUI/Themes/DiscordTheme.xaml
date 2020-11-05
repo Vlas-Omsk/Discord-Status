@@ -14,6 +14,94 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="BlueMenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="container" Background="Transparent" CornerRadius="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label x:Name="label" Content="{TemplateBinding Header}" Foreground="#b5b7ba" Padding="9" FontSize="13" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="{TemplateBinding InputGestureText}" Foreground="{Binding Foreground, ElementName=label}" Padding="9" FontSize="13" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="container" Property="Background" Value="#5c6fb1"/>
+                            <Setter TargetName="label" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="container" Property="Background" Value="#4e5d94"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="label" Property="Foreground" Value="Gray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="RedMenuItem" TargetType="{x:Type MenuItem}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type MenuItem}">
+                    <Border x:Name="container" Background="Transparent" CornerRadius="4">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <Label x:Name="label" Content="{TemplateBinding Header}" Foreground="#f04747" Padding="9" FontSize="13" FontWeight="Bold"/>
+                            <Label Grid.Column="1" Content="{TemplateBinding InputGestureText}" Foreground="{Binding Foreground, ElementName=label}" Padding="9" FontSize="13" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="container" Property="Background" Value="#f04747"/>
+                            <Setter TargetName="label" Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="container" Property="Background" Value="#d84040"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="label" Property="Foreground" Value="Gray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ContextMenuDiscord"  TargetType="{x:Type ContextMenu}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Width" Value="250"/>
+        <Setter Property="Background" Value="#18191c"/>
+        <Setter Property="Padding" Value="7"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="ClipToBounds" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ContextMenu}">
+                    <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" CornerRadius="4" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <StackPanel ClipToBounds="{TemplateBinding ClipToBounds}" Orientation="Vertical" IsItemsHost="True"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ItemContainerStyle" Value="{StaticResource BlueMenuItem}"/>
+    </Style>
+
     <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
@@ -46,6 +134,15 @@
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu Style="{StaticResource ContextMenuDiscord}">
+                    <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
+                    <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
+                    <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                </ContextMenu>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
@@ -88,6 +185,15 @@
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu Style="{StaticResource ContextMenuDiscord}">
+                    <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
+                    <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
+                    <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                </ContextMenu>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
@@ -1345,6 +1451,14 @@
                                     <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                 </Border>
                             </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu Style="{StaticResource ContextMenuDiscord}">
+                                <MenuItem Header="Копировать имя параметра" Command="{Binding CopyCommand}"></MenuItem>
+                                <MenuItem Header="¯\_(ツ)_/¯" Style="{StaticResource RedMenuItem}"></MenuItem>
+                            </ContextMenu>
                         </Setter.Value>
                     </Setter>
                     <Style.Triggers>

@@ -16,7 +16,8 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         public WebSocket WebSocket;
         public bool IsConnected => WebSocket?.IsAlive ?? false;
         public UserStatus CurrentUserStatus;
-        
+        public ActivityType CurrentActivityType = ActivityType.Game;
+
         private bool _DisconnectedManually = false;
         private System.Timers.Timer _KeepAliveTimer;
         private Discord _Discord;
@@ -64,8 +65,12 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
                 if (IsConnected)
                 {
-                    var str = statusJson.ToString();
-                    WebSocket.Send(str);
+                    try
+                    {
+                        var str = statusJson.ToString();
+                        WebSocket.Send(str);
+                    }
+                    catch { }
                 }
             });
         }
@@ -117,14 +122,19 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
         private Json CreateActivityJson(Activity Activity)
         {
+            ConsoleEx.WriteLine(ConsoleEx.Info, CurrentActivityType.ToFormatString(Activity));
             var activity = Json.FromAnonymous(new
             {
-                type = 0,
+                type = CurrentActivityType?.ID,
                 assets = new
                 {
                     //empty = ""
                 },
                 timestamps = new
+                {
+                    //empty = ""
+                },
+                party = new
                 {
                     //empty = ""
                 }
@@ -139,17 +149,33 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             if (!string.IsNullOrEmpty(Activity.State))
                 activity.Add(new JsonObject("state", Activity.State));
             if (!string.IsNullOrEmpty(Activity.ImageLargeKey))
-                (activity["assets"].Value as Json).Add(new JsonObject("large_image", Discord.AppImages.GetImageIdByName(Activity.ImageLargeKey, Activity.ApplicationID)));
+            {
+                string i;
+                if ((i = Discord.AppImages.GetImageIdByName(Activity.ImageLargeKey, Activity.ApplicationID)) != null)
+                    (activity["assets"].Value as Json).Add(new JsonObject("large_image", i));
+            }
             if (!string.IsNullOrEmpty(Activity.ImageLargeText))
                 (activity["assets"].Value as Json).Add(new JsonObject("large_text", Activity.ImageLargeText));
-            if (!string.IsNullOrEmpty(Activity.ImageSmallKey))
-                (activity["assets"].Value as Json).Add(new JsonObject("small_image", Discord.AppImages.GetImageIdByName(Activity.ImageSmallKey, Activity.ApplicationID)));
+            if (!string.IsNullOrEmpty(Activity.ImageSmallKey)) 
+            {
+                string i;
+                if ((i = Discord.AppImages.GetImageIdByName(Activity.ImageSmallKey, Activity.ApplicationID)) != null)
+                    (activity["assets"].Value as Json).Add(new JsonObject("small_image", i));
+            }
             if (!string.IsNullOrEmpty(Activity.ImageSmallText))
                 (activity["assets"].Value as Json).Add(new JsonObject("small_text", Activity.ImageSmallText));
             if (!string.IsNullOrEmpty(Activity.StartTime) && Activity.StartTime != "0")
                 (activity["timestamps"].Value as Json).Add(new JsonObject("start", Activity.StartTime));
             if (!string.IsNullOrEmpty(Activity.EndTime) && Activity.EndTime != "0")
                 (activity["timestamps"].Value as Json).Add(new JsonObject("end", Activity.EndTime));
+            if (!string.IsNullOrEmpty(Activity.PartyMax) && !string.IsNullOrEmpty(Activity.PartySize))
+            {
+                var obj = new JsonObjectArray();
+                obj.Add(Activity.PartySize);
+                obj.Add(Activity.PartyMax);
+                (activity["party"].Value as Json).Add(new JsonObject("size", obj));
+            }
+
 
             var statusJson = Json.FromAnonymous(new
             {

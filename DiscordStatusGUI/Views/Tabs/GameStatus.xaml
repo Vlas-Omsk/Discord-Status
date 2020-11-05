@@ -60,7 +60,7 @@
                         </Border>
 
                         <TabControl Grid.Row="1" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF18191C">
-                            <TabItem Width="100" Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}">
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}">
                                 <Grid Width="510" Height="500" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="110"/>
@@ -125,7 +125,7 @@
                                                 </Rectangle.RenderTransform>
                                             </Rectangle>
                                             <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameAvatar_HelpText}" HorizontalAlignment="Stretch"/>
-                                            <TextBlock x:Name="LargeImageTextPresenter" Padding="4,4,4,4" Text="{Binding Text, ElementName=VisualiserImageLargeText}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                            <TextBlock x:Name="LargeImageTextPresenter" Padding="4,4,4,4" Text="{Binding ImageLargeText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
                                         </Grid>
 
                                         <Rectangle x:Name="VisualiserTabControlGameAvatar" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="5" RadiusY="5" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="17,0,0,0" Grid.RowSpan="22" Grid.Row="1" AutomationProperties.HelpText="123"/>
@@ -147,20 +147,20 @@
                                                 </Rectangle.RenderTransform>
                                             </Rectangle>
                                             <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" HorizontalAlignment="Stretch"/>
-                                            <TextBlock x:Name="SmallImageTextPresenter" Padding="4,4,4,4" Text="{Binding Text, ElementName=VisualiserImageSmallText}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                            <TextBlock x:Name="SmallImageTextPresenter" Padding="4,4,4,4" Text="{Binding ImageSmallText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
                                         </Grid>
 
                                         <Rectangle MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="50" RadiusY="50" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,52,0,0" Grid.RowSpan="22" Grid.Row="1" AutomationProperties.HelpText="123"/>
                                         <!-- SmallImage -->
 
-                                        <TextBlock Text="{Binding Text, ElementName=Name}" Margin="0,-2,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Grid.Column="1" Grid.Row="1"/>
-                                        <TextBlock Text="{Binding Text, ElementName=Details}" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" FontWeight="Normal"/>
+                                        <TextBlock Text="{Binding Name, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Margin="0,-2,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Grid.Column="1" Grid.Row="1"/>
+                                        <TextBlock Text="{Binding Details, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" FontWeight="Normal"/>
                                         <TextBlock HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" FontWeight="Normal">
                                             <TextBlock.Text>
                                                 <MultiBinding Converter="{converters:MultiStringConverter}" ConverterParameter="( : )">
-                                                    <Binding Path="Text" ElementName="State" Converter="{converters:StringConverter}" ConverterParameter="[Value] "/>
-                                                    <Binding Path="Text" ElementName="PartySize" Converter="{converters:StringConverter}" ConverterParameter="([Value] : "/>
-                                                    <Binding Path="Text" ElementName="PartyMax" Converter="{converters:StringConverter}" ConverterParameter="[Value])"/>
+                                                    <Binding Path="State" Converter="{converters:StringConverter}" ConverterParameter="[Value.ReplaceFields] "/>
+                                                    <Binding Path="PartySize" Converter="{converters:StringConverter}" ConverterParameter="([Value.ReplaceFields] : "/>
+                                                    <Binding Path="PartyMax" Converter="{converters:StringConverter}" ConverterParameter="[Value.ReplaceFields])"/>
                                                 </MultiBinding>
                                             </TextBlock.Text>
                                         </TextBlock>
@@ -176,7 +176,7 @@
                                 </Grid>
                             </TabItem>
 
-                            <TabItem Width="100" Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{DynamicResource TabItemStyleDiscord}">
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{DynamicResource TabItemStyleDiscord}">
                                 <Grid>
                                     <TextBlock Margin="5" Foreground="White" Text="&#10;Ты думал что-то здесь будет?&#10;&#10;Оооо... Нееет&#10;" TextAlignment="Center" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                 </Grid>
@@ -227,6 +227,12 @@
                             <CorLib:String x:Key="how_to_use_pictures">
                                 https://vlas-omsk.github.io/documentation.html#how_to_use_pictures
                             </CorLib:String>
+                            <ContextMenu x:Key="ContextMenuWithHowToUsePictures" Style="{StaticResource ContextMenuDiscord}">
+                                <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
+                                <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
+                                <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                                <MenuItem Header="Как использовать картинки?" Command="{Binding OpenLinkCommand}" CommandParameter="{StaticResource how_to_use_pictures}"/>
+                            </ContextMenu>
                         </Grid.Resources>
 
                         <Grid x:Name="Profiles" Grid.ColumnSpan="2">
@@ -239,10 +245,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="Заблокировано статусом игры" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
+                            <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="В данный момент невозможно изменить профиль" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
 
                             <TextBlock Grid.Row="1" Text="{x:Static locales:Lang.ContentForm_Visualizer_Options_Profiles}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
-                            <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}">
+                            <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Grid.Column="1" Text="{Binding ProfileName}" FontSize="15"/>
@@ -259,17 +265,17 @@
 
                         <!-- 0, 0 -->
                         <TextBlock Text="NAME" Grid.Column="0" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="Name" Grid.Column="0" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="Name" Grid.Column="0" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 0, 1 -->
                         <TextBlock Text="APPLICATION ID" Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ApplicationID" Grid.Column="1" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding ApplicationID, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="ApplicationID" Grid.Column="1" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding ApplicationID, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 1, 0 -->
                         <TextBlock Text="STATE" Grid.Column="0" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="State" Grid.Column="0" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding State, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="State" Grid.Column="0" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding State, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 1, 1 -->
                         <TextBlock Text="DETAILS" Grid.Column="1" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 2, 0 -->
                         <TextBlock Text="START TIMESTAMP" Grid.Column="0" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="StartTime" Grid.Column="0" Grid.Row="3" Style="{StaticResource Field}" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"/>
@@ -285,14 +291,14 @@
                         <!-- 4, 0 -->
                         <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageLargeKey" Grid.Column="0" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="ImageLargeKey" Grid.Column="0" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}"/>
                         <!-- 4, 1 -->
                         <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageLargeText" Grid.Column="1" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeText, UpdateSourceTrigger=PropertyChanged}"/>
                         <!-- 5, 0 -->
                         <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="6"  Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageSmallKey" Grid.Column="0" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Name="ImageSmallKey" Grid.Column="0" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}"/>
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>

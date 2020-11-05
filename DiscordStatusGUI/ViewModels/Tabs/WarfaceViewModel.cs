@@ -15,6 +15,7 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using DiscordStatusGUI.Libs;
 using DiscordStatusGUI.Models;
+using System.Threading;
 
 namespace DiscordStatusGUI.ViewModels.Tabs
 {
@@ -27,6 +28,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 WarfaceApi.FastGameClientClose = value;
                 OnPropertyChanged("IsFastGameClientClose");
+                Preferences.Save();
             }
         }
 
@@ -38,6 +40,17 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 _Properties = new PropertiesModel(value);
                 OnPropertyChanged("Properties");
+            }
+        }
+
+        private PropertyModel _SelectedProperty;
+        public PropertyModel SelectedProperty
+        {
+            get => _SelectedProperty;
+            set
+            {
+                _SelectedProperty = value;
+                OnPropertyChanged("SelectedProperty");
             }
         }
 
@@ -60,15 +73,17 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 _SelectedProfileIndex = value;
                 OnPropertyChanged("SelectedProfileIndex");
                 WarfaceApi_OnGameProcessStateChanged(_SavedState);
+                Preferences.Save();
             }
         }
 
-        private int _SavedLastProfileIndex;
+        private int _SavedLastProfileIndex = -1;
         private bool _SavedState = false;
 
 
         public WarfaceViewModel()
         {
+
             _Properties.Add("{wf:AppName}", "Название приложения", Static.GetValueByFieldName("wf:AppName"));
             _Properties.Add("{wf:AppID}", "ID приложения", Static.GetValueByFieldName("wf:AppID"));
             _Properties.Add("{wf:Map}", "Текущая карта", Static.GetValueByFieldName("wf:Map"));

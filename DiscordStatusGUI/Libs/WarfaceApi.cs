@@ -288,22 +288,36 @@ namespace DiscordStatusGUI.Libs
                 args = SplitCommandLineParams(Process.GetProcessById(pid).StartInfo.Arguments);
                 return true;
             }
-            else if (File.Exists("util\\GetProcessCommandLine32.exe"))
+            else
             {
-                var m = ProcessEx.GetOutput("util\\GetProcessCommandLine32", pid.ToString());
-                if (m.StartsWith("Err"))
+                var tmp = ProcessEx.GetProcessCommandLine(pid, out long ntstatus);
+                if (ntstatus != 0)
                 {
-                    var err = Math.Abs(Convert.ToInt32(m.Substring(4, 2))) - 10;
-                    ConsoleEx.WriteLine(ConsoleEx.Warning, new JsonObjectArray(File.ReadAllText("util\\GetProcessCommandLineErrors.json"))[err].ToString());
-                    args = null;
-                    return false;
+                    ConsoleEx.WriteLine(ConsoleEx.Warning, "GetProcessCommandLine error: " + ntstatus);
+                    goto end;
                 }
-                else
-                {
-                    args = SplitCommandLineParams(m);
-                    return true;
-                }
+
+                args = SplitCommandLineParams(tmp);
+                ConsoleEx.WriteLine(ConsoleEx.Info, "Yeah. (CPP) GetProcessCommandLine working");
+                return true;
             }
+            //else if (File.Exists("util\\GetProcessCommandLine32.exe"))
+            //{
+            //    var m = ProcessEx.GetOutput("util\\GetProcessCommandLine32", pid.ToString());
+            //    if (m.StartsWith("Err"))
+            //    {
+            //        var err = Math.Abs(Convert.ToInt32(m.Substring(4, 2))) - 10;
+            //        ConsoleEx.WriteLine(ConsoleEx.Warning, new JsonObjectArray(File.ReadAllText("util\\GetProcessCommandLineErrors.json"))[err].ToString());
+            //        args = null;
+            //        return false;
+            //    }
+            //    else
+            //    {
+            //        args = SplitCommandLineParams(m);
+            //        return true;
+            //    }
+            //}
+            end:
             args = null;
             return false;
         }

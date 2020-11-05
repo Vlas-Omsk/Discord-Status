@@ -22,6 +22,7 @@ using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
 using System.Text.RegularExpressions;
 using PinkJson.Parser;
+using System.IO;
 
 namespace DiscordStatusGUI
 {
@@ -32,10 +33,12 @@ namespace DiscordStatusGUI
     {
         public MainWindow()
         {
+            Static.MainWindow = this;
+            Static.MainWindowViewModel = new MainWindowViewModel();
+
             InitializeComponent();
 
-            Static.MainWindow = this;
-            Static.MainWindowViewModel = DataContext as MainWindowViewModel;
+            DataContext = Static.MainWindowViewModel;
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -44,10 +47,13 @@ namespace DiscordStatusGUI
 
             Static.Discord.Socket.OnWorkingStatusChanged += Socket_OnWorkingStatusChanged;
 
-            ConsoleEx.InitLogger();
+            await Task.Run(() =>
+            {
+                Preferences.LoadProfiles();
+                Preferences.Load();
+            });
 
-            Preferences.LoadProfiles();
-            Preferences.Load();
+            ConsoleEx.InitLogger();
 
             await Task.Run(() =>
             {

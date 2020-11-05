@@ -19,10 +19,14 @@ namespace DiscordStatusGUI.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return "";
+
             var outt = System.Convert.ToString(parameter)
-                .Replace("[Value]", value.ToString())
+                .Replace("[Value]", value?.ToString())
                 .Replace("[Value.ToUpper]", System.Convert.ToString(value).ToUpper())
-                .Replace("[Value.ToStars]", new string('*', value.ToString().Length));
+                .Replace("[Value.ToStars]", new string('*', value.ToString().Length))
+                .Replace("[Value.ReplaceFields]", Static.ReplaceFilds(value + ""));
             try
             {
                 outt = System.Convert.ToString(outt)

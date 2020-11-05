@@ -36,7 +36,7 @@ namespace DiscordStatusGUI
         {
             new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new GameStatus()),
             new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, "Settings", new Settings()),
-            new VerticalTabItem("", 0.6, "Windows", new Windows()),
+            new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Windows()),
             new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Warface())
         };
 
@@ -52,14 +52,15 @@ namespace DiscordStatusGUI
                 {
                     ProfileName = "Discord Status",
                     Name = "Discord Status",
-                    Details = "vlas-omsk.github.io"
+                    Details = "vlas-omsk.github.io",
+                    IsAvailableForChange = false
                 },
-                new Activity() { ProfileName = "Profile1" },
-                new Activity() { ProfileName = "Profile2" },
-                new Activity() { ProfileName = "Profile3" },
-                new Activity() { ProfileName = "Profile4" },
-                new Activity() { ProfileName = "Profile5" },
-                new Activity() 
+                new Activity() { ProfileName = "Profile1", IsAvailableForChange = true },
+                new Activity() { ProfileName = "Profile2", IsAvailableForChange = true },
+                new Activity() { ProfileName = "Profile3", IsAvailableForChange = true },
+                new Activity() { ProfileName = "Profile4", IsAvailableForChange = true },
+                new Activity() { ProfileName = "Profile5", IsAvailableForChange = true },
+                new Activity()
                 {
                     ProfileName = "Warface",
                     Name = "{wf:AppName} ({wf:ServerName}: {wf:PlayerNickname})",
@@ -70,7 +71,8 @@ namespace DiscordStatusGUI
                     ImageLargeKey = "logo",
                     ImageLargeText = "Warface Status",
                     ImageSmallKey = "rank{wf:PlayerRank}",
-                    ImageSmallText = "Ранк: {wf:PlayerRank} {wf:PlayerRankName}"
+                    ImageSmallText = "Ранк: {wf:PlayerRank} {wf:PlayerRankName}",
+                    IsAvailableForChange = true
                 }
             });
             set
@@ -114,18 +116,26 @@ namespace DiscordStatusGUI
             object result = new Activity();
             ActivityFields.ToList().ForEach((fi) =>
             {
-                var val = fi.GetValue(activity)?.ToString() + "";
-                var pattern = @"\{(.*?)\}";
-                var matches = Regex.Matches(val, pattern);
+                var val = fi.GetValue(activity);
+                if (!(val is string))
+                    return;
 
-                foreach (Match m in matches)
-                {
-                    val = val.Replace($"{{{m.Groups[1].Value}}}", GetValueByFieldName(m.Groups[1].Value));
-                }
-
-                fi.SetValue(result, val);
+                fi.SetValue(result, ReplaceFilds(val.ToString() + ""));
             });
             return (Activity)result;
+        }
+
+        public static string ReplaceFilds(string value)
+        {
+            var pattern = @"\{(.*?)\}";
+            var matches = Regex.Matches(value, pattern);
+
+            foreach (Match m in matches)
+            {
+                value = value.Replace($"{{{m.Groups[1].Value}}}", GetValueByFieldName(m.Groups[1].Value));
+            }
+
+            return value;
         }
 
         private static int _CurrentActivityIndex;

@@ -42,8 +42,15 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 var response = WEB.Get("https://discord.com/api/v6/oauth2/applications/" + appId + "/assets");
                 if (_LastAppAssetsResponse != response)
                 {
-                    _LastAppAssets = new JsonObjectArray(response);
-                    _LastAppAssetsResponse = response;
+                    try
+                    {
+                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssetsResponse = response;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
                 }
 
                 foreach (Json item in _LastAppAssets)
@@ -52,7 +59,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                         return item["id"].Value.ToString();
                 }
 
-                return "";
+                return null;
             }
         }
 

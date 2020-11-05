@@ -13,6 +13,18 @@ namespace DiscordStatusGUI.Extensions
 {
     class ProcessEx
     {
+#if DEBUG
+        [DllImport(@"G:\GitBuh\GetProcessCommandLine\Release\ProcessCommandLine.dll")]
+#else
+        [DllImport(@"ProcessCommandLine.dll")]
+#endif
+        static extern IntPtr GetProcessCommandLineByPid(int pid, out long ntstatus);
+
+        public static string GetProcessCommandLine(int pid, out long ntstatus)
+        {
+            return Marshal.PtrToStringAnsi(GetProcessCommandLineByPid(pid, out ntstatus));
+        }
+
         public static string GetOutput(string path, string args, bool hidewindow = true)
         {
             Process proc = new Process();

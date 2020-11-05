@@ -50,7 +50,7 @@
                             <TranslateTransform Y="1"/>
                         </Border.RenderTransform>
                     </Border>
-                    <DataGrid Grid.Row="1" IsReadOnly="True" Style="{DynamicResource DataGridStyleDiscord}" ItemsSource="{Binding Properties}" AutoGenerateColumns="False">
+                    <DataGrid Grid.Row="1" IsReadOnly="True" Style="{DynamicResource DataGridStyleDiscord}" ItemsSource="{Binding Properties}" SelectedItem="{Binding SelectedProperty}" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Параметр" Binding="{Binding Parameter}"/>
                             <DataGridTextColumn Header="Описание" Binding="{Binding Description}"/>

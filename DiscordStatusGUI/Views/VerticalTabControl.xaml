@@ -35,17 +35,22 @@
                                 <TranslateTransform Y="0"/>
                             </Grid.RenderTransform>
                             <Rectangle x:Name="background_rect" RadiusX="30" RadiusY="30" Fill="#FF36393F"/>
-                            <Image Source="{Binding ImagePath}" RenderTransformOrigin="0.5,0.5">
-                                <Image.RenderTransform>
-                                    <ScaleTransform ScaleY="{Binding Zoom}" ScaleX="{Binding Zoom}"/>
-                                </Image.RenderTransform>
-                            </Image>
+                            <Grid x:Name="imageContainer" RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Grid.RenderTransform>
+                                <Image Source="{Binding ImagePath}" RenderTransformOrigin="0.5,0.5">
+                                    <Image.RenderTransform>
+                                        <ScaleTransform ScaleY="{Binding Zoom}" ScaleX="{Binding Zoom}"/>
+                                    </Image.RenderTransform>
+                                </Image>
+                            </Grid>
                             <Rectangle x:Name="mark" RadiusX="10" RadiusY="10" Fill="White" Height="20" Width="8" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
                                 <Rectangle.RenderTransform>
                                     <TranslateTransform X="-20" Y="0"/>
                                 </Rectangle.RenderTransform>
                             </Rectangle>
-                            
+
                             <!--#region ContentPresenter-->
                             <Popup x:Name="contentPopup" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
                                 <Grid Height="50">
@@ -145,6 +150,9 @@
                                 <MultiTrigger.EnterActions>
                                     <BeginStoryboard>
                                         <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" Duration="0:0:0.1" To="1.1" />
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" Duration="0:0:0.1" To="1.1" />
+                                            
                                             <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="15" />
                                             <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="15" />
                                             <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF7289DA" />
@@ -158,6 +166,9 @@
                                 <MultiTrigger.ExitActions>
                                     <BeginStoryboard>
                                         <Storyboard >
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" Duration="0:0:0.1" To="1" />
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" Duration="0:0:0.1" To="1" />
+                                            
                                             <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="30" />
                                             <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="30" />
                                             <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF36393F" />

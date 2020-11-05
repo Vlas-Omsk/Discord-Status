@@ -34,6 +34,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
         public WindowsViewModel()
         {
+
             _Properties.Add("{win:ForegroundWindowName}", "Имя активного окна", Static.GetValueByFieldName("win:ForegroundWindowName"));
 
             OnPropertyChanged("Properties");

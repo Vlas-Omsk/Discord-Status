@@ -59,17 +59,20 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             set
             {
                 if (value == -1)
-                    throw new Exception();
+                    return;
                 Static.CurrentActivityIndex = value;
-                OnPropertyChanged("SelectedProfileIndex");
                 Preferences.Save();
             }
+        }
+        public Activity SelectedProfile
+        {
+            get => Static.CurrentActivity;
         }
 
         #region Options
         public List<string> Options = new List<string>(new string[] { "Name", "ApplicationID", "State", "Details", 
             "StartTime", "EndTime", "PartySize", "PartyMax", 
-            "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText" });
+            "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText", "IsAvailableForChange" });
         public string Name
         {
             get => Static.CurrentActivity.Name;
@@ -178,6 +181,15 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("ImageSmallText");
             }
         }
+        public bool IsAvailableForChange
+        {
+            get => Static.CurrentActivity.IsAvailableForChange;
+            set
+            {
+                Static.CurrentActivity.IsAvailableForChange = value;
+                OnPropertyChanged("IsAvailableForChange");
+            }
+        }
         #endregion
 
         private GameStatus _GameStatusView;
@@ -199,7 +211,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                     var s = Static.CurrentActivity.SavedState;
                     Static.CurrentActivity = (Activity)Static.CurrentActivity.SavedState;
                     Static.CurrentActivity.SavedState = s;
-                    Socket_OnActivityChanged();
+                    OnActivityChanged();
                     GameStatusView.IsChanged = false;
                 });
             }
@@ -208,12 +220,16 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         public GameStatusViewModel()
         {
             Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
-            Static.OnActivityChanged += Socket_OnActivityChanged;
+            Static.OnActivityChanged += OnActivityChanged;
             Static.OnActivitiesChanged += () =>
+            {
+                var save = SelectedProfileIndex;
                 OnPropertyChanged("Profiles");
+                SelectedProfileIndex = save;
+            };
         }
 
-        public void Socket_OnActivityChanged()
+        public void OnActivityChanged()
         {
             OnPropertyChanged("SelectedProfileIndex");
             OnPropertyChanged("SelectedProfile");
