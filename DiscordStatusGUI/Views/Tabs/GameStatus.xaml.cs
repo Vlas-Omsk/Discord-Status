@@ -40,8 +40,8 @@ namespace DiscordStatusGUI.Views.Tabs
             if (!LockedByGame || isGame)
             Dispatcher.Invoke(() =>
                 ProfilesComboBox.IsEnabled = value);
-            if (isGame)
-                LockedByGame = true;
+            //if (isGame)
+            LockedByGame = isGame;
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -65,7 +65,11 @@ namespace DiscordStatusGUI.Views.Tabs
         #region HelpText
         private void HelpText_MouseEnter(object sender, MouseEventArgs e)
         {
-            var help = FindName((sender as FrameworkElement).Name + "_HelpText") as FrameworkElement;
+            var Help = FindName((sender as FrameworkElement).Name + "_HelpText") as FrameworkElement;
+            var TextPresenter = FindName((sender as FrameworkElement).Name + "_TextPresenter") as TextBlock;
+
+            if (string.IsNullOrEmpty(TextPresenter?.Text))
+                return;
 
             Storyboard storyboard = new Storyboard();
 
@@ -85,13 +89,13 @@ namespace DiscordStatusGUI.Views.Tabs
             storyboard.Children.Add(scaleY);
 
             Storyboard.SetTargetProperty(opacity, new PropertyPath("Opacity"));
-            Storyboard.SetTarget(opacity, help);
+            Storyboard.SetTarget(opacity, Help);
 
             Storyboard.SetTargetProperty(scaleX, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)"));
-            Storyboard.SetTarget(scaleX, help);
+            Storyboard.SetTarget(scaleX, Help);
 
             Storyboard.SetTargetProperty(scaleY, new PropertyPath("(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)"));
-            Storyboard.SetTarget(scaleY, help);
+            Storyboard.SetTarget(scaleY, Help);
 
             storyboard.Begin();
         }
@@ -160,13 +164,13 @@ namespace DiscordStatusGUI.Views.Tabs
                 if (value)
                 {
                     ProfilesComboBox_IsEnabled(false);
-                    if (SaveChangesBox?.Visibility == Visibility.Hidden)
+                    if (SaveChangesBox != null && !SaveChangesBox.IsVisible)
                         SaveChangesBox?.Show();
                 }
                 else
                 {
                     ProfilesComboBox_IsEnabled(true);
-                    if (SaveChangesBox?.Visibility == Visibility.Visible)
+                    if (SaveChangesBox != null && SaveChangesBox.IsVisible)
                         SaveChangesBox?.Hide();
                 }
             }

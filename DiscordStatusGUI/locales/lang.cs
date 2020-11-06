@@ -49,7 +49,7 @@ namespace DiscordStatusGUI.Locales
         {
             Static.Discord.Language = string.Format("{0}, {1};q=0.9, en-US;q=0.8, en;q=0.7, *;q=0.6", CurrentCultureInfo.Name, CurrentCultureInfo.Parent.Name);
             
-            if (Directory.Exists("Locales"))
+            if (Directory.Exists("locales"))
             {
 #if DEBUG
 #else

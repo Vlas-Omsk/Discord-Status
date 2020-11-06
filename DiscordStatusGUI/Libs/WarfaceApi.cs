@@ -75,11 +75,15 @@ namespace DiscordStatusGUI.Libs
             if (GameProcess == null || GameProcess.HasExited)
             {
                 foreach (var process in processes)
-                    if (process.ProcessName == "Game")
+                    try
                     {
-                        GameProcess = process;
-                        break;
+                        if (process.ProcessName == "Game")
+                        {
+                            GameProcess = process;
+                            break;
+                        }
                     }
+                    catch { }
 
                 if (GameProcess != null && !GameProcess.HasExited)
                 {
@@ -242,7 +246,7 @@ namespace DiscordStatusGUI.Libs
                     for (var i = log_file_launcher_lines.Length - 1; i > 0; i--)
                         if (log_file_launcher_lines[i].IndexOf("RunGameProcess (id=0.1177") != -1)
                         {
-                            return SplitCommandLineParams(log_file_launcher_lines[i].Substring(log_file_launcher_lines[i].IndexOf(')') + 1).Trim());
+                            return ProcessEx.SplitParams(log_file_launcher_lines[i].Substring(log_file_launcher_lines[i].IndexOf(')') + 1).Trim());
                         }
                     ConsoleEx.WriteLine(ConsoleEx.Warning, "Error: could'n read player id");
                 }
@@ -285,7 +289,7 @@ namespace DiscordStatusGUI.Libs
         {
             if (!string.IsNullOrEmpty(Process.GetProcessById(pid).StartInfo.Arguments))
             {
-                args = SplitCommandLineParams(Process.GetProcessById(pid).StartInfo.Arguments);
+                args = ProcessEx.SplitParams(Process.GetProcessById(pid).StartInfo.Arguments);
                 return true;
             }
             else
@@ -297,7 +301,7 @@ namespace DiscordStatusGUI.Libs
                     goto end;
                 }
 
-                args = SplitCommandLineParams(tmp);
+                args = ProcessEx.SplitParams(tmp);
                 ConsoleEx.WriteLine(ConsoleEx.Info, "Yeah. (CPP) GetProcessCommandLine working");
                 return true;
             }
@@ -320,25 +324,6 @@ namespace DiscordStatusGUI.Libs
             end:
             args = null;
             return false;
-        }
-
-        private static string[] SplitCommandLineParams(string str)
-        {
-            var result = new List<string>();
-            var locked = false;
-            var p = "";
-            for (var i = 0; i < str.Length; i++)
-            {
-                p += str[i];
-                if (str[i] == '\"') locked = !locked;
-                if (str[i] == ' ' && !locked)
-                {
-                    result.Add(p.Trim());
-                    p = "";
-                }
-            }
-            result.Add(p.Trim());
-            return result.ToArray();
         }
     }
 

@@ -33,6 +33,8 @@ namespace DiscordStatusGUI
     {
         public MainWindow()
         {
+            ProtocolCommands.CreateProtocol();
+
             Static.MainWindow = this;
             Static.MainWindowViewModel = new MainWindowViewModel();
 

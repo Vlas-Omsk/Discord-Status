@@ -100,25 +100,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
             OnPropertyChanged("Properties");
 
-            WarfaceApi.CurrentGameState.OnPropertyChanged += (p) =>
-            {
-                _Properties[2].Value = Static.GetValueByFieldName("wf:Map");
-                _Properties[3].Value = Static.GetValueByFieldName("wf:State");
-                _Properties[4].Value = Static.GetValueByFieldName("wf:StateStartTime");
-                _Properties[5].Value = Static.GetValueByFieldName("wf:InGameServerName");
-                _Properties[6].Value = Static.GetValueByFieldName("wf:ServerIP");
-                _Properties[7].Value = Static.GetValueByFieldName("wf:ServerName");
-                _Properties[8].Value = Static.GetValueByFieldName("wf:ServerRegion");
-                _Properties[9].Value = Static.GetValueByFieldName("wf:PlayerNickname");
-                _Properties[10].Value = Static.GetValueByFieldName("wf:PlayerRank");
-                _Properties[11].Value = Static.GetValueByFieldName("wf:PlayerRankName");
-                _Properties[12].Value = Static.GetValueByFieldName("wf:PlayerUserID");
-
-                OnPropertyChanged("Properties");
-
-                UpdateDiscordActivityIf();
-            };
-
+            WarfaceApi.CurrentGameState.OnPropertyChanged += (p) => UpdateDiscordActivityIf();
             WarfaceApi.CurrentPlayer.OnPlayerInfoChanged += () => UpdateDiscordActivityIf();
             WarfaceApi.CurrentPlayer.OnUserInfoChanged += (p) => UpdateDiscordActivityIf();
 
@@ -128,6 +110,20 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
         private void UpdateDiscordActivityIf()
         {
+            _Properties[2].Value = Static.GetValueByFieldName("wf:Map");
+            _Properties[3].Value = Static.GetValueByFieldName("wf:State");
+            _Properties[4].Value = Static.GetValueByFieldName("wf:StateStartTime");
+            _Properties[5].Value = Static.GetValueByFieldName("wf:InGameServerName");
+            _Properties[6].Value = Static.GetValueByFieldName("wf:ServerIP");
+            _Properties[7].Value = Static.GetValueByFieldName("wf:ServerName");
+            _Properties[8].Value = Static.GetValueByFieldName("wf:ServerRegion");
+            _Properties[9].Value = Static.GetValueByFieldName("wf:PlayerNickname");
+            _Properties[10].Value = Static.GetValueByFieldName("wf:PlayerRank");
+            _Properties[11].Value = Static.GetValueByFieldName("wf:PlayerRankName");
+            _Properties[12].Value = Static.GetValueByFieldName("wf:PlayerUserID");
+
+            OnPropertyChanged("Properties");
+
             if (Static.IsPrefixContainsInFields(Static.CurrentActivity, "wf"))
                 Static.UpdateDiscordActivity();
         }

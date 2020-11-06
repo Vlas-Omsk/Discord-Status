@@ -32,13 +32,18 @@ namespace DiscordStatusGUI
 
         public static string Titile = "Discord Status";
 
-        public static ObservableCollection<VerticalTabItem> Tabs = new ObservableCollection<VerticalTabItem>()
+        public static ObservableCollection<VerticalTabItem> Tabs;
+
+        public static void Init()
         {
-            new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new GameStatus()),
-            new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, "Settings", new Settings()),
-            new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Windows()),
-            new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Warface())
-        };
+            Tabs = new System.Collections.ObjectModel.ObservableCollection<Models.VerticalTabItem>()
+            {
+                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new Views.Tabs.GameStatus()),
+                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, "Settings", new Views.Tabs.Settings()),
+                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
+                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Views.Tabs.Warface())
+            };
+        }
 
         #region Activity
         private static Activity[] _Activities;
@@ -52,7 +57,9 @@ namespace DiscordStatusGUI
                 {
                     ProfileName = "Discord Status",
                     Name = "Discord Status",
+                    ApplicationID = "743507332838981723",
                     Details = "vlas-omsk.github.io",
+                    ImageLargeKey = "logo",
                     IsAvailableForChange = false
                 },
                 new Activity() { ProfileName = "Profile1", IsAvailableForChange = true },
@@ -202,6 +209,8 @@ namespace DiscordStatusGUI
 
         public struct Window
         {
+            private static WindowState laststate;
+
             public static void Minimize()
             {
                 Static.MainWindow.WindowState = WindowState.Minimized;
@@ -214,10 +223,21 @@ namespace DiscordStatusGUI
                 else
                     Static.MainWindow.WindowState = WindowState.Maximized;
             }
-            
+
+            public static void Normalize()
+            {
+                Static.MainWindow.Show();
+                if (laststate != (WindowState)(-1))
+                {
+                    Static.MainWindow.WindowState = laststate;
+                    laststate = (WindowState)(-1);
+                }
+            }
+
             public static void Close()
             {
                 Static.MainWindow.Hide();
+                laststate = Static.MainWindow.WindowState;
                 Static.MainWindow.WindowState = WindowState.Minimized;
             }
 

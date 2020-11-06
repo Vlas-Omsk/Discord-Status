@@ -30,12 +30,16 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             public static Bitmap GetImageById(string id, string appId)
             {
-                System.Net.HttpWebRequest request =
-                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create(
-                            "https://cdn.discordapp.com/app-assets/" + appId + "/" + id);
-                using (System.Net.WebResponse response = request.GetResponse())
-                using (Stream responseStream = response.GetResponseStream())
-                    return new System.Drawing.Bitmap(responseStream);
+                try
+                {
+                    System.Net.HttpWebRequest request =
+                            (System.Net.HttpWebRequest)System.Net.WebRequest.Create(
+                                "https://cdn.discordapp.com/app-assets/" + appId + "/" + id);
+                    using (System.Net.WebResponse response = request.GetResponse())
+                    using (Stream responseStream = response.GetResponseStream())
+                        return new System.Drawing.Bitmap(responseStream);
+                }
+                catch { return new Bitmap(1, 1); }
             }
 
             public static string GetImageIdByName(string name, string appId)

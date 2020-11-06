@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
              xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
        mc:Ignorable="d"
-       d:DesignWidth="800" d:DesignHeight="1000" Background="#36393f"
+       d:DesignWidth="800" d:DesignHeight="1200" Background="#36393f"
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
              xmlns:dialogs="clr-namespace:DiscordStatusGUI.Views.Dialogs"
              SizeChanged="UserControl_SizeChanged">
@@ -110,13 +110,13 @@
                                         <TextBlock Text="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_Playing}" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Grid.ColumnSpan="99"/>
 
                                         <!-- LargeImage -->
-                                        <Grid x:Name="VisualiserTabControlGameAvatar_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="54.5,5,0,0" Grid.RowSpan="22" Grid.ColumnSpan="22">
+                                        <Grid x:Name="ImageLarge_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="54.5,5,0,0" Grid.RowSpan="22" Grid.ColumnSpan="22">
                                             <Grid.RenderTransform>
                                                 <TransformGroup>
                                                     <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
                                                     <SkewTransform/>
                                                     <RotateTransform/>
-                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=VisualiserTabControlGameAvatar_HelpText}"/>
+                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=ImageLarge_HelpText}"/>
                                                 </TransformGroup>
                                             </Grid.RenderTransform>
                                             <Rectangle Fill="Black" Margin="0,0,0,-2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="5" Width="5" RenderTransformOrigin="0.5,0.5" >
@@ -125,20 +125,24 @@
                                                 </Rectangle.RenderTransform>
                                             </Rectangle>
                                             <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameAvatar_HelpText}" HorizontalAlignment="Stretch"/>
-                                            <TextBlock x:Name="LargeImageTextPresenter" Padding="4,4,4,4" Text="{Binding ImageLargeText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                            <TextBlock x:Name="ImageLarge_TextPresenter" Padding="4,4,4,4" Text="{Binding ImageLargeText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
                                         </Grid>
 
-                                        <Rectangle x:Name="VisualiserTabControlGameAvatar" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="5" RadiusY="5" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="17,0,0,0" Grid.RowSpan="22" Grid.Row="1" AutomationProperties.HelpText="123"/>
+                                        <Rectangle x:Name="ImageLarge" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="5" RadiusY="5" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="17,0,0,0" Grid.RowSpan="22" Grid.Row="1">
+                                            <Rectangle.Fill>
+                                                <ImageBrush ImageSource="{Binding ImageLarge}"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
                                         <!-- LargeImage -->
 
                                         <!-- SmallImage -->
-                                        <Grid x:Name="VisualiserTabControlGameSmallAvatar_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="88,1,0,0" Grid.RowSpan="2" Grid.Row="2" Grid.ColumnSpan="22">
+                                        <Grid x:Name="ImageSmall_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="88,1,0,0" Grid.RowSpan="2" Grid.Row="2" Grid.ColumnSpan="22">
                                             <Grid.RenderTransform>
                                                 <TransformGroup>
                                                     <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
                                                     <SkewTransform/>
                                                     <RotateTransform/>
-                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}"/>
+                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=ImageSmall_HelpText}"/>
                                                 </TransformGroup>
                                             </Grid.RenderTransform>
                                             <Rectangle Fill="Black" Margin="0,0,0,-2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="5" Width="5" RenderTransformOrigin="0.5,0.5" >
@@ -147,10 +151,14 @@
                                                 </Rectangle.RenderTransform>
                                             </Rectangle>
                                             <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" HorizontalAlignment="Stretch"/>
-                                            <TextBlock x:Name="SmallImageTextPresenter" Padding="4,4,4,4" Text="{Binding ImageSmallText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                            <TextBlock x:Name="ImageSmall_TextPresenter" Padding="4,4,4,4" Text="{Binding ImageSmallText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
                                         </Grid>
 
-                                        <Rectangle MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="50" RadiusY="50" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,52,0,0" Grid.RowSpan="22" Grid.Row="1" AutomationProperties.HelpText="123"/>
+                                        <Rectangle x:Name="ImageSmall" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="50" RadiusY="50" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,52,0,0" Grid.RowSpan="22" Grid.Row="1">
+                                            <Rectangle.Fill>
+                                                <ImageBrush ImageSource="{Binding ImageSmall}"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
                                         <!-- SmallImage -->
 
                                         <TextBlock Text="{Binding Name, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Margin="0,-2,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Grid.Column="1" Grid.Row="1"/>
@@ -291,14 +299,14 @@
                         <!-- 4, 0 -->
                         <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageLargeKey" Grid.Column="0" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}"/>
+                        <TextBox Name="ImageLargeKey" Grid.Column="0" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 4, 1 -->
                         <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageLargeText" Grid.Column="1" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeText, UpdateSourceTrigger=PropertyChanged}"/>
                         <!-- 5, 0 -->
                         <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="6"  Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageSmallKey" Grid.Column="0" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}"/>
+                        <TextBox Name="ImageSmallKey" Grid.Column="0" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>

@@ -50,13 +50,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>DiscordStatusGUI.App</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -101,11 +102,12 @@
     <Compile Include="Libs\WarfaceApi.cs" />
     <Compile Include="Libs\WEB.cs" />
     <None Include="Libs\WEB_new.cs" />
-    <Compile Include="Locales\Lang.cs" />
+    <Compile Include="locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
     <Compile Include="Models\PropertiesModel.cs" />
     <Compile Include="Models\VerticalTabItem.cs" />
     <Compile Include="Preferences.cs" />
+    <Compile Include="ProtocolCommands.cs" />
     <Compile Include="Static.cs" />
     <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
@@ -236,10 +238,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Locales\default.json">
+    <None Include="locales\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Locales\ru.json">
+    <None Include="locales\ru.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">

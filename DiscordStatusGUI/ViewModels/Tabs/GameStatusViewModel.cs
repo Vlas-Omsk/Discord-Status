@@ -68,11 +68,13 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         {
             get => Static.CurrentActivity;
         }
+        
 
         #region Options
         public List<string> Options = new List<string>(new string[] { "Name", "ApplicationID", "State", "Details", 
             "StartTime", "EndTime", "PartySize", "PartyMax", 
-            "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText", "IsAvailableForChange" });
+            "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText", "IsAvailableForChange",
+            "ImageLarge", "ImageSmall"});
         public string Name
         {
             get => Static.CurrentActivity.Name;
@@ -89,6 +91,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.ApplicationID = value;
                 OnPropertyChanged("ApplicationId");
+                OnPropertyChanged("ImageLarge");
+                OnPropertyChanged("ImageSmall");
             }
         }
         public string State
@@ -152,6 +156,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.ImageLargeKey = value;
                 OnPropertyChanged("ImageLargeKey");
+                OnPropertyChanged("ImageLarge");
             }
         }
         public string ImageLargeText
@@ -170,6 +175,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.ImageSmallKey = value;
                 OnPropertyChanged("ImageSmallKey");
+                OnPropertyChanged("ImageSmall");
             }
         }
         public string ImageSmallText
@@ -188,6 +194,50 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.IsAvailableForChange = value;
                 OnPropertyChanged("IsAvailableForChange");
+            }
+        }
+
+        private string _SSavedApplicationID, _LSavedApplicationID;
+        private System.Drawing.Bitmap _ImageLarge = new System.Drawing.Bitmap(1, 1);
+        private string _SavedImageLargeKey;
+        private async void ImageLarge_Set()
+        {
+            await Task.Run(() =>
+            {
+                _SavedImageLargeKey = Static.ReplaceFilds(ImageLargeKey);
+                _LSavedApplicationID = Static.ReplaceFilds(ApplicationID);
+                _ImageLarge = Libs.DiscordApi.Discord.AppImages.GetImageById(Libs.DiscordApi.Discord.AppImages.GetImageIdByName(_SavedImageLargeKey, _LSavedApplicationID), _LSavedApplicationID);
+                OnPropertyChanged("ImageLarge");
+            });
+        }
+        public ImageSource ImageLarge
+        {
+            get
+            {
+                if (_SavedImageLargeKey != Static.ReplaceFilds(ImageLargeKey) || _LSavedApplicationID != Static.ReplaceFilds(ApplicationID))
+                    ImageLarge_Set();
+                return BitmapEx.ToImageSource(_ImageLarge);
+            }
+        }
+        private System.Drawing.Bitmap _ImageSmall = new System.Drawing.Bitmap(1, 1);
+        private string _SavedImageSmallKey;
+        private async void ImageSmall_Set()
+        {
+            await Task.Run(() =>
+            {
+                _SavedImageSmallKey = Static.ReplaceFilds(ImageSmallKey);
+                _SSavedApplicationID = Static.ReplaceFilds(ApplicationID);
+                _ImageSmall = Libs.DiscordApi.Discord.AppImages.GetImageById(Libs.DiscordApi.Discord.AppImages.GetImageIdByName(_SavedImageSmallKey, _SSavedApplicationID), _SSavedApplicationID);
+                OnPropertyChanged("ImageSmall");
+            });
+        }
+        public ImageSource ImageSmall
+        {
+            get
+            {
+                if (_SavedImageSmallKey != Static.ReplaceFilds(ImageSmallKey) || _SSavedApplicationID != Static.ReplaceFilds(ApplicationID))
+                    ImageSmall_Set();
+                return BitmapEx.ToImageSource(_ImageSmall);
             }
         }
         #endregion
@@ -223,9 +273,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             Static.OnActivityChanged += OnActivityChanged;
             Static.OnActivitiesChanged += () =>
             {
-                var save = SelectedProfileIndex;
                 OnPropertyChanged("Profiles");
-                SelectedProfileIndex = save;
+                OnPropertyChanged("SelectedProfileIndex");
             };
         }
 

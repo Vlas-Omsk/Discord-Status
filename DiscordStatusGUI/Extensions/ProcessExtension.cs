@@ -43,6 +43,25 @@ namespace DiscordStatusGUI.Extensions
             }
         }
 
+        public static string[] SplitParams(string str)
+        {
+            var result = new List<string>();
+            var locked = false;
+            var p = "";
+            for (var i = 0; i < str.Length; i++)
+            {
+                p += str[i];
+                if (str[i] == '\"') locked = !locked;
+                if (str[i] == ' ' && !locked)
+                {
+                    result.Add(p.Trim());
+                    p = "";
+                }
+            }
+            result.Add(p.Trim());
+            return result.ToArray();
+        }
+
 
         public static void Init()
         {
