@@ -52,6 +52,10 @@
   <PropertyGroup>
     <StartupObject>DiscordStatusGUI.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
@@ -334,6 +338,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Tabs\Windows.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
