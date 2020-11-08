@@ -61,11 +61,12 @@
 
                         <TabControl Grid.Row="1" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF18191C">
                             <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}">
-                                <Grid Width="510" Height="500" Margin="10">
+                                <Grid Width="510" Height="510" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="110"/>
                                         <RowDefinition Height="130"/>
                                         <RowDefinition Height="260"/>
+                                        <RowDefinition Height="10"/>
                                     </Grid.RowDefinitions>
                                     <!-- ZONE 1 -->
                                     <Border Background="#FF7289DA" CornerRadius="10,10,0,0"/>
@@ -181,6 +182,11 @@
                                         <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
                                         <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
                                     </TabControl>
+                                    <Border Grid.Row="3" Background="#FF2F3136" CornerRadius="0,0,10,10" RenderTransformOrigin="0.5,0.5">
+                                        <Border.RenderTransform>
+                                            <TranslateTransform Y="-1"/>
+                                        </Border.RenderTransform>
+                                    </Border>
                                 </Grid>
                             </TabItem>
 
@@ -190,6 +196,14 @@
                                 </Grid>
                             </TabItem>
                         </TabControl>
+                        <Rectangle Grid.Row="1" Grid.RowSpan="2" IsHitTestVisible="False">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0.5">
+                                    <GradientStop Color="Black" Offset="1"/>
+                                    <GradientStop Color="#00000000"/>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
                     </Grid>
 
                     <Grid x:Name="Options" Grid.Row="2" Grid.ColumnSpan="2">

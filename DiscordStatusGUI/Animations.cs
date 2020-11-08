@@ -9,6 +9,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Controls;
 using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using DiscordStatusGUI.Extensions;
 
 namespace DiscordStatusGUI
 {
@@ -465,6 +466,43 @@ namespace DiscordStatusGUI
             Storyboard.SetTarget(scalex, control);
 
             return storyboard;
+        }
+
+        public static void ReplaceWithWaves(Grid parent, FrameworkElement oldControl, FrameworkElement newControl, bool withremoveoldcontrol = false)
+        {
+            newControl.Visibility = Visibility.Hidden;
+
+            var plug_img = new Image() { Width = parent.ActualWidth * 1.5, Height = parent.ActualHeight * 1.5,
+                HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top,
+                Source = BitmapEx.ToImageSource(Properties.Resources.Plug), IsHitTestVisible = true };
+            var plug = new Grid() { Width = parent.ActualWidth * 3, Height = parent.ActualHeight * 3,
+                Margin = new Thickness(-(parent.ActualWidth * 1.5), -(parent.ActualHeight * 1.5), 0, 0),
+                Background = new SolidColorBrush(Colors.Transparent), IsHitTestVisible = true };
+            plug.Children.Add(plug_img);
+
+            parent.Children.Add(plug);
+
+            var opacity = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300));
+            var location = new ThicknessAnimation(new Thickness(0, 0, 0, 0), new Duration(TimeSpan.FromMilliseconds(1000)));
+
+            location.Completed += (s, ev) =>
+            {
+                if (oldControl != null)
+                    oldControl.Visibility = Visibility.Hidden;
+                newControl.Visibility = Visibility.Visible;
+                plug.BeginAnimation(FrameworkElement.OpacityProperty, opacity);
+            };
+
+            opacity.Completed += (s, ev) =>
+            {
+                plug_img.RaiseEvent(new RoutedEventArgs(Image.UnloadedEvent));
+                plug.RaiseEvent(new RoutedEventArgs(Grid.UnloadedEvent));
+                parent.Children.Remove(plug);
+                if (withremoveoldcontrol && oldControl != null)
+                    parent.Children.Remove(oldControl);
+            };
+
+            plug.BeginAnimation(Image.MarginProperty, location);
         }
     }
 

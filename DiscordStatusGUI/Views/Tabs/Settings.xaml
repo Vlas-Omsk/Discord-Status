@@ -184,10 +184,12 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Text="ОСНОВНЫЕ" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
                     <CheckBox x:Name="DiscordConnectedSwitcher" Content="Установить соединение с Discord" Grid.Row="2" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsDiscordConnected}" IsEnabled="{Binding DiscordConnectedSwitcherEnable}"/>
+                    <CheckBox Content="Открывать Discord Status при запуске системы" Grid.Row="3" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsAutoRunEnabled}"/>
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="0,10, 0, 0">

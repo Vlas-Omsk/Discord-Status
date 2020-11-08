@@ -19,13 +19,14 @@
         AllowsTransparency="False"
         WindowStartupLocation="CenterScreen"
         
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        SizeChanged="Window_SizeChanged"
+        LocationChanged="Window_LocationChanged"
+        StateChanged="Window_LocationChanged"
+        Closing="Window_Closing">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
     </Window.DataContext>
-    <Window.Title>
-        <Binding Path="Title"/>
-    </Window.Title>
 
     <Grid Background="{Binding GlobalBackground}" Margin="0">
         <Grid.RowDefinitions>
@@ -35,10 +36,10 @@
 
         <Grid x:Name="ActualSize" Visibility="Hidden" Height="{Binding ActualHeight, ConverterParameter=-4, Converter={converters:SumConverter}, ElementName=window}" Width="{Binding ActualWidth, ConverterParameter=-12, Converter={converters:SumConverter}, ElementName=window}"/>
 
-        <Grid Grid.Row="1">
+        <Grid x:Name="Container" Grid.Row="1">
             <Image x:Name="StaticAbyse" Visibility="Visible" HorizontalAlignment="Left" Width="{Binding ActualWidth, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" Height="{Binding ActualHeight, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" VerticalAlignment="Top" Source="Resources/StaticAbyse.png"/>
 
-            <ContentControl Content="{Binding CurrentPage}"/>
+            <ContentControl x:Name="CurrentPage" Content="{Binding CurrentPage}"/>
 
             <views:Initialization x:Name="initialization"/>
 
@@ -46,5 +47,7 @@
         </Grid>
 
         <views:TopPanel x:Name="toppanel"/>
+
+        <local:NotifyPopup x:Name="NotifyPopup"/>
     </Grid>
 </Window>

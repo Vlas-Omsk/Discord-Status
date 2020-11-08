@@ -20,19 +20,20 @@ namespace DiscordStatusGUI.Extensions
 
         public delegate void OnTextChangedEventHandler(OnTextChangedEventArgs e);
         public event OnTextChangedEventHandler OnTextChanged;
-        
-        public string SafeReadText()
+
+        public string SafeReadText() => SafeReadText(Info.FullName);
+        public string[] SafeReadLines() => SafeReadLines(Info.FullName);
+
+        public static string SafeReadText(string path)
         {
-            var path = Info.FullName;
             File.Copy(path, path + "temp", true);
             var text = File.ReadAllText(path + "temp");
             File.Delete(path + "temp");
             return text;
         }
 
-        public string[] SafeReadLines()
+        public static string[] SafeReadLines(string path)
         {
-            var path = Info.FullName;
             File.Copy(path, path + "temp", true);
             var text = File.ReadAllLines(path + "temp");
             File.Delete(path + "temp");

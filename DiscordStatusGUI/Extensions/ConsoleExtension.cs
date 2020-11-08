@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PinkJson.Parser;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,19 +21,18 @@ namespace DiscordStatusGUI.Extensions
 
         public static void WriteLine(string prefix, string content)
         {
-            ColoredWriteLine(prefix, content);
+            ColoredWriteLine(prefix, content, new Color(System.Drawing.Color.DarkGray), new Color(System.Drawing.Color.White));
         }
 
-        public static void ColoredWriteLine(string prefix, string content, ConsoleColor prefixcolor = ConsoleColor.DarkGray, ConsoleColor contentcolor = ConsoleColor.White)
+        public static void ColoredWriteLine(string prefix, string content, Color prefixcolor, Color contentcolor)
         {
-            Console.ForegroundColor = prefixcolor;
-            Console.Write($"[{prefix}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   ");
-            Console.ForegroundColor = contentcolor;
-            Console.WriteLine($"{content}");
+            Console.Write($"{prefixcolor.ToAnsiForegroundEscapeCode()}[{prefix}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {contentcolor.ToAnsiForegroundEscapeCode()}{content}\r\n");
         }
 
         public static void InitLogger()
         {
+            SyntaxHighlighting.EnableVirtualTerminalProcessing();
+
             var stringWriter = new StreamWriter("latest.log") { AutoFlush = true };
             var consoleWriter = Console.Out;
 

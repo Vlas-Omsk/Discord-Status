@@ -129,6 +129,25 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("MyGamesAccountButtonStyle");
             }
         }
+        public bool IsAutoRunEnabled
+        {
+            get
+            {
+                if (RegistryCommands.AutoRunStatus() == RegistryCommands.AutoRun.OtherPath)
+                    RegistryCommands.CreateAutoRun();
+                if (RegistryCommands.AutoRunStatus() == RegistryCommands.AutoRun.Registered)
+                    return true;
+                else return false;
+            }
+            set
+            {
+                if (value)
+                    RegistryCommands.CreateAutoRun();
+                else
+                    RegistryCommands.RemoveAutoRun();
+                OnPropertyChanged("IsAutoRunEnabled");
+            }
+        }
         public Style MyGamesAccountButtonStyle
         {
             get => _IsMyGamesAccountLogined ? _GreenButton : _BlueButton;

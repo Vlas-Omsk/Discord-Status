@@ -10,4 +10,12 @@
     <FallbackCulture>ru-RU</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartArguments>--tray</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>
+    </StartArguments>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
 </Project>

@@ -15,8 +15,6 @@ namespace DiscordStatusGUI.ViewModels
 {
     class MainWindowViewModel : TemplateViewModel
     {
-        public string Title { get => Static.Titile; }
-
         Brush _GlobalBackground = new ImageBrush() { ImageSource = BitmapEx.ToImageSource(Resources.Background), Stretch = Stretch.UniformToFill };
         public Brush GlobalBackground
         {
@@ -28,7 +26,7 @@ namespace DiscordStatusGUI.ViewModels
             }
         }
 
-        UserControl _CurrentPage;
+        public UserControl _CurrentPage;
         public UserControl CurrentPage
         {
             get => _CurrentPage;

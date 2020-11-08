@@ -29,13 +29,17 @@ namespace DiscordStatusGUI
 
         public App()
         {
+            Console.Write($"[{ConsoleEx.Info}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   STARTED\r\n");
+
             CheckCopy();
 
             string CurrentExe = Environment.GetCommandLineArgs()[0];
             string CurrentDir = Path.GetDirectoryName(CurrentExe);
 
+            ConsoleEx.InitLogger();
+
             Directory.SetCurrentDirectory(CurrentDir);
-            ConsoleEx.WriteLine("Info", "Working directory: " + Directory.GetCurrentDirectory());
+            ConsoleEx.WriteLine(ConsoleEx.Info, "Working directory: " + Directory.GetCurrentDirectory());
 
             Locales.Lang.Init();
             Static.Init();
@@ -67,16 +71,7 @@ namespace DiscordStatusGUI
             ConsoleEx.WriteLine(ConsoleEx.Info, $"\r\n    [{ProcessCopy.Id}] {ProcessCopy.ProcessName}\r\n    {cmdline}");
             ProcessCopy.Kill();
             var splittedcmdline = ProcessEx.SplitParams(cmdline);
-            for (var i = 0; i < splittedcmdline.Length; i++)
-            {
-                var param = splittedcmdline[i];
-                switch (param)
-                {
-                    case "--url":
-                        ProtocolCommands.SetPropertiesByURL(splittedcmdline[++i]);
-                        break;
-                }
-            }
+            Preferences.SetPropertiesByCmdLine(splittedcmdline);
         }
     }
 }

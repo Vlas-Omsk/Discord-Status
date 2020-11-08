@@ -58,7 +58,8 @@ namespace DiscordStatusGUI.Extensions
                     p = "";
                 }
             }
-            result.Add(p.Trim());
+            if (!string.IsNullOrEmpty(p.Trim()))
+                result.Add(p.Trim());
             return result.ToArray();
         }
 

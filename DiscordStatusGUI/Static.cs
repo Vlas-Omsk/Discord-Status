@@ -9,10 +9,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
 using DiscordStatusGUI.Libs.DiscordApi;
 using DiscordStatusGUI.Models;
+using DiscordStatusGUI.Properties;
 using DiscordStatusGUI.ViewModels;
 using DiscordStatusGUI.ViewModels.Dialogs;
 using DiscordStatusGUI.ViewModels.Discord;
@@ -31,6 +34,7 @@ namespace DiscordStatusGUI
         public static Discord Discord = new Discord();
 
         public static string Titile = "Discord Status";
+        public static ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
 
         public static ObservableCollection<VerticalTabItem> Tabs;
 
@@ -232,6 +236,7 @@ namespace DiscordStatusGUI
                     Static.MainWindow.WindowState = laststate;
                     laststate = (WindowState)(-1);
                 }
+                Static.MainWindow.Activate();
             }
 
             public static void Close()
@@ -315,7 +320,7 @@ namespace DiscordStatusGUI
 
             public static bool IsInitialized
             {
-                get => MainWindow.initialization.Visibility != Visibility.Visible;
+                get => MainWindow.initialization != null && MainWindow.initialization.Visibility != Visibility.Visible;
                 set
                 {
                     MainWindow.Dispatcher.Invoke(() =>
@@ -334,6 +339,19 @@ namespace DiscordStatusGUI
                     });
                 }
             }
+
+            private static void OnFirstInitialization()
+            {
+                if (!string.IsNullOrEmpty(Discord?.Token))
+                    DiscordLoginSuccessful();
+                else
+                    CurrentPage = new Login();
+
+                FirstInitialization?.Invoke();
+            }
+
+            public delegate void OnActivitiesChangedEventHandler();
+            public static event OnActivitiesChangedEventHandler FirstInitialization;
         }
 
         public struct Dialogs
@@ -386,13 +404,17 @@ namespace DiscordStatusGUI
             public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, "Ok"); }
         }
 
-        
+        public delegate void OnMouseButtonClickEventHandler(int x, int y, MouseButton button);
+        public static event OnMouseButtonClickEventHandler OnMouseButtonClick;
+        public static void MouseButtonClick(int x, int y, MouseButton button) => OnMouseButtonClick?.Invoke(x, y, button);
+
+
         public static void DiscordLoginSuccessful()
         {
             if (Discord.IsTokenValid(Discord?.Token))
                 MainWindow.Dispatcher.Invoke(() =>
                 {
-                    CurrentPage = new VerticalTabControl();
+                    MainWindow.ReplaceWithWaves(new VerticalTabControl());
                     Accounts.Discord = true;
                 });
             else
@@ -403,14 +425,6 @@ namespace DiscordStatusGUI
                     CurrentPage = new Login();
                 });
             }
-        }
-
-        private static void OnFirstInitialization()
-        {
-            if (!string.IsNullOrEmpty(Discord?.Token))
-                DiscordLoginSuccessful();
-            else
-                CurrentPage = new Login();
         }
 
         public static UserControl CurrentPage

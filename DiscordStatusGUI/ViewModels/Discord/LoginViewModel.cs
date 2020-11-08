@@ -156,7 +156,7 @@ namespace DiscordStatusGUI.ViewModels.Discord
 
         public void SkipLogin()
         {
-            Static.CurrentPage = new VerticalTabControl();
+            Static.MainWindow.ReplaceWithWaves(new VerticalTabControl());
         }
     }
 }
