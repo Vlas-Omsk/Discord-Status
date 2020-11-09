@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5C106643-5AE7-46E0-867F-6331808D8F74}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>DiscordStatusGUI</RootNamespace>
     <AssemblyName>DiscordStatusGUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -98,6 +98,7 @@
     <Compile Include="Converters\SumConverter.cs" />
     <Compile Include="Extensions\BitmapExtension.cs" />
     <Compile Include="Extensions\ConsoleExtension.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Preferences.cs" />
     <Compile Include="RegistryCommands.cs" />
     <Compile Include="Static.cs" />
+    <Compile Include="ViewModels\Dialogs\DateTimePickerViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
     <Compile Include="ViewModels\Discord\CodeViewModel.cs" />
@@ -129,6 +131,9 @@
     <Compile Include="ViewModels\NotifyPopupViewModel.cs" />
     <Compile Include="ViewModels\TopPanelViewModel.cs" />
     <Compile Include="ViewModels\VerticalTabControlViewModel.cs" />
+    <Compile Include="Views\Dialogs\DateTimePicker.xaml.cs">
+      <DependentUpon>DateTimePicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Dialogs\SaveChangesBox.xaml.cs">
       <DependentUpon>SaveChangesBox.xaml</DependentUpon>
     </Compile>
@@ -183,6 +188,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Themes\SmoothScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\DateTimePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

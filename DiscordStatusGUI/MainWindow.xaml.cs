@@ -38,8 +38,6 @@ namespace DiscordStatusGUI
             Static.MainWindow = this;
             Static.MainWindowViewModel = new MainWindowViewModel();
 
-            Preferences.SetPropertiesByCmdLine(Environment.GetCommandLineArgs());
-
             InitializeComponent();
 
             DataContext = Static.MainWindowViewModel;
@@ -61,8 +59,9 @@ namespace DiscordStatusGUI
             {
                 Preferences.LoadProfiles();
                 Preferences.Load();
+                Preferences.SetPropertiesByCmdLine(Environment.GetCommandLineArgs());
             });
-
+            
             await Task.Run(() =>
             {
                 WarfaceApi.Init();
@@ -91,7 +90,7 @@ namespace DiscordStatusGUI
             Static.Window.SetTopStatus(msg);
         }
 
-#region NoBorderWindow
+        #region NoBorderWindow
         IntPtr Handle;
         int xborder;
         int yborder;
@@ -280,7 +279,7 @@ namespace DiscordStatusGUI
         }
 #endregion Window Style
 
-#region MouseHook
+        #region MouseHook
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, [In] IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential)]
@@ -392,6 +391,9 @@ namespace DiscordStatusGUI
                 MSLLHOOKSTRUCT mhs = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
                 switch ((WM)wParam.ToInt32())
                 {
+                    case WM.MOUSEMOVE:
+                        Static.MouseMove(mhs.pt.X, mhs.pt.Y);
+                        break;
                     case WM.LBUTTONUP:
                         ConsoleEx.WriteLine("LBUTTONUP", mhs.pt.X + " " + mhs.pt.Y);
                         Static.MouseButtonClick(mhs.pt.X, mhs.pt.Y, MouseButton.Left);

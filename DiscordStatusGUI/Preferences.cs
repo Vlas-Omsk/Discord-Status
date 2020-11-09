@@ -9,10 +9,13 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace DiscordStatusGUI
 {
@@ -48,7 +51,8 @@ namespace DiscordStatusGUI
             }
             set => Static.MainWindow.Height = value;
         }
-        public static int  State  { get => Static.MainWindow.Dispatcher.Invoke(() => (int)Static.MainWindow.WindowState); set => Static.MainWindow.WindowState = (WindowState)value; }
+        public static int  State  { get => Static.MainWindow.Dispatcher.Invoke(() => (int)Static.MainWindow.WindowState); set => Static.MainWindow.Dispatcher.Invoke(() => Static.MainWindow.WindowState = (WindowState)value); }
+
 
         public static bool Loading { get; private set; } = false;
         public static bool LoadingProfiles { get; private set; } = false;
@@ -125,15 +129,15 @@ namespace DiscordStatusGUI
                 try
                 {
                     var propjson = new Json(FileInfoEx.SafeReadText("preferences.json"));
-
+                    
                     Static.MainWindow.Dispatcher.Invoke(() =>
                     {
                         X = (int)propjson["Window"]["X"].Value;
                         Y = (int)propjson["Window"]["Y"].Value;
-                        State = (int)propjson["Window"]["State"].Value;
                         Width = (int)propjson["Window"]["Width"].Value;
                         Height = (int)propjson["Window"]["Height"].Value;
                     });
+                    State = (int)propjson["Window"]["State"].Value;
 
                     Discord_Token = propjson["Accounts"]["Discord"]["token"].Value?.ToString();
                     CurrentUserStatus = (int)propjson["CurrentUserStatus"].Value;
@@ -201,7 +205,7 @@ namespace DiscordStatusGUI
 
             Static.MainWindow.Dispatcher.Invoke(() =>
             {
-                if (list.Count <= 1 && Static.InitializationSteps.IsInitialized)
+                if (list.Count <= 1)
                 {
                     Static.Window.Normalize();
                     return;
@@ -224,6 +228,111 @@ namespace DiscordStatusGUI
                     }
                 }
             });
+        }
+
+        public static void OpenLocalServer()
+        {
+            var d = new WebSocketServer(IPAddress.Parse("127.0.0.1"), 48655);
+            d.AddWebSocketService<LocalServer>("/");
+            d.Start();
+        }
+    }
+
+    class LocalServer : WebSocketBehavior
+    {
+        #region Override
+        protected override void OnOpen()
+        {
+            ConsoleEx.WriteLine(ConsoleEx.WebSocketServer, "Connected");
+            base.OnOpen();
+        }
+
+        protected override void OnMessage(MessageEventArgs e)
+        {
+            SendResponse(e.Data);
+            base.OnMessage(e);
+        }
+
+        protected override void OnError(WebSocketSharp.ErrorEventArgs e)
+        {
+            ConsoleEx.WriteLine(ConsoleEx.WebSocketServer, "Error: " + e.Message);
+            base.OnError(e);
+        }
+
+        protected override void OnClose(CloseEventArgs e)
+        {
+            ConsoleEx.WriteLine(ConsoleEx.WebSocketServer, "Closed" + (e.WasClean ? " clean" : "") + ": " + e.Reason + "(" + e.Code + ")");
+            base.OnClose(e);
+        }
+        #endregion
+
+        void SendResponse(string data)
+        {
+            var response = new JsonObjectArray();
+
+            try
+            {
+                var jsonarr = new JsonObjectArray(data);
+
+                for (var i = 0; i < jsonarr.Count; i++)
+                {
+                    var inresponse = new Json();
+                    try
+                    {
+                        var json = (Json)jsonarr[i];
+
+                        if (json.IndexByKey("cmd") != -1)
+                            switch (json["cmd"].Value.ToString())
+                            {
+                                case "IsStarted":
+                                    inresponse.Add(json["cmd"]);
+                                    inresponse.Add(new JsonObject("IsStarted", true));
+                                    inresponse.Add(new JsonObject("Protocol", RegistryCommands.Protocol));
+                                    break;
+                                case "Window":
+                                    inresponse.Add(json["cmd"]);
+                                    if (json.IndexByKey("Value") != -1)
+                                        Static.MainWindow.Dispatcher.Invoke(() =>
+                                        {
+                                            switch (json["Value"].Value.ToString())
+                                            {
+                                                case "Minimize": Static.Window.Minimize(); break;
+                                                case "Maximize": Static.Window.Maximize(); break;
+                                                case "Normalize": Static.Window.Normalize(); break;
+                                                case "Close": Static.Window.Normalize(); break;
+                                            }
+                                        });
+                                    inresponse.Add(new JsonObject("WindowState", Preferences.State));
+                                    break;
+                                case "SetTopStatus":
+                                    if (json.IndexByKey("Value") != -1)
+                                        Static.Window.SetTopStatus(json["Value"].Value.ToString());
+                                    break;
+                            }
+                    }
+                    catch (Exception ex)
+                    {
+                        inresponse.Add(new JsonObject("Error", Json.FromAnonymous(new
+                        {
+                            HResult = ex.HResult,
+                            Message = ex.Message,
+                            StackTrace = ex.StackTrace
+                        })));
+                    }
+                    response.Add(inresponse);
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Add(Json.FromAnonymous(new
+                {
+                    HResult = ex.HResult,
+                    Message = ex.Message,
+                    StackTrace = ex.StackTrace
+                }));
+            }
+
+            Send(response.ToString());
         }
     }
 }

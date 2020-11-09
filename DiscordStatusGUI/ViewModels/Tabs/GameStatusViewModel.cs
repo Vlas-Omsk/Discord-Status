@@ -13,6 +13,9 @@ using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using System.Windows.Data;
+using System.Windows.Controls;
+using DiscordStatusGUI.Models;
 
 namespace DiscordStatusGUI.ViewModels.Tabs
 {
@@ -267,8 +270,27 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             }
         }
 
+        public Command ShowDateTimePickerCommand { get; private set; }
+
         public GameStatusViewModel()
         {
+            ButtonItem cancel = new ButtonItem(Static.Dialogs.DateTimePickerHide) { Style = Static.DiscordTheme["RedButton"] as Style, Text = "Cancel" };
+            ShowDateTimePickerCommand = new Command(o => {
+                var apply = Static.Dialogs.ButtonApply;
+                var fe = GameStatusView.FindName(o.ToString()) as TextBox;
+                var dti = DateTime.Now;
+                if (!string.IsNullOrEmpty(fe.Text) && long.TryParse(fe.Text, out long result))
+                    dti = DateTimeEx.FromUNIX(result);
+                apply.ClickCommand = new Command(() =>
+                {
+                    Static.Dialogs.DateTimePickerHide();
+                    var dt = Static.Dialogs.GetLastDateTime();
+                    if (dt.HasValue)
+                        fe.Text = DateTimeEx.ToUNIX(dt.Value).ToString();
+                });
+                Static.Dialogs.DateTimePickerShow(dti, new ObservableCollection<Models.ButtonItem> { apply, cancel }, HorizontalAlignment.Right, Static.Dialogs.DateTimePickerHide);
+            });
+
             Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
             Static.OnActivityChanged += OnActivityChanged;
             Static.OnActivitiesChanged += () =>

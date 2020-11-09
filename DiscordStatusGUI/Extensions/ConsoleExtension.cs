@@ -14,6 +14,7 @@ namespace DiscordStatusGUI.Extensions
     {
         public const string Info = "Info";
         public const string WebSocket = "DiscordWebSocket";
+        public const string WebSocketServer = "WebSocketServer";
         public const string Warning = "Warning";
         public const string Warface = "Warface";
         public const string Message = "Message";

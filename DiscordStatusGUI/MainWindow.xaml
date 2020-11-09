@@ -44,6 +44,8 @@
             <views:Initialization x:Name="initialization"/>
 
             <ContentControl x:Name="messagebox"/>
+
+            <ContentControl x:Name="datetimepicker"/>
         </Grid>
 
         <views:TopPanel x:Name="toppanel"/>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -8,8 +9,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Baml2006;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Markup.Localizer;
 using System.Windows.Media;
 using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
@@ -40,6 +43,7 @@ namespace DiscordStatusGUI
 
         public static void Init()
         {
+            DiscordTheme = Application.Current.Resources;
             Tabs = new System.Collections.ObjectModel.ObservableCollection<Models.VerticalTabItem>()
             {
                 new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new Views.Tabs.GameStatus()),
@@ -48,6 +52,8 @@ namespace DiscordStatusGUI
                 new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Views.Tabs.Warface())
             };
         }
+
+        public static ResourceDictionary DiscordTheme { get; private set; }
 
         #region Activity
         private static Activity[] _Activities;
@@ -357,7 +363,8 @@ namespace DiscordStatusGUI
         public struct Dialogs
         {
             //Dialogs.MessageBoxShow("Hello", "Click Ok", new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/Tabs/Command.png");
-            public static  bool IsMessageBoxShowed { get; private set; } = false;
+            public static bool IsMessageBoxShowed { get; private set; } = false;
+            public static bool IsDateTimePickerShowed { get; private set; } = false;
 
             public static void MessageBoxShow(string title = "", string text = "", ObservableCollection<ButtonItem> buttons = null, HorizontalAlignment buttonsaligment = HorizontalAlignment.Right, Action back = null, string imagepath = "", double imagescale = 0.5, double width = 440, double height = 160)
             {
@@ -400,13 +407,61 @@ namespace DiscordStatusGUI
             }
 
 
+            public static void DateTimePickerShow(DateTime dt, ObservableCollection<ButtonItem> buttons = null, HorizontalAlignment buttonsaligment = HorizontalAlignment.Right, Action back = null, string imagepath = "", double imagescale = 0.5, double width = 440, double height = 160)
+            {
+                MainWindow.Dispatcher.Invoke(() =>
+                {
+                    var msg = new Views.Dialogs.DateTimePicker();
+                    var dc = (msg.DataContext as DateTimePickerViewModel);
+                    dc.BackCommand = new Command(back);
+                    dc.Buttons = buttons;
+                    dc.ButtonsAligment = buttonsaligment;
+                    dc.Width = width;
+                    dc.Height = height;
+                    dc.SetDateTime(dt);
+                    MainWindow.datetimepicker.Content = msg;
+                    if (!IsDateTimePickerShowed)
+                    {
+                        Animations.VisibleOnZoom((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body).Begin();
+                        Animations.VisibleOnOpacity((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background).Begin();
+                    }
+                    else
+                    {
+                        (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body.Visibility = Visibility.Visible;
+                        (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background.Visibility = Visibility.Visible;
+                    }
+                    IsDateTimePickerShowed = true;
+                });
+            }
+
+            public static void DateTimePickerHide()
+            {
+                MainWindow.Dispatcher.Invoke(() =>
+                {
+                    Animations.VisibleOffZoom((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body).Begin();
+                    Animations.VisibleOffOpacity((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background).Begin();
+                    IsDateTimePickerShowed = false;
+                });
+            }
+
+            public static DateTime? GetLastDateTime()
+            {
+                var vm = ((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).DataContext as DateTimePickerViewModel);
+                return vm?.GetDateTime();
+            }
+
 
             public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, "Ok"); }
+            public static ButtonItem ButtonApply { get => new ButtonItem(DateTimePickerHide, "Apply"); }
         }
 
         public delegate void OnMouseButtonClickEventHandler(int x, int y, MouseButton button);
         public static event OnMouseButtonClickEventHandler OnMouseButtonClick;
         public static void MouseButtonClick(int x, int y, MouseButton button) => OnMouseButtonClick?.Invoke(x, y, button);
+
+        public delegate void OnMouseMoveEventHandler(int x, int y);
+        public static event OnMouseMoveEventHandler OnMouseMove;
+        public static void MouseMove(int x, int y) => OnMouseMove?.Invoke(x, y);
 
 
         public static void DiscordLoginSuccessful()

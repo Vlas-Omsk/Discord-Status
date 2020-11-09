@@ -11,7 +11,9 @@ namespace DiscordStatusGUI
     public class RegistryCommands
     {
         public static string CurrentExe => Environment.GetCommandLineArgs()[0];
+        public static string Protocol => protocol + "://";
 
+        private static readonly string protocol = $"discordstatus";
         private static readonly string open_command = $"\"{CurrentExe}\" --url \"%1\"";
         private static readonly string autorun_command = $"\"{CurrentExe}\" --tray";
         private static readonly RegistryKey CLASSES_ROOT = Registry.ClassesRoot;
@@ -26,7 +28,7 @@ namespace DiscordStatusGUI
         {
             if (!IsProtocolRegistered())
             {
-                var discordstatus = CLASSES_ROOT.CreateSubKey("discordstatus");
+                var discordstatus = CLASSES_ROOT.CreateSubKey(protocol);
                 var shell = discordstatus.CreateSubKey("shell");
                 var command = shell.CreateSubKey("open").CreateSubKey("command");
 

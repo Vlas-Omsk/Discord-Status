@@ -1,0 +1,147 @@
+﻿<UserControl x:Class="DiscordStatusGUI.Views.Dialogs.DateTimePicker"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:local="clr-namespace:DiscordStatusGUI.Views"
+       xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
+             xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
+             xmlns:dialogs="clr-namespace:DiscordStatusGUI.ViewModels.Dialogs"
+             xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+       mc:Ignorable="d" 
+       d:DesignWidth="800" d:DesignHeight="450">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
+                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <UserControl.DataContext>
+        <dialogs:DateTimePickerViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Content>
+        <Grid>
+            <Rectangle x:Name="background" Fill="#CC1D1D1D" Visibility="Visible" PreviewMouseLeftButtonUp="{converters:EventBinding Command=BackCommand}"/>
+            <Grid x:Name="body" Height="160" Width="440" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Border Background="#FF36393F" CornerRadius="7,7,0,0"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.ColumnSpan="2" Content="Date time picker" Foreground="White" Margin="16,0" FontSize="16" FontWeight="Bold"/>
+                    <Grid Grid.Row="1">
+                        <Ellipse x:Name="ClockBody" Width="{Binding ElementName=ClockBody, Path=ActualHeight}" Margin="8" Fill="#FF2F3136" Stroke="Black" StrokeThickness="0.2"/>
+                        <Border x:Name="HourArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Width="5" Height="30" Margin="0,0,0,30" RenderTransformOrigin="0.5,1" Background="#FFD0D1D3" MouseLeftButtonDown="HourArrow_MouseLeftButtonDown">
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="{Binding HourArrowAngle}"/>
+                            </Border.RenderTransform>
+                        </Border>
+                        <Border x:Name="MinuteArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Width="3" Height="50" Margin="0,0,0,50" RenderTransformOrigin="0.5,1" Background="#FFD0D1D3" MouseLeftButtonDown="MinuteArrow_MouseLeftButtonDown">
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="{Binding MinuteArrowAngle}"/>
+                            </Border.RenderTransform>
+                        </Border>
+                        <Border x:Name="SecondArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Width="3" Height="50" Margin="0,0,0,50" RenderTransformOrigin="0.5,1" Background="#FFD1181C" MouseLeftButtonDown="SecondArrow_MouseLeftButtonDown" CornerRadius="20,20,0,0">
+                            <Border.RenderTransform>
+                                <RotateTransform Angle="{Binding SecondArrowAngle}"/>
+                            </Border.RenderTransform>
+                        </Border>
+                        <Ellipse Width="6" Height="6" Fill="#FFD0D1D3"/>
+                    </Grid>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style x:Key="ComboBoxDiscord2" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxDiscord}">
+                                    <Setter Property="Height" Value="30"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <TextBlock Text=" H: " Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Hours}"   SelectedIndex="{Binding SelectedHour}"/>
+                            <TextBlock Text=" M: " Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="3" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Minutes}" SelectedIndex="{Binding SelectedMinute}"/>
+                            <TextBlock Text=" S: " Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="5" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Seconds}" SelectedIndex="{Binding SelectedSecond}"/>
+                        </Grid>
+                        <Grid Grid.Row="1" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <Style x:Key="ComboBoxDiscord2" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxDiscord}">
+                                    <Setter Property="Height" Value="30"/>
+                                </Style>
+                            </Grid.Resources>
+
+                            <TextBlock Text=" D: " Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Days}"   SelectedIndex="{Binding SelectedDay}"/>
+                            <TextBlock Text=" M: " Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="3" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Months}" SelectedIndex="{Binding SelectedMonth}"/>
+                            <TextBlock Text=" Y: " Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="5" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Years}"  SelectedIndex="{Binding SelectedYear}"/>
+                        </Grid>
+                    </Grid>
+                    <!--<Image Grid.Row="1" Source="{Binding ImagePath}" RenderTransformOrigin="0.5,0.5">
+                        <Image.RenderTransform>
+                            <ScaleTransform ScaleX="{Binding ImageScale}" ScaleY="{Binding ImageScale}"/>
+                        </Image.RenderTransform>
+                    </Image>
+                    <controls:SmoothScrollViewer Grid.Column="1" Style="{StaticResource SmoothScrollViewerStyle}" Grid.Row="1" CanContentScroll="False" Margin="10,0,10,5">
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Text}" Foreground="#FFD0D1D3" FontSize="13"/>
+                    </controls:SmoothScrollViewer>-->
+                </Grid>
+                <Border Background="#FF2F3136" CornerRadius="0,0,7,7" Grid.Row="1"/>
+                <ListView Grid.Row="1" BorderThickness="0" Foreground="Transparent" Background="Transparent" ItemsSource="{Binding Buttons}">
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="{Binding ButtonsAligment}"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Margin" Value="5"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Button Style="{Binding Style}" Padding="16, 5, 16, 5" Command="{Binding ClickCommand}" Content="{Binding Text}"/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </Grid>
+    </UserControl.Content>
+</UserControl>

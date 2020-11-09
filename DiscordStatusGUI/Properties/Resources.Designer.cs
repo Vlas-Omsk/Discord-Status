@@ -161,6 +161,21 @@ namespace DiscordStatusGUI.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;ResourceDictionary xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        ///                    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        ///                    xmlns:local=&quot;clr-namespace:DiscordStatusGUI.Themes&quot;
+        ///                    xmlns:controls=&quot;clr-namespace:DiscordStatusGUI.Controls&quot;
+        ///                    xmlns:converters=&quot;clr-namespace:DiscordStatusGUI.Converters&quot; xmlns:Themes=&quot;clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2&quot;&gt;
+        ///
+        ///    &lt;Style x:Key=&quot;Repe [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string DiscordTheme {
+            get {
+                return ResourceManager.GetString("DiscordTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
         /// </summary>
         internal static System.Drawing.Icon logo {

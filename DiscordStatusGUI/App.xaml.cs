@@ -41,8 +41,12 @@ namespace DiscordStatusGUI
             Directory.SetCurrentDirectory(CurrentDir);
             ConsoleEx.WriteLine(ConsoleEx.Info, "Working directory: " + Directory.GetCurrentDirectory());
 
+            InitializeComponent();
+
             Locales.Lang.Init();
             Static.Init();
+
+            Preferences.OpenLocalServer();
         }
 
         private void CheckCopy()

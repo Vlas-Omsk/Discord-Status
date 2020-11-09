@@ -196,14 +196,14 @@
                                 </Grid>
                             </TabItem>
                         </TabControl>
-                        <Rectangle Grid.Row="1" Grid.RowSpan="2" IsHitTestVisible="False">
-                            <Rectangle.Fill>
+                        <Border Grid.Row="1" Grid.RowSpan="2" CornerRadius="0,0,5,5" IsHitTestVisible="False">
+                            <Border.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0.5">
                                     <GradientStop Color="Black" Offset="1"/>
                                     <GradientStop Color="#00000000"/>
                                 </LinearGradientBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
+                            </Border.Background>
+                        </Border>
                     </Grid>
 
                     <Grid x:Name="Options" Grid.Row="2" Grid.ColumnSpan="2">
@@ -300,10 +300,26 @@
                         <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
                         <!-- 2, 0 -->
                         <TextBlock Text="START TIMESTAMP" Grid.Column="0" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="StartTime" Grid.Column="0" Grid.Row="3" Style="{StaticResource Field}" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Grid Grid.Column="0" Grid.Row="3" Margin="10,28,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBox Name="StartTime" Style="{StaticResource Field}" Margin="0" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1" Style="{StaticResource BlueButton}" Padding="5" Content="🕔" Margin="5,0,0,0" Command="{Binding ShowDateTimePickerCommand}" CommandParameter="StartTime"/>
+                        </Grid>
                         <!-- 2, 1 -->
                         <TextBlock Text="END TIMESTAMP" Grid.Column="1" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="EndTime" Grid.Column="1" Grid.Row="3" Style="{StaticResource Field}" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Grid Grid.Column="1" Grid.Row="3" Margin="10,28,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Name="EndTime" Style="{StaticResource Field}" Margin="0" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1" Style="{StaticResource BlueButton}" Padding="5" Content="🕔" Margin="5,0,0,0" Command="{Binding ShowDateTimePickerCommand}" CommandParameter="EndTime"/>
+                        </Grid>
                         <!-- 3, 0 -->
                         <TextBlock Text="PARTY SIZE" Grid.Column="0" Grid.Row="4" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="PartySize" Grid.Column="0" Grid.Row="4" Style="{StaticResource Field}" Text="{Binding PartySize, UpdateSourceTrigger=PropertyChanged}"/>
