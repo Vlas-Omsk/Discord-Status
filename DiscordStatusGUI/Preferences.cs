@@ -94,7 +94,7 @@ namespace DiscordStatusGUI
                         Discord = new
                         {
                             IsDiscordConnected,
-                            token = Discord_Token
+                            token = AES.EncryptString(Discord_Token, "Some kind of password")
                         },
                         Warface = new
                         {
@@ -115,7 +115,7 @@ namespace DiscordStatusGUI
                     File.WriteAllText("preferences.json", propjson.ToFormatString());
                 } catch (Exception ex)
                 {
-                    ConsoleEx.WriteLine(ConsoleEx.Warning, $"Preferences.Save() Error {ex.HResult}");
+                    ConsoleEx.WriteLine(ConsoleEx.Warning, $"Preferences.Save() -> Error {ex.HResult}");
                 }
             });
         }
@@ -139,7 +139,7 @@ namespace DiscordStatusGUI
                     });
                     State = (int)propjson["Window"]["State"].Value;
 
-                    Discord_Token = propjson["Accounts"]["Discord"]["token"].Value?.ToString();
+                    Discord_Token = AES.DecryptString(propjson["Accounts"]["Discord"]["token"].Value?.ToString(), "Some kind of password");
                     CurrentUserStatus = (int)propjson["CurrentUserStatus"].Value;
                     CurrentActivityIndex = (int)propjson["CurrentActivityIndex"].Value;
                     FastGameClientClose = (bool)propjson["FastGameClientClose"].Value;
@@ -147,7 +147,7 @@ namespace DiscordStatusGUI
 
                     IsDiscordConnected = (bool)propjson["Accounts"]["Discord"]["IsDiscordConnected"].Value;
                 }
-                catch
+                catch (Exception ex)
                 {
                     var name = "preferences";
                     int i = 1;

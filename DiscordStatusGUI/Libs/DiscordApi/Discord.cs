@@ -13,6 +13,8 @@ using WebSocketSharp;
 using DiscordStatusGUI.Extensions;
 using PinkJson.Parser;
 using System.Security.Cryptography;
+using System.Security.RightsManagement;
+using System.Security;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
@@ -66,14 +68,38 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
                 return null;
             }
+
+            public static JsonObjectArray GetAppAssets(string appId)
+            {
+                var response = WEB.Get("https://discord.com/api/v6/oauth2/applications/" + appId + "/assets");
+                if (_LastAppAssetsResponse != response)
+                {
+                    try
+                    {
+                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssetsResponse = response;
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                }
+                return _LastAppAssets;
+            }
         }
 
         public DiscordSocket Socket;
         public string Email = "";
         public string Password = "";
-        public string Token;
         public string Phone { get; private set; }
         public string LastError { get; private set; }
+
+        private SecureString _Token = new SecureString();
+        public string Token
+        {
+            get => _Token.Get();
+            set => _Token.Set(value);
+        }
 
         private string _Ticket = "";
 
@@ -153,6 +179,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 else
                 {
                     Token = respJson["token"].Value.ToString();
+                    Email = Password = "";
                     return AuthErrors.Successful;
                 }
             }
@@ -188,6 +215,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 }
 
                 Token = respJson["token"].Value.ToString();
+                Email = Password = "";
                 return MFAuthErrors.Successful;
             }
             catch (Exception ex)

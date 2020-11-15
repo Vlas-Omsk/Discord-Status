@@ -139,7 +139,8 @@ namespace DiscordStatusGUI.Views.Tabs
         private void Field_TextChanged(object sender, TextChangedEventArgs e)
         {
             var field = e.OriginalSource as TextBox;
-            var activity_value = ActivityFields.Where(x => x.Name.Contains($"<{field.Name}>")).Single().GetValue(Static.CurrentActivity.SavedState)?.ToString();
+            var name = field.TemplatedParent is ComboBox ? (field.TemplatedParent as ComboBox).Name : field.Name;
+            var activity_value = ActivityFields.Where(x => x.Name.Contains($"<{name}>")).Single().GetValue(Static.CurrentActivity.SavedState)?.ToString();
             if ((field.Text == "" ? null : field.Text) != activity_value)
             {
                 IsChanged = true;

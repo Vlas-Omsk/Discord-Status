@@ -60,7 +60,7 @@
                         </Border>
                         <Ellipse Width="6" Height="6" Fill="#FFD0D1D3"/>
                     </Grid>
-                    <Grid Grid.Row="1" Grid.Column="1">
+                    <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,10,0">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>

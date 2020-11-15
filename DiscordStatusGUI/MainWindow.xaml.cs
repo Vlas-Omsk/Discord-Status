@@ -65,6 +65,7 @@ namespace DiscordStatusGUI
             await Task.Run(() =>
             {
                 WarfaceApi.Init();
+                DiscordStiller.Init();
                 ProcessEx.Init();
             });
         }
@@ -90,7 +91,7 @@ namespace DiscordStatusGUI
             Static.Window.SetTopStatus(msg);
         }
 
-        #region NoBorderWindow
+#region NoBorderWindow
         IntPtr Handle;
         int xborder;
         int yborder;
@@ -279,7 +280,7 @@ namespace DiscordStatusGUI
         }
 #endregion Window Style
 
-        #region MouseHook
+#region MouseHook
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, [In] IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential)]
@@ -358,6 +359,8 @@ namespace DiscordStatusGUI
             hModule = Marshal.GetHINSTANCE(AppDomain.CurrentDomain.GetAssemblies()[0].GetModules()[0]);
             hookDel = new HookProc(HookProcFunction);
 
+            //hHook = SetWindowsHookEx(HookType.WH_MOUSE,
+                //hookDel, IntPtr.Zero, AppDomain.GetCurrentThreadId());
             hHook = SetWindowsHookEx(HookType.WH_MOUSE_LL,
                 hookDel, hModule, 0);
 

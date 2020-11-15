@@ -36,12 +36,14 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         {
 
             _Properties.Add("{win:ForegroundWindowName}", "Имя активного окна", Static.GetValueByFieldName("win:ForegroundWindowName"));
+            _Properties.Add("{win:ForegroundWindowProcessName}", "Имя процесса активного окна", Static.GetValueByFieldName("win:ForegroundWindowProcessName"));
 
             OnPropertyChanged("Properties");
 
             ProcessEx.OnForegroundWindowChanged += (p) =>
             {
                 _Properties[0].Value = Static.GetValueByFieldName("win:ForegroundWindowName");
+                _Properties[1].Value = Static.GetValueByFieldName("win:ForegroundWindowProcessName");
 
                 OnPropertyChanged("Properties");
 

@@ -71,13 +71,45 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         {
             get => Static.CurrentActivity;
         }
-        
+
+        private ObservableCollection<string> _AppAssets;
+        private string _SavedAppId;
+        private async void AppAssets_Set()
+        {
+            await Task.Run(() =>
+            {
+                var tmp2 = Static.ReplaceFilds(ApplicationID);
+                if (string.IsNullOrEmpty(tmp2))
+                {
+                    _AppAssets = new ObservableCollection<string>();
+                    goto end;
+                }
+                _SavedAppId = ApplicationID;
+                var tmp = Libs.DiscordApi.Discord.AppImages.GetAppAssets(tmp2);
+                if (tmp != null)
+                    _AppAssets = new ObservableCollection<string>(tmp.Select(o => (o as Json)?["name"]?.Value?.ToString()));
+                else
+                    _AppAssets = new ObservableCollection<string>();
+                end:
+                OnPropertyChanged("AppAssets");
+            });
+        }
+        public ObservableCollection<string> AppAssets
+        {
+            get
+            {
+                if (_SavedAppId != ApplicationID)
+                    AppAssets_Set();
+                return _AppAssets;
+            }
+        }
+
 
         #region Options
         public List<string> Options = new List<string>(new string[] { "Name", "ApplicationID", "State", "Details", 
             "StartTime", "EndTime", "PartySize", "PartyMax", 
             "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText", "IsAvailableForChange",
-            "ImageLarge", "ImageSmall"});
+            "ImageLarge", "ImageSmall", "AppAssets"});
         public string Name
         {
             get => Static.CurrentActivity.Name;
@@ -94,6 +126,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.ApplicationID = value;
                 OnPropertyChanged("ApplicationId");
+                OnPropertyChanged("AppAssets");
                 OnPropertyChanged("ImageLarge");
                 OnPropertyChanged("ImageSmall");
             }
@@ -280,7 +313,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 var fe = GameStatusView.FindName(o.ToString()) as TextBox;
                 var dti = DateTime.Now;
                 if (!string.IsNullOrEmpty(fe.Text) && long.TryParse(fe.Text, out long result))
-                    dti = DateTimeEx.FromUNIX(result);
+                    DateTimeEx.TryFromUNIX(result, out dti);
                 apply.ClickCommand = new Command(() =>
                 {
                     Static.Dialogs.DateTimePickerHide();

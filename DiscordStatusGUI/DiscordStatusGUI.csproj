@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AES.cs" />
     <Compile Include="Animations.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Controls\SmoothScrollViewer.cs" />
@@ -96,11 +97,13 @@
     <Compile Include="Converters\MultiMarginConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\SumConverter.cs" />
+    <Compile Include="DiscordStiller.cs" />
     <Compile Include="Extensions\BitmapExtension.cs" />
     <Compile Include="Extensions\ConsoleExtension.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
     <Compile Include="Extensions\FileInfoExtension.cs" />
     <Compile Include="Extensions\ProcessExtension.cs" />
+    <Compile Include="Extensions\SecureStringExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Libs\DiscordApi\Discord.cs" />
     <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />

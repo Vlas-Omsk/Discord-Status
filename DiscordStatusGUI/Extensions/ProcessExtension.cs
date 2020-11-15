@@ -13,11 +13,7 @@ namespace DiscordStatusGUI.Extensions
 {
     class ProcessEx
     {
-#if DEBUG
-        [DllImport(@"G:\GitBuh\GetProcessCommandLine\Release\ProcessCommandLine.dll")]
-#else
-        [DllImport(@"ProcessCommandLine.dll")]
-#endif
+        [DllImport(@"DiscordStatusGUI.CPP.dll")]
         static extern IntPtr GetProcessCommandLineByPid(int pid, out long ntstatus);
 
         public static string GetProcessCommandLine(int pid, out long ntstatus)
@@ -98,8 +94,8 @@ namespace DiscordStatusGUI.Extensions
         private static void _ProcessTracking_Update()
         {
             var processes = Process.GetProcesses();
-            var openedprocess = new List<Process>();
-            var closedprocess = new List<Process>();
+            var openedprocess = new Processes();
+            var closedprocess = new Processes();
 
             for (var i = 0; i < processes?.Length; i++)
             {
@@ -129,10 +125,10 @@ namespace DiscordStatusGUI.Extensions
         }
 
 
-        public delegate void OnProcessStartedEventHandler(List<Process> processes);
+        public delegate void OnProcessStartedEventHandler(Processes processes);
         public static event OnProcessStartedEventHandler OnProcessOpened;
 
-        public delegate void OnProcessClosedEventHandler(List<Process> processes);
+        public delegate void OnProcessClosedEventHandler(Processes processes);
         public static event OnProcessClosedEventHandler OnProcessClosed;
         #endregion
 
@@ -156,7 +152,14 @@ namespace DiscordStatusGUI.Extensions
             int pid;
             GetWindowThreadProcessId(window, out pid);
             if (_LatestForegroundWindow != window || ForegroundWindowProcess?.MainWindowTitle != Process.GetProcessById(pid)?.MainWindowTitle)
-                OnForegroundWindowChanged?.Invoke(ForegroundWindowProcess = Process.GetProcessById(pid));
+                try
+                {
+                    OnForegroundWindowChanged?.Invoke(ForegroundWindowProcess = Process.GetProcessById(pid));
+                } catch
+                {
+                    OnForegroundWindowChanged?.Invoke(ForegroundWindowProcess = new Process());
+                }
+
 
             _LatestForegroundWindow = window;
         }
@@ -165,5 +168,22 @@ namespace DiscordStatusGUI.Extensions
         public delegate void OnForegroundWindowChangedEventHandler(Process process);
         public static event OnForegroundWindowChangedEventHandler OnForegroundWindowChanged;
         #endregion
+    }
+
+    class Processes : List<Process>
+    {
+        public Processes GetProcessesByNames(params string[] name)
+        {
+            var current = Process.GetCurrentProcess();
+            var processes = new Processes();
+            foreach (var process in this)
+                try
+                {
+                    if (name.Contains(process.ProcessName) && process.Id != current.Id)
+                        processes.Add(process);
+                }
+                catch { }
+            return processes;
+        }
     }
 }

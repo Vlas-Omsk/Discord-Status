@@ -59,16 +59,10 @@ namespace DiscordStatusGUI
             ProcessEx.OnProcessOpened += ProcessEx_OnProcessOpened;
         }
 
-        private static void ProcessEx_OnProcessOpened(List<Process> processes)
+        private static void ProcessEx_OnProcessOpened(Processes processes)
         {
-            Process ProcessCopy = null, current = Process.GetCurrentProcess();
-            foreach (var process in processes)
-                if (process.ProcessName == current.ProcessName && process.Id != current.Id)
-                {
-                    ProcessCopy = process;
-                    break;
-                }
-            if (ProcessCopy is null)
+            Process current = Process.GetCurrentProcess(), ProcessCopy = processes.GetProcessesByNames(current.ProcessName).FirstOrDefault();
+            if (ProcessCopy == null || ProcessCopy.HasExited)
                 return;
 
             var cmdline = ProcessEx.GetProcessCommandLine(ProcessCopy.Id, out _);

@@ -235,6 +235,18 @@
                                 <Setter Property="Margin" Value="10,28,10,10"/>
                                 <EventSetter Event="TextChanged" Handler="Field_TextChanged"/>
                             </Style>
+                            <Style x:Key="ComboBoxField" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxDiscord}">
+                                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Padding" Value="7"/>
+                                <Setter Property="Margin" Value="10,28,10,10"/>
+                                <Setter Property="Height" Value="35"/>
+                                <Setter Property="BorderBrush" Value="#FFABAdB3"/>
+                                <Setter Property="IsEditable" Value="True"/>
+                                <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemDiscord}"/>
+                                <Setter Property="IsTextSearchEnabled" Value="True"/>
+                                <EventSetter Event="TextBoxBase.TextChanged" Handler="Field_TextChanged"/>
+                            </Style>
                             <Style x:Key="FieldHelp" TargetType="Path">
                                 <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
                                 <Setter Property="Fill" Value="#FF72767D"/>
@@ -329,14 +341,14 @@
                         <!-- 4, 0 -->
                         <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageLargeKey" Grid.Column="0" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <ComboBox Name="ImageLargeKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="5" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
                         <!-- 4, 1 -->
                         <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageLargeText" Grid.Column="1" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeText, UpdateSourceTrigger=PropertyChanged}"/>
                         <!-- 5, 0 -->
                         <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="6"  Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ImageSmallKey" Grid.Column="0" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <ComboBox Name="ImageSmallKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="6" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>

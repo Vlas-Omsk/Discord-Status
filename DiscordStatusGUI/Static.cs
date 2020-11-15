@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Baml2006;
@@ -38,8 +37,8 @@ namespace DiscordStatusGUI
 
         public static string Titile = "Discord Status";
         public static ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
-
         public static ObservableCollection<VerticalTabItem> Tabs;
+        public static ResourceDictionary DiscordTheme { get; private set; }
 
         public static void Init()
         {
@@ -52,8 +51,6 @@ namespace DiscordStatusGUI
                 new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Views.Tabs.Warface())
             };
         }
-
-        public static ResourceDictionary DiscordTheme { get; private set; }
 
         #region Activity
         private static Activity[] _Activities;
@@ -118,6 +115,7 @@ namespace DiscordStatusGUI
                 case "wf:PlayerUserID": return WarfaceApi.CurrentPlayer.Uid.ToString();
 
                 case "win:ForegroundWindowName": return ProcessEx.ForegroundWindowProcess?.MainWindowTitle;
+                case "win:ForegroundWindowProcessName": return ProcessEx.ForegroundWindowProcess?.ProcessName;
             }
 
             return "You are idiot?";
@@ -144,6 +142,7 @@ namespace DiscordStatusGUI
 
         public static string ReplaceFilds(string value)
         {
+            value = value ?? "";
             var pattern = @"\{(.*?)\}";
             var matches = Regex.Matches(value, pattern);
 
@@ -348,10 +347,7 @@ namespace DiscordStatusGUI
 
             private static void OnFirstInitialization()
             {
-                if (!string.IsNullOrEmpty(Discord?.Token))
-                    DiscordLoginSuccessful();
-                else
-                    CurrentPage = new Login();
+                DiscordLoginSuccessful();
 
                 FirstInitialization?.Invoke();
             }
@@ -472,14 +468,18 @@ namespace DiscordStatusGUI
                     MainWindow.ReplaceWithWaves(new VerticalTabControl());
                     Accounts.Discord = true;
                 });
-            else
+            else if (!string.IsNullOrEmpty(Discord?.Token))
             {
                 Dialogs.MessageBoxShow("Oops...", "It seems your Discord token is not valid. Try logging into your Discord account again.", new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
                 MainWindow.Dispatcher.Invoke(() =>
                 {
                     CurrentPage = new Login();
                 });
-            }
+            } else
+                MainWindow.Dispatcher.Invoke(() =>
+                {
+                    CurrentPage = new Login();
+                });
         }
 
         public static UserControl CurrentPage

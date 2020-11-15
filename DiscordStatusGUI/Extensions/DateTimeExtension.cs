@@ -14,6 +14,16 @@ namespace DiscordStatusGUI.Extensions
             return dt2.ToUnixTimeMilliseconds();
         }
 
+        public static bool TryFromUNIX(long unix, out DateTime result)
+        {
+            try
+            {
+                result = FromUNIX(unix);
+                return true;
+            }
+            catch { result = DateTime.Now; return false; }
+        }
+
         public static DateTime FromUNIX(long unix)
         {
             DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);

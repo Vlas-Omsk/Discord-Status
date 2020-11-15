@@ -52,16 +52,9 @@ namespace DiscordStatusGUI.Libs
             Static.InitializationSteps.IsWarfaceApiInitialized = true;
         }
 
-        private static void ProcessEx_OnProcessClosed(List<Process> processes)
+        private static void ProcessEx_OnProcessClosed(Processes processes)
         {
-            var exit = true;
-            foreach (var process in processes)
-                if (process.ProcessName == "Game")
-                {
-                    exit = false;
-                    break;
-                }
-            if (exit)
+            if (processes.GetProcessesByNames("Game", "GameDX11").Count == 0)
                 return;
 
             ConsoleEx.WriteLine(ConsoleEx.Warning, "GameLogFile.OnTextChanged Stopped");
@@ -70,20 +63,11 @@ namespace DiscordStatusGUI.Libs
             OnGameProcessStateChanged?.Invoke(false);
         }
 
-        private static void ProcessEx_OnProcessOpened(List<System.Diagnostics.Process> processes)
+        private static void ProcessEx_OnProcessOpened(Processes processes)
         {
             if (GameProcess == null || GameProcess.HasExited)
             {
-                foreach (var process in processes)
-                    try
-                    {
-                        if (process.ProcessName == "Game")
-                        {
-                            GameProcess = process;
-                            break;
-                        }
-                    }
-                    catch { }
+                GameProcess = processes.GetProcessesByNames("Game", "GameDX11").FirstOrDefault();
 
                 if (GameProcess != null && !GameProcess.HasExited)
                 {
