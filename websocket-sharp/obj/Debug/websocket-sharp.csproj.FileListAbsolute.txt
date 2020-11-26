@@ -9,3 +9,9 @@ G:\GitBuh\Discord_Status\websocket-sharp\bin\Debug\websocket-sharp.pdb
 G:\GitBuh\Discord_Status\websocket-sharp\obj\Debug\websocket-sharp.csproj.CoreCompileInputs.cache
 G:\GitBuh\Discord_Status\websocket-sharp\obj\Debug\websocket-sharp.dll
 G:\GitBuh\Discord_Status\websocket-sharp\obj\Debug\websocket-sharp.pdb
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\bin\Debug\websocket-sharp.dll
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\bin\Debug\websocket-sharp.pdb
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\obj\Debug\websocket-sharp.csproj.CoreCompileInputs.cache
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\obj\Debug\websocket-sharp.dll
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\obj\Debug\websocket-sharp.pdb
+G:\CSharp\_WPF\DiscordStatusGUI\websocket-sharp\obj\Debug\websocket-sharp.csprojAssemblyReference.cache

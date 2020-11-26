@@ -1,14 +1,15 @@
-﻿using System;
+﻿using DiscordStatusGUI.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Runtime.InteropServices;
-using System.Collections;
+using System.Diagnostics;
+using System.Threading;
 
 namespace DiscordStatusGUI
 {
@@ -17,58 +18,58 @@ namespace DiscordStatusGUI
     /// </summary>
     public partial class App : Application
     {
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
+        //[DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        //[return: MarshalAs(UnmanagedType.Bool)]
+        //static extern bool SetDllDirectory(string lpPathName);
+        //var dllDirectory = CurrentDir + "\\libs";
+        //SetDllDirectory(dllDirectory);
+        //Environment.SetEnvironmentVariable("PATH", Environment.GetEnvironmentVariable("PATH") + ";" + dllDirectory);
+        //Environment.SetEnvironmentVariable("Path", Environment.GetEnvironmentVariable("Path") + ";" + CurrentDir + @"\libs");
+        //ConsoleEx.WriteLine("Info", "Libs directory: " + CurrentDir + @"\libs");
 
         public App()
         {
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            AppDomain.CurrentDomain.ProcessExit += (a, b) => { c.save(); };
+            Console.Write($"[{ConsoleEx.Info}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   STARTED\r\n");
 
-            var proc = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName).OfType<Process>().ToList();
-            if (proc.Count > 1)
-            {
-                foreach (var p in proc)
-                {
-                    ShowWindow(p.MainWindowHandle, 1);
-                    SetForegroundWindow(p.MainWindowHandle);
-                }
-                Shutdown();
-            }
+            CheckCopy();
+
+            string CurrentExe = Environment.GetCommandLineArgs()[0];
+            string CurrentDir = Path.GetDirectoryName(CurrentExe);
+
+            ConsoleEx.InitLogger();
+
+            Directory.SetCurrentDirectory(CurrentDir);
+            ConsoleEx.WriteLine(ConsoleEx.Info, "Working directory: " + Directory.GetCurrentDirectory());
+
+            InitializeComponent();
+
+            Locales.Lang.Init();
+            Static.Init();
+
+            Preferences.OpenLocalServer();
         }
 
-        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void CheckCopy()
         {
-            crit(e.ExceptionObject as Exception);
+            var processes = Process.GetProcessesByName(Process.GetCurrentProcess().ProcessName);
+
+            while (processes.Length > 1)
+                Thread.Sleep(100);
+
+            ProcessEx.OnProcessOpened += ProcessEx_OnProcessOpened;
         }
 
-        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private static void ProcessEx_OnProcessOpened(Processes processes)
         {
-            crit(e.Exception);
-        }
+            Process current = Process.GetCurrentProcess(), ProcessCopy = processes.GetProcessesByNames(current.ProcessName).FirstOrDefault();
+            if (ProcessCopy == null || ProcessCopy.HasExited)
+                return;
 
-        void crit (Exception ex)
-        {
-            var result = "";
-            foreach (DictionaryEntry obj in ex.Data)
-            {
-                result += "  " + obj.Key;
-            }
-
-            c.crit($"\r\n-----------------------BEGIN-------------------------" +
-                   $"\r\n[MESSAGE]\r\n{ex.Message}" +
-                   $"\r\n[STACK TRACE]\r\n{ex.StackTrace}" +
-                   $"\r\n[SOURCE]\r\n{ex.Source}" +
-                   $"\r\n[TARGET SITE]\r\n{ex.TargetSite}" +
-                   $"\r\n[HRESULT]\r\n{ex.HResult}" +
-                   $"\r\n[DATA]\r\n{result}" +
-                   $"\r\n[HELP LINK]\r\n{ex.HelpLink}" +
-                   $"\r\n-------------------------END-------------------------");
+            var cmdline = ProcessEx.GetProcessCommandLine(ProcessCopy.Id, out _);
+            ConsoleEx.WriteLine(ConsoleEx.Info, $"\r\n    [{ProcessCopy.Id}] {ProcessCopy.ProcessName}\r\n    {cmdline}");
+            ProcessCopy.Kill();
+            var splittedcmdline = ProcessEx.SplitParams(cmdline);
+            Preferences.SetPropertiesByCmdLine(splittedcmdline);
         }
     }
 }

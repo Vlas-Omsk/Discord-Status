@@ -5,30 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Globalization;
-using PinkJson;
+using PinkJson.Parser;
 
-namespace DiscordStatusGUI.locales
+namespace DiscordStatusGUI.Locales
 {
     public static class JsonExtensions
     {
         public static string GetString(this Json resources, string resourceString, object resourceCulture)
         {
-            if (lang.CurrentLanguage != null && lang.CurrentLanguage.IndexByKey(resourceString) != -1)
-                return lang.CurrentLanguage[resourceString].Value;
+            if (Lang.CurrentLanguage != null && Lang.CurrentLanguage.IndexByKey(resourceString) != -1)
+                return Lang.CurrentLanguage[resourceString].Value.ToString();
             else
-                if (lang.DefaultLanguage != null && lang.DefaultLanguage.IndexByKey(resourceString) != -1)
-                    return lang.DefaultLanguage[resourceString].Value;
+                if (Lang.DefaultLanguage != null && Lang.DefaultLanguage.IndexByKey(resourceString) != -1)
+                    return Lang.DefaultLanguage[resourceString].Value.ToString();
                 else 
                     return $"\"{resourceString}\" resource not found";
         }
     }
 
-    class lang
+    class Lang
     {
 #if DEBUG
-        public static Json DefaultLanguage = new Json(File.ReadAllText(@"G:\GitBuh\Discord_Status\DiscordStatusGUI\locales\default.json"));
+        public static Json DefaultLanguage = LoadLocale(@"G:\CSharp\_WPF\DiscordStatusGUI\DiscordStatusGUI\locales\default.json");
 #else
-        public static Json DefaultLanguage = new Json(File.ReadAllText(@"locales\default.json"));
+        public static Json DefaultLanguage;
 #endif
         public static CultureInfo DefaultCultureInfo = CultureInfo.GetCultureInfo("en");
         public static Json CurrentLanguage = null;
@@ -47,15 +47,31 @@ namespace DiscordStatusGUI.locales
 
         public static void Init()
         {
+            Static.Discord.Language = string.Format("{0}, {1};q=0.9, en-US;q=0.8, en;q=0.7, *;q=0.6", CurrentCultureInfo.Name, CurrentCultureInfo.Parent.Name);
+            
             if (Directory.Exists("locales"))
+            {
+#if DEBUG
+#else
+                DefaultLanguage = LoadLocale(@"locales\default.json");
+#endif
+
                 if (File.Exists("locales\\" + CurrentCultureInfo.Name + ".json"))
                 {
-                    CurrentLanguage = new Json(File.ReadAllText("locales\\" + CurrentCultureInfo.Name + ".json"));
+                    CurrentLanguage = LoadLocale("locales\\" + CurrentCultureInfo.Name + ".json");
                 }
-                else if (File.Exists("locales\\" + CurrentCultureInfo.Parent + ".json"))
+                else if (File.Exists("locales\\" + CurrentCultureInfo.Parent.Name + ".json"))
                 {
-                    CurrentLanguage = new Json(File.ReadAllText("locales\\" + CurrentCultureInfo.Parent.Name + ".json"));
+                    CurrentLanguage = LoadLocale("locales\\" + CurrentCultureInfo.Parent.Name + ".json");
                 }
+            }
+
+            Static.InitializationSteps.IsLanguageInitialized = true;
+        }
+
+        private static Json LoadLocale(string path)
+        {
+            return new Json(File.ReadAllText(path));
         }
 
         /// <summary>

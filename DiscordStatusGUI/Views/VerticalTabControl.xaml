@@ -1,0 +1,242 @@
+﻿<UserControl x:Class="DiscordStatusGUI.Views.VerticalTabControl"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:local="clr-namespace:DiscordStatusGUI.Views"
+       xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
+             xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
+       mc:Ignorable="d" 
+       d:DesignHeight="450"
+       d:DesignWidth="72">
+    <UserControl.DataContext>
+        <viewmodels:VerticalTabControlViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="PopupTextPresenter" TargetType="{x:Type Popup}">
+            <Setter Property="StaysOpen" Value="True"/>
+            <Setter Property="Placement" Value="Right"/>
+            <Setter Property="AllowsTransparency" Value="True"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="Tag" Value="Close"/>
+        </Style>
+        <Style x:Key="VerticalListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Margin" Value="0,10,0,0"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Grid x:Name="templateRoot">
+                            <Grid.RenderTransform>
+                                <TranslateTransform Y="0"/>
+                            </Grid.RenderTransform>
+                            <Rectangle x:Name="background_rect" RadiusX="30" RadiusY="30" Fill="#FF36393F"/>
+                            <Grid x:Name="imageContainer" RenderTransformOrigin="0.5,0.5">
+                                <Grid.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Grid.RenderTransform>
+                                <Image Source="{Binding ImagePath}" RenderTransformOrigin="0.5,0.5">
+                                    <Image.RenderTransform>
+                                        <ScaleTransform ScaleY="{Binding Zoom}" ScaleX="{Binding Zoom}"/>
+                                    </Image.RenderTransform>
+                                </Image>
+                            </Grid>
+                            <Rectangle x:Name="mark" RadiusX="10" RadiusY="10" Fill="White" Height="20" Width="8" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5">
+                                <Rectangle.RenderTransform>
+                                    <TranslateTransform X="-20" Y="0"/>
+                                </Rectangle.RenderTransform>
+                            </Rectangle>
+
+                            <!--#region ContentPresenter-->
+                            <Popup x:Name="contentPopup" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
+                                <Grid Height="50">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid x:Name="contentPresenter" Grid.Row="1" RenderTransformOrigin="0,0.5">
+                                        <Grid.RenderTransform>
+                                            <TransformGroup>
+                                                <ScaleTransform ScaleX="0.7" ScaleY="0.7"/>
+                                                <SkewTransform/>
+                                                <RotateTransform/>
+                                                <TranslateTransform X="0" Y="0"/>
+                                            </TransformGroup>
+                                        </Grid.RenderTransform>
+                                        <Rectangle Fill="Black" HorizontalAlignment="Left" VerticalAlignment="Center" Height="5" Width="5" RenderTransformOrigin="0.5,0.5" >
+                                            <Rectangle.RenderTransform>
+                                                <RotateTransform Angle="45"/>
+                                            </Rectangle.RenderTransform>
+                                        </Rectangle>
+                                        <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Margin="2,0,0,0"/>
+                                        <TextBlock Padding="8,6" Margin="2,0,0,0" Text="{Binding Text}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                                    </Grid>
+                                </Grid>
+                            </Popup>
+                            <!--#endregion ContentPresenter-->
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <!--#region ContentPresenterTrigger-->
+                            <Trigger SourceName="contentPopup" Property="Tag" Value="Open">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="1" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter"  Duration="0:0:0.1" To="1" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter"  Duration="0:0:0.1" To="1" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPopup" Storyboard.TargetProperty="IsOpen">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.001">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <CorLib:Boolean>True</CorLib:Boolean>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="contentPresenter" Storyboard.TargetProperty="Opacity" Duration="0:0:0.1" To="0" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="contentPresenter"  Duration="0:0:0.1" To="0.7" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="contentPresenter"  Duration="0:0:0.1" To="0.7" />
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPopup" Storyboard.TargetProperty="IsOpen" BeginTime="0:0:0.1">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.001">
+                                                    <DiscreteObjectKeyFrame.Value>
+                                                        <CorLib:Boolean>False</CorLib:Boolean>
+                                                    </DiscreteObjectKeyFrame.Value>
+                                                </DiscreteObjectKeyFrame>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                            <!--#endregion ContentPresenter-->
+
+                            <!--#region PushEffect-->
+                            <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonDown">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="templateRoot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" Duration="0:0:0.1" To="2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="UIElement.PreviewMouseLeftButtonUp">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="templateRoot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" Duration="0:0:0.1" To="0"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="UIElement.MouseLeave">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="templateRoot" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" Duration="0:0:0.1" To="0"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                            <!--#endregion PushEffect-->
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="contentPopup" Property="Tag" Value="Open"/>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" Duration="0:0:0.1" To="1.1" />
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" Duration="0:0:0.1" To="1.1" />
+                                            
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="15" />
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="15" />
+                                            <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF7289DA" />
+
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="4" />
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="4" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="-15" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard >
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)" Duration="0:0:0.1" To="1" />
+                                            <DoubleAnimation Storyboard.TargetName="imageContainer" Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)" Duration="0:0:0.1" To="1" />
+                                            
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="30" />
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="30" />
+                                            <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF36393F" />
+
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="10" />
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="10" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="-20" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <MultiTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard >
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="15" />
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="15" />
+                                            <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF7289DA" />
+
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="4" />
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="4" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="-15" />
+                                            <DoubleAnimation Storyboard.TargetProperty="Height" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="40" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.EnterActions>
+                                <MultiTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard FillBehavior="Stop">
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="30" />
+                                            <DoubleAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="30" />
+                                            <ColorAnimation Storyboard.TargetName="background_rect" Storyboard.TargetProperty="(Fill).(SolidColorBrush.Color)" Duration="0:0:0.1" To="#FF36393F" />
+
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusX" Duration="0:0:0.1" To="10" />
+                                            <DoubleAnimation Storyboard.TargetName="mark" Storyboard.TargetProperty="RadiusY" Duration="0:0:0.1" To="10" />
+                                            <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="-20" />
+                                            <DoubleAnimation Storyboard.TargetProperty="Height" Storyboard.TargetName="mark"  Duration="0:0:0.1" To="20" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </MultiTrigger.ExitActions>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <UserControl.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="72"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ListView ItemsSource="{Binding Tabs}" Background="#FF202225" BorderThickness="0" Foreground="Transparent" ItemContainerStyle="{StaticResource VerticalListViewItemStyle}" SelectedItem="{Binding SelectedTab}" SelectedIndex="0"/>
+            <Rectangle Grid.Column="1" Fill="#36393f"/>
+            <!--#region Костыль для круглого угла-->
+            <Grid Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20">
+                <Ellipse Stroke="#FF202225" Width="20" Height="20" StrokeThickness="5" Margin="-5,-5,5,5" />
+                <Rectangle Fill="#36393f" Width="10" Height="15" StrokeThickness="5" Margin="5,0,5,5"/>
+                <Rectangle Fill="#36393f" Width="5" Height="9" StrokeThickness="5" Margin="0,6,15,5"/>
+            </Grid>
+            <!--#endregion-->
+            <ContentControl Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>
+        </Grid>
+    </UserControl.Content>
+</UserControl>

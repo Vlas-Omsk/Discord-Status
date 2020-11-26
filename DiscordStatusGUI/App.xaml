@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:DiscordStatusGUI"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
     </Application.Resources>
 </Application>

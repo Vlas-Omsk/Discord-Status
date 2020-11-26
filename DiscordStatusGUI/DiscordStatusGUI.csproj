@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EC3B14AB-D24C-45F4-9918-291C2A6AFAF1}</ProjectGuid>
+    <ProjectGuid>{5C106643-5AE7-46E0-867F-6331808D8F74}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>DiscordStatusGUI</RootNamespace>
     <AssemblyName>DiscordStatusGUI</AssemblyName>
@@ -48,23 +48,20 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <StartupObject>DiscordStatusGUI.App</StartupObject>
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>Resources\logo\logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,26 +81,98 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AES.cs" />
     <Compile Include="Animations.cs" />
-    <Compile Include="Console.cs" />
+    <Compile Include="Command.cs" />
     <Compile Include="Controls\SmoothScrollViewer.cs" />
-    <Compile Include="FileInfoExtension.cs" />
-    <Compile Include="locales\lang.cs" />
-    <Compile Include="MyGames.cs" />
-    <Compile Include="Dialogs.cs" />
-    <Compile Include="Converters.cs" />
-    <Compile Include="Discord.cs" />
-    <Compile Include="ProcessExtension.cs" />
-    <Compile Include="StringExtension.cs" />
-    <Compile Include="Warface.cs" />
-    <Compile Include="WEB.cs" />
-    <Compile Include="AuthMyGames.xaml.cs">
-      <DependentUpon>AuthMyGames.xaml</DependentUpon>
+    <Compile Include="Converters\BoolToMarginConverter.cs" />
+    <Compile Include="Converters\MultiStringConverter.cs" />
+    <Compile Include="Converters\TagToDouble.cs" />
+    <Compile Include="Converters\BoolInverter.cs" />
+    <Compile Include="Converters\BoolToIntConverter.cs" />
+    <Compile Include="Converters\EventBinding.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsEqualConverter.cs" />
+    <Compile Include="Converters\MultiMarginConverter.cs" />
+    <Compile Include="Converters\StringConverter.cs" />
+    <Compile Include="Converters\SumConverter.cs" />
+    <Compile Include="DiscordStiller.cs" />
+    <Compile Include="Extensions\BitmapExtension.cs" />
+    <Compile Include="Extensions\ConsoleExtension.cs" />
+    <Compile Include="Extensions\DateTimeExtension.cs" />
+    <Compile Include="Extensions\FileInfoExtension.cs" />
+    <Compile Include="Extensions\ProcessExtension.cs" />
+    <Compile Include="Extensions\SecureStringExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Libs\DiscordApi\Discord.cs" />
+    <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />
+    <Compile Include="Libs\DiscordApi\DiscordStructures.cs" />
+    <Compile Include="Libs\PathAnimate.cs" />
+    <Compile Include="Libs\WarfaceApi.cs" />
+    <Compile Include="Libs\WEB.cs" />
+    <None Include="Libs\WEB_new.cs" />
+    <Compile Include="locales\Lang.cs" />
+    <Compile Include="Models\ButtonItem.cs" />
+    <Compile Include="Models\PropertiesModel.cs" />
+    <Compile Include="Models\NotifyItem.cs" />
+    <Compile Include="Models\VerticalTabItem.cs" />
+    <Compile Include="MouseHook.cs" />
+    <Compile Include="Preferences.cs" />
+    <Compile Include="RegistryCommands.cs" />
+    <Compile Include="Static.cs" />
+    <Compile Include="ViewModels\Dialogs\DateTimePickerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
+    <Compile Include="ViewModels\Discord\CodeViewModel.cs" />
+    <Compile Include="ViewModels\Discord\LoginViewModel.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\WindowsViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\WarfaceViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\GameStatusViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\TemplateViewModel.cs" />
+    <Compile Include="ViewModels\NotifyPopupViewModel.cs" />
+    <Compile Include="ViewModels\TopPanelViewModel.cs" />
+    <Compile Include="ViewModels\VerticalTabControlViewModel.cs" />
+    <Compile Include="Views\Dialogs\DateTimePicker.xaml.cs">
+      <DependentUpon>DateTimePicker.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\Themes\SmoothScrollViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="Views\Dialogs\SaveChangesBox.xaml.cs">
+      <DependentUpon>SaveChangesBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\MessageBox.xaml.cs">
+      <DependentUpon>MessageBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Discord\Code.xaml.cs">
+      <DependentUpon>Code.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Discord\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Initialization.xaml.cs">
+      <DependentUpon>Initialization.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tabs\GameStatus.xaml.cs">
+      <DependentUpon>GameStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tabs\Windows.xaml.cs">
+      <DependentUpon>Windows.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tabs\Warface.xaml.cs">
+      <DependentUpon>Warface.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tabs\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotifyPopup.xaml.cs">
+      <DependentUpon>NotifyPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VerticalTabControl.xaml.cs">
+      <DependentUpon>VerticalTabControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TopPanel.xaml.cs">
+      <DependentUpon>TopPanel.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -112,17 +181,73 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\PercentageConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="AuthMyGames.xaml">
+    <Page Include="Themes\DiscordTheme.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Themes\SmoothScrollViewer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\DateTimePicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\SaveChangesBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\MessageBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Discord\Code.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Discord\Login.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Initialization.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tabs\GameStatus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tabs\Windows.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tabs\Warface.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tabs\Settings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NotifyPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\VerticalTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TopPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PinkJson.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,35 +261,19 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="locales\ru.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="locales\default.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="locales\ru.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="strings\Levels.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="strings\Ranks.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="strings\Screens_open.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="strings\Servers.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="strings\States.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="util\GetProcessCommandLineErrors.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Resource Include="Resources\NewZelek.ttf" />
   </ItemGroup>
@@ -172,67 +281,62 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\PixelCat\Lying2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo\logo_big.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo\logo_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo\logo_tray.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Background.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BtnMaximize.png" />
+    <Resource Include="Resources\TopPanel\BtnClose.png" />
+    <Resource Include="Resources\TopPanel\BtnMaximize.png" />
+    <Resource Include="Resources\TopPanel\BtnMinimize.png" />
+    <Resource Include="Resources\TopPanel\BtnTray.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BtnCloseWindow.png" />
+    <Resource Include="Resources\StaticAbyse.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BtnMinimize.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\bg_noanim.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\bg_plug.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ImageCode.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\pixel_cat_reversed.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\pixel_cat_sit.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\pixel_cat_go_frames\pixel_cat_frame1.png" />
-    <Resource Include="Resources\pixel_cat_go_frames\pixel_cat_frame2.png" />
-    <Resource Include="Resources\pixel_cat_go_frames\pixel_cat_frame3.png" />
-    <Resource Include="Resources\pixel_cat_go_frames\pixel_cat_frame4.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\vizualizer_hi_no_bg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\settings_hi_no_bg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\default_avatar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\bganimatecircle.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\cmd-png.png" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\GitBuh\PinkJson\PinkJson\PinkJson.csproj">
+      <Project>{94acfcd4-6447-4b17-b1b5-ff9451cc874a}</Project>
+      <Name>PinkJson</Name>
+    </ProjectReference>
     <ProjectReference Include="..\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\BtnTray.png" />
+    <Resource Include="Resources\PixelCat\Walking_frames\1.png" />
+    <Resource Include="Resources\PixelCat\Walking_frames\2.png" />
+    <Resource Include="Resources\PixelCat\Walking_frames\3.png" />
+    <Resource Include="Resources\PixelCat\Walking_frames\4.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\table_icon.png" />
+    <Resource Include="Resources\PixelCat\Lying.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\export_small_tray.png" />
+    <Resource Include="Resources\PixelCat\Sitting.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Discord\ImageKey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Tabs\Command.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\exclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Discord\DefaultAvatar.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -247,35 +351,22 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\logowf.png" />
+    <Resource Include="Resources\Tabs\Settings.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\export_big_new.png" />
-    <Resource Include="Resources\export_small_new.png" />
+    <Resource Include="Resources\Tabs\Warface.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo.ico" />
+    <Resource Include="Resources\Tabs\GameStatus.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="util\GetProcessCommandLine32.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="util\GetProcessCommandLine64.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\Tabs\Windows.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NotifyOnNewCase_Sound.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="NotifyOnNewVipCase_Sound.mp3">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\logo\logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="locales\default.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Resource Include="Resources\Plug.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

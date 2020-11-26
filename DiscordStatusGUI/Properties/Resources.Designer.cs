@@ -63,6 +63,46 @@ namespace DiscordStatusGUI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _1 {
+            get {
+                object obj = ResourceManager.GetObject("_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _2 {
+            get {
+                object obj = ResourceManager.GetObject("_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _3 {
+            get {
+                object obj = ResourceManager.GetObject("_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _4 {
+            get {
+                object obj = ResourceManager.GetObject("_4", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Background {
             get {
                 object obj = ResourceManager.GetObject("Background", resourceCulture);
@@ -73,9 +113,9 @@ namespace DiscordStatusGUI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap BtnCloseWindow {
+        internal static System.Drawing.Bitmap BtnClose {
             get {
-                object obj = ResourceManager.GetObject("BtnCloseWindow", resourceCulture);
+                object obj = ResourceManager.GetObject("BtnClose", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +143,9 @@ namespace DiscordStatusGUI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap default_avatar {
+        internal static System.Drawing.Bitmap BtnTray {
             get {
-                object obj = ResourceManager.GetObject("default_avatar", resourceCulture);
+                object obj = ResourceManager.GetObject("BtnTray", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,79 +153,54 @@ namespace DiscordStatusGUI.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap export_big {
+        internal static System.Drawing.Bitmap DefaultAvatar {
             get {
-                object obj = ResourceManager.GetObject("export_big", resourceCulture);
+                object obj = ResourceManager.GetObject("DefaultAvatar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;ResourceDictionary xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot;
+        ///                    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot;
+        ///                    xmlns:local=&quot;clr-namespace:DiscordStatusGUI.Themes&quot;
+        ///                    xmlns:controls=&quot;clr-namespace:DiscordStatusGUI.Controls&quot;
+        ///                    xmlns:converters=&quot;clr-namespace:DiscordStatusGUI.Converters&quot; xmlns:Themes=&quot;clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2&quot;&gt;
+        ///
+        ///    &lt;Style x:Key=&quot;Repe [остаток строки не уместился]&quot;;.
+        /// </summary>
+        internal static string DiscordTheme {
+            get {
+                return ResourceManager.GetString("DiscordTheme", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Icon, аналогичного (Значок).
+        /// </summary>
+        internal static System.Drawing.Icon logo {
+            get {
+                object obj = ResourceManager.GetObject("logo", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] NewZelek {
+            get {
+                object obj = ResourceManager.GetObject("NewZelek", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap export_small {
+        internal static System.Drawing.Bitmap Plug {
             get {
-                object obj = ResourceManager.GetObject("export_small", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap export_small_tray {
-            get {
-                object obj = ResourceManager.GetObject("export_small_tray", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pixel_cat_frame11 {
-            get {
-                object obj = ResourceManager.GetObject("pixel_cat_frame11", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pixel_cat_frame21 {
-            get {
-                object obj = ResourceManager.GetObject("pixel_cat_frame21", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pixel_cat_frame31 {
-            get {
-                object obj = ResourceManager.GetObject("pixel_cat_frame31", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pixel_cat_frame41 {
-            get {
-                object obj = ResourceManager.GetObject("pixel_cat_frame41", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap pixel_cat_sit {
-            get {
-                object obj = ResourceManager.GetObject("pixel_cat_sit", resourceCulture);
+                object obj = ResourceManager.GetObject("Plug", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

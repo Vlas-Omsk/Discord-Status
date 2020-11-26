@@ -1,0 +1,69 @@
+﻿<Popup x:Class="DiscordStatusGUI.NotifyPopup"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:local="clr-namespace:DiscordStatusGUI.Views"
+       xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
+       xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+       mc:Ignorable="d" 
+       d:DesignHeight="200" d:DesignWidth="200" Placement="MousePoint">
+    <Popup.DataContext>
+        <viewmodels:NotifyPopupViewModel/>
+    </Popup.DataContext>
+    <Popup.Resources>
+        <Style x:Key="ListViewStyle" TargetType="{x:Type ListView}">
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#FFDADCE0"/>
+            <Setter Property="Padding" Value="0,3"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+        <Style x:Key="ListViewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0,3,20,3"/>
+            <Setter Property="IsEnabled" Value="{Binding IsEnabled}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Border x:Name="border" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" PreviewMouseLeftButtonUp="{converters:EventBinding Command=Command}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="30"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Source="{Binding ImagePath}" Height="{Binding ElementName=contentPresenter, Path=ActualHeight, Converter={converters:SumConverter}, ConverterParameter=6}" RenderTransformOrigin="0.5,0.5">
+                                        <Image.RenderTransform>
+                                            <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}"/>
+                                        </Image.RenderTransform>
+                                    </Image>
+                                    <ContentPresenter Grid.Column="1" x:Name="contentPresenter" Content="{Binding Text}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                </Grid>
+                            </Border>
+                            <Rectangle Height="1" Grid.Row="1" Fill="#FFDADCE0" Visibility="{Binding WithSplitter, Converter={converters:BoolToVisibilityConverter}}" Margin="{Binding WithSplitter, Converter={converters:BoolToMarginConverter}, ConverterParameter=0.5.0.5|0.0.0.0}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="#FFDADCE0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FF80868B"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Popup.Resources>
+
+    <Popup.Child>
+        <Grid>
+            <ListView Style="{StaticResource ListViewStyle}" ItemContainerStyle="{StaticResource ListViewItemStyle}" ItemsSource="{Binding Items}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False"/>
+        </Grid>
+    </Popup.Child>
+</Popup>

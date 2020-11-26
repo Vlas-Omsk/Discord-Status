@@ -1,0 +1,9 @@
+LIBRARY DiscordStatusGUI.CPP
+EXPORTS
+	GetProcessCommandLine
+	GetProcessCommandLineByPid
+	AdjustDebugPriviliges
+	GetProcessHandle
+	GetStringFromProcessMemory
+	GetStringFromProcessMemoryByPid
+	GetDiscordToken

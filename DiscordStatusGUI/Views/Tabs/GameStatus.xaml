@@ -1,0 +1,361 @@
+﻿<UserControl x:Class="DiscordStatusGUI.Views.Tabs.GameStatus"
+       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+       xmlns:local="clr-namespace:DiscordStatusGUI.Views"
+             xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
+       xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
+             xmlns:tabs="clr-namespace:DiscordStatusGUI.ViewModels.Tabs"
+             xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
+             xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
+       mc:Ignorable="d"
+       d:DesignWidth="800" d:DesignHeight="1200" Background="#36393f"
+             xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+             xmlns:dialogs="clr-namespace:DiscordStatusGUI.Views.Dialogs"
+             SizeChanged="UserControl_SizeChanged">
+    <UserControl.DataContext>
+        <tabs:GameStatusViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
+                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <UserControl.Content>
+        <Grid>
+            <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition MinHeight="72" Height="72*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="370*"/>
+                        <ColumnDefinition MinWidth="540" Width="540*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.ColumnSpan="2" Margin="5" Foreground="White" TextAlignment="Center" Text="Game Status" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+
+                    <Grid x:Name="Preview" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,10,10,10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="5"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="5"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.ColumnSpan="2" Grid.Row="0" CornerRadius="5,5,0,0" Background="#FF18191C" RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <TranslateTransform Y="1"/>
+                            </Border.RenderTransform>
+                        </Border>
+                        <Border Grid.ColumnSpan="2" Grid.Row="2" CornerRadius="0,0,5,5" Background="#FF18191C" RenderTransformOrigin="0.5,0.5">
+                            <Border.RenderTransform>
+                                <TranslateTransform Y="-1"/>
+                            </Border.RenderTransform>
+                        </Border>
+
+                        <TabControl Grid.Row="1" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF18191C">
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}">
+                                <Grid Width="510" Height="510" Margin="10">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="110"/>
+                                        <RowDefinition Height="130"/>
+                                        <RowDefinition Height="260"/>
+                                        <RowDefinition Height="10"/>
+                                    </Grid.RowDefinitions>
+                                    <!-- ZONE 1 -->
+                                    <Border Background="#FF7289DA" CornerRadius="10,10,0,0"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="93"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Ellipse Width="75" Height="75" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="18,0,0,0">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="{Binding DiscordUserAvatar}"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Ellipse Width="19" Height="19" Fill="#FF7289DA" HorizontalAlignment="Left" Margin="73.25,73,0,0" Stroke="#FF7289DA" VerticalAlignment="Top"/>
+                                        <Ellipse Width="15" Height="15" Fill="#FF43B581" HorizontalAlignment="Left" Margin="75,75,0,0" Stroke="#FF80CFAA" VerticalAlignment="Top"/>
+                                        <Grid Grid.Column="1" Margin="17,0,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding DiscordUserName}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" FontWeight="Bold"/>
+                                            <TextBlock Text="{Binding DiscordUserTag, ConverterParameter=#[Value], Converter={converters:StringConverter}}" Margin="3,6,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Foreground="#FFC4CCF0" Grid.Column="1" FontWeight="Normal"/>
+                                        </Grid>
+                                    </Grid>
+
+                                    <!-- ZONE 2 -->
+                                    <Rectangle Grid.Row="1" Fill="#FF6C82CF" Margin="0,-1"/>
+                                    <Grid Grid.Row="1">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_Playing}" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Grid.ColumnSpan="99"/>
+
+                                        <!-- LargeImage -->
+                                        <Grid x:Name="ImageLarge_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="54.5,5,0,0" Grid.RowSpan="22" Grid.ColumnSpan="22">
+                                            <Grid.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform/>
+                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=ImageLarge_HelpText}"/>
+                                                </TransformGroup>
+                                            </Grid.RenderTransform>
+                                            <Rectangle Fill="Black" Margin="0,0,0,-2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="5" Width="5" RenderTransformOrigin="0.5,0.5" >
+                                                <Rectangle.RenderTransform>
+                                                    <RotateTransform Angle="45"/>
+                                                </Rectangle.RenderTransform>
+                                            </Rectangle>
+                                            <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameAvatar_HelpText}" HorizontalAlignment="Stretch"/>
+                                            <TextBlock x:Name="ImageLarge_TextPresenter" Padding="4,4,4,4" Text="{Binding ImageLargeText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                        </Grid>
+
+                                        <Rectangle x:Name="ImageLarge" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="5" RadiusY="5" Width="75" Height="75" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="17,0,0,0" Grid.RowSpan="22" Grid.Row="1">
+                                            <Rectangle.Fill>
+                                                <ImageBrush ImageSource="{Binding ImageLarge}"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <!-- LargeImage -->
+
+                                        <!-- SmallImage -->
+                                        <Grid x:Name="ImageSmall_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=SmallImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="88,1,0,0" Grid.RowSpan="2" Grid.Row="2" Grid.ColumnSpan="22">
+                                            <Grid.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                                                    <SkewTransform/>
+                                                    <RotateTransform/>
+                                                    <TranslateTransform X="{Binding ActualWidth, ConverterParameter=-0\,5, Converter={converters:PercentageConverter}, ElementName=ImageSmall_HelpText}"/>
+                                                </TransformGroup>
+                                            </Grid.RenderTransform>
+                                            <Rectangle Fill="Black" Margin="0,0,0,-2" HorizontalAlignment="Center" VerticalAlignment="Bottom" Height="5" Width="5" RenderTransformOrigin="0.5,0.5" >
+                                                <Rectangle.RenderTransform>
+                                                    <RotateTransform Angle="45"/>
+                                                </Rectangle.RenderTransform>
+                                            </Rectangle>
+                                            <Rectangle RadiusX="4" RadiusY="4" Fill="Black" Width="{Binding ActualWidth, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" Height="{Binding ActualHeight, ElementName=VisualiserTabControlGameSmallAvatar_HelpText}" HorizontalAlignment="Stretch"/>
+                                            <TextBlock x:Name="ImageSmall_TextPresenter" Padding="4,4,4,4" Text="{Binding ImageSmallText, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontSize="14"/>
+                                        </Grid>
+
+                                        <Rectangle x:Name="ImageSmall" MouseEnter="HelpText_MouseEnter" MouseLeave="HelpText_MouseLeave" RadiusX="50" RadiusY="50" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="70,52,0,0" Grid.RowSpan="22" Grid.Row="1">
+                                            <Rectangle.Fill>
+                                                <ImageBrush ImageSource="{Binding ImageSmall}"/>
+                                            </Rectangle.Fill>
+                                        </Rectangle>
+                                        <!-- SmallImage -->
+
+                                        <TextBlock Text="{Binding Name, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" Margin="0,-2,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Grid.Column="1" Grid.Row="1"/>
+                                        <TextBlock Text="{Binding Details, Converter={converters:StringConverter}, ConverterParameter=[Value.ReplaceFields]}" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" FontWeight="Normal"/>
+                                        <TextBlock HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" FontWeight="Normal">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{converters:MultiStringConverter}" ConverterParameter="( : )">
+                                                    <Binding Path="State" Converter="{converters:StringConverter}" ConverterParameter="[Value.ReplaceFields] "/>
+                                                    <Binding Path="PartySize" Converter="{converters:StringConverter}" ConverterParameter="([Value.ReplaceFields] : "/>
+                                                    <Binding Path="PartyMax" Converter="{converters:StringConverter}" ConverterParameter="[Value.ReplaceFields])"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock Margin="0" HorizontalAlignment="Left" FontSize="14" VerticalAlignment="Center" Grid.Column="1" Grid.Row="4" FontWeight="Normal"/>
+                                    </Grid>
+
+                                    <!-- ZONE 3 -->
+                                    <TabControl Grid.Row="2" Margin="0,0,0,0" Padding="0,0,0,0" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF2F3136" Foreground="#FF6C82CF" BorderBrush="White" HorizontalContentAlignment="Center">
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                    </TabControl>
+                                    <Border Grid.Row="3" Background="#FF2F3136" CornerRadius="0,0,10,10" RenderTransformOrigin="0.5,0.5">
+                                        <Border.RenderTransform>
+                                            <TranslateTransform Y="-1"/>
+                                        </Border.RenderTransform>
+                                    </Border>
+                                </Grid>
+                            </TabItem>
+
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{DynamicResource TabItemStyleDiscord}">
+                                <Grid>
+                                    <TextBlock Margin="5" Foreground="White" Text="&#10;Ты думал что-то здесь будет?&#10;&#10;Оооо... Нееет&#10;" TextAlignment="Center" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                        <Border Grid.Row="1" Grid.RowSpan="2" CornerRadius="0,0,5,5" IsHitTestVisible="False">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0.5">
+                                    <GradientStop Color="Black" Offset="1"/>
+                                    <GradientStop Color="#00000000"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                    </Grid>
+
+                    <Grid x:Name="Options" Grid.Row="2" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style x:Key="FieldTitle" TargetType="TextBlock">
+                                <Setter Property="Margin" Value="20,10,10,0"/>
+                                <Setter Property="VerticalAlignment" Value="Top"/>
+                                <Setter Property="Foreground" Value="#FFADBBBE"/>
+                                <Setter Property="Height" Value="16"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </Style>
+                            <Style x:Key="Field" TargetType="TextBox" BasedOn="{StaticResource RoundedTextBox}">
+                                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Padding" Value="7"/>
+                                <Setter Property="Margin" Value="10,28,10,10"/>
+                                <EventSetter Event="TextChanged" Handler="Field_TextChanged"/>
+                            </Style>
+                            <Style x:Key="ComboBoxField" TargetType="ComboBox" BasedOn="{StaticResource ComboBoxDiscord}">
+                                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="Padding" Value="7"/>
+                                <Setter Property="Margin" Value="10,28,10,10"/>
+                                <Setter Property="Height" Value="35"/>
+                                <Setter Property="BorderBrush" Value="#FFABAdB3"/>
+                                <Setter Property="IsEditable" Value="True"/>
+                                <Setter Property="ItemContainerStyle" Value="{StaticResource ComboBoxItemDiscord}"/>
+                                <Setter Property="IsTextSearchEnabled" Value="True"/>
+                                <EventSetter Event="TextBoxBase.TextChanged" Handler="Field_TextChanged"/>
+                            </Style>
+                            <Style x:Key="FieldHelp" TargetType="Path">
+                                <Setter Property="Data" Value="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                                <Setter Property="Fill" Value="#FF72767D"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Top"/>
+                                <Setter Property="Margin" Value="0,12,12,0"/>
+                                <Setter Property="Height" Value="11"/>
+                                <Setter Property="Width" Value="11"/>
+                                <Setter Property="Stretch" Value="Fill"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Style>
+                            <CorLib:String x:Key="how_to_use_pictures">
+                                https://vlas-omsk.github.io/documentation.html#how_to_use_pictures
+                            </CorLib:String>
+                            <ContextMenu x:Key="ContextMenuWithHowToUsePictures" Style="{StaticResource ContextMenuDiscord}">
+                                <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
+                                <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
+                                <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                                <MenuItem Header="Как использовать картинки?" Command="{Binding OpenLinkCommand}" CommandParameter="{StaticResource how_to_use_pictures}"/>
+                            </ContextMenu>
+                        </Grid.Resources>
+
+                        <Grid x:Name="Profiles" Grid.ColumnSpan="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="В данный момент невозможно изменить профиль" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
+
+                            <TextBlock Grid.Row="1" Text="{x:Static locales:Lang.ContentForm_Visualizer_Options_Profiles}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                            <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Grid.Column="1" Text="{Binding ProfileName}" FontSize="15"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                                <ComboBox.ItemContainerStyle>
+                                    <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ComboBoxItemDiscord}">
+                                        <Setter Property="Content" Value="{Binding ProfileName}"/>
+                                        <Setter Property="FontSize" Value="15"/>
+                                    </Style>
+                                </ComboBox.ItemContainerStyle>
+                            </ComboBox>
+                        </Grid>
+
+                        <!-- 0, 0 -->
+                        <TextBlock Text="NAME" Grid.Column="0" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="Name" Grid.Column="0" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <!-- 0, 1 -->
+                        <TextBlock Text="APPLICATION ID" Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
+                        <Path Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
+                        <TextBox Name="ApplicationID" Grid.Column="1" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding ApplicationID, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <!-- 1, 0 -->
+                        <TextBlock Text="STATE" Grid.Column="0" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="State" Grid.Column="0" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding State, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <!-- 1, 1 -->
+                        <TextBlock Text="DETAILS" Grid.Column="1" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <!-- 2, 0 -->
+                        <TextBlock Text="START TIMESTAMP" Grid.Column="0" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
+                        <Grid Grid.Column="0" Grid.Row="3" Margin="10,28,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            
+                            <TextBox Name="StartTime" Style="{StaticResource Field}" Margin="0" Text="{Binding StartTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1" Style="{StaticResource BlueButton}" Padding="5" Content="🕔" Margin="5,0,0,0" Command="{Binding ShowDateTimePickerCommand}" CommandParameter="StartTime"/>
+                        </Grid>
+                        <!-- 2, 1 -->
+                        <TextBlock Text="END TIMESTAMP" Grid.Column="1" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
+                        <Grid Grid.Column="1" Grid.Row="3" Margin="10,28,10,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Name="EndTime" Style="{StaticResource Field}" Margin="0" Text="{Binding EndTime, UpdateSourceTrigger=PropertyChanged}"/>
+                            <Button Grid.Column="1" Style="{StaticResource BlueButton}" Padding="5" Content="🕔" Margin="5,0,0,0" Command="{Binding ShowDateTimePickerCommand}" CommandParameter="EndTime"/>
+                        </Grid>
+                        <!-- 3, 0 -->
+                        <TextBlock Text="PARTY SIZE" Grid.Column="0" Grid.Row="4" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="PartySize" Grid.Column="0" Grid.Row="4" Style="{StaticResource Field}" Text="{Binding PartySize, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- 3, 1 -->
+                        <TextBlock Text="PARTY MAX" Grid.Column="1" Grid.Row="4" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="PartyMax" Grid.Column="1" Grid.Row="4" Style="{StaticResource Field}" Text="{Binding PartyMax, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- 4, 0 -->
+                        <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
+                        <Path Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
+                        <ComboBox Name="ImageLargeKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="5" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
+                        <!-- 4, 1 -->
+                        <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="ImageLargeText" Grid.Column="1" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- 5, 0 -->
+                        <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
+                        <Path Grid.Column="0" Grid.Row="6"  Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
+                        <ComboBox Name="ImageSmallKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="6" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
+                        <!-- 5, 1 -->
+                        <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
+                        <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                </Grid>
+            </controls:SmoothScrollViewer>
+            <dialogs:SaveChangesBox x:Name="SaveChangesBox" Visibility="Hidden" VerticalAlignment="Bottom" Margin="10" Height="52"/>
+        </Grid>
+    </UserControl.Content>
+</UserControl>
