@@ -14,17 +14,12 @@
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
              xmlns:dialogs="clr-namespace:DiscordStatusGUI.Views.Dialogs"
              SizeChanged="UserControl_SizeChanged">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
+    </UserControl.Resources>
     <UserControl.DataContext>
         <tabs:GameStatusViewModel/>
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <UserControl.Content>
         <Grid>
@@ -59,8 +54,8 @@
                             </Border.RenderTransform>
                         </Border>
 
-                        <TabControl Grid.Row="1" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF18191C">
-                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}">
+                        <TabControl Grid.Row="1" Style="{StaticResource TabControlStyleDiscord}" Background="#FF18191C">
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{StaticResource TabItemStyleDiscord}">
                                 <Grid Width="510" Height="510" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="110"/>
@@ -177,10 +172,10 @@
                                     </Grid>
 
                                     <!-- ZONE 3 -->
-                                    <TabControl Grid.Row="2" Margin="0,0,0,0" Padding="0,0,0,0" Style="{DynamicResource TabControlStyleDiscord}" Background="#FF2F3136" Foreground="#FF6C82CF" BorderBrush="White" HorizontalContentAlignment="Center">
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Style="{DynamicResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                    <TabControl Grid.Row="2" Margin="0,0,0,0" Padding="0,0,0,0" Style="{StaticResource TabControlStyleDiscord}" Background="#FF2F3136" Foreground="#FF6C82CF" BorderBrush="White" HorizontalContentAlignment="Center">
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
                                     </TabControl>
                                     <Border Grid.Row="3" Background="#FF2F3136" CornerRadius="0,0,10,10" RenderTransformOrigin="0.5,0.5">
                                         <Border.RenderTransform>
@@ -190,7 +185,7 @@
                                 </Grid>
                             </TabItem>
 
-                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{DynamicResource TabItemStyleDiscord}">
+                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{StaticResource TabItemStyleDiscord}">
                                 <Grid>
                                     <TextBlock Margin="5" Foreground="White" Text="&#10;Ты думал что-то здесь будет?&#10;&#10;Оооо... Нееет&#10;" TextAlignment="Center" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                 </Grid>
@@ -282,7 +277,7 @@
                             <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="В данный момент невозможно изменить профиль" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
 
                             <TextBlock Grid.Row="1" Text="{x:Static locales:Lang.ContentForm_Visualizer_Options_Profiles}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
-                            <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
+                            <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{StaticResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <TextBlock Grid.Column="1" Text="{Binding ProfileName}" FontSize="15"/>
@@ -341,14 +336,14 @@
                         <!-- 4, 0 -->
                         <TextBlock Text="IMAGE LARGE KEY" Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="5" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <ComboBox Name="ImageLargeKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="5" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
+                        <ComboBox Name="ImageLargeKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="5" Style="{StaticResource ComboBoxField}" Text="{Binding ImageLargeKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
                         <!-- 4, 1 -->
                         <TextBlock Text="IMAGE LARGE TEXT" Grid.Column="1" Grid.Row="5" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageLargeText" Grid.Column="1" Grid.Row="5" Style="{StaticResource Field}" Text="{Binding ImageLargeText, UpdateSourceTrigger=PropertyChanged}"/>
                         <!-- 5, 0 -->
                         <TextBlock Text="IMAGE SMALL KEY" Grid.Column="0" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="0" Grid.Row="6"  Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <ComboBox Name="ImageSmallKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="6" Style="{DynamicResource ComboBoxField}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
+                        <ComboBox Name="ImageSmallKey" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="6" Style="{StaticResource ComboBoxField}" Text="{Binding ImageSmallKey, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}" ItemsSource="{Binding AppAssets}"/>
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>

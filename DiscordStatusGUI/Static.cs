@@ -43,6 +43,7 @@ namespace DiscordStatusGUI
         public static void Init()
         {
             DiscordTheme = Application.Current.Resources;
+            
             Tabs = new System.Collections.ObjectModel.ObservableCollection<Models.VerticalTabItem>()
             {
                 new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new Views.Tabs.GameStatus()),

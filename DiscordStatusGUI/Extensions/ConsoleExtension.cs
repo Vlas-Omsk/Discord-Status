@@ -53,14 +53,16 @@ namespace DiscordStatusGUI.Extensions
 #endif
         }
 
+        public static StreamWriter StreamWriter;
+
         public static void InitLogger()
         {
             SyntaxHighlighting.EnableVirtualTerminalProcessing();
 
-            var stringWriter = new StreamWriter("latest.log") { AutoFlush = true };
+            StreamWriter = new StreamWriter("latest.log") { AutoFlush = true };
             var consoleWriter = Console.Out;
 
-            Console.SetOut(new MultiWriter(stringWriter, consoleWriter));
+            Console.SetOut(new MultiWriter(StreamWriter, consoleWriter));
             WriteLine("", $"{Static.Titile} v{Assembly.GetExecutingAssembly().GetName().Version}");
 
             var DiscordStatus =

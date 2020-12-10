@@ -10,6 +10,7 @@ using System.Windows;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Threading;
+using System.Collections;
 
 namespace DiscordStatusGUI
 {
@@ -29,6 +30,9 @@ namespace DiscordStatusGUI
 
         public App()
         {
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             Console.Write($"[{ConsoleEx.Info}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   STARTED\r\n");
 
             CheckCopy();
@@ -45,7 +49,7 @@ namespace DiscordStatusGUI
 
             Locales.Lang.Init();
             Static.Init();
-
+            
             Preferences.OpenLocalServer();
         }
 
@@ -70,6 +74,42 @@ namespace DiscordStatusGUI
             ProcessCopy.Kill();
             var splittedcmdline = ProcessEx.SplitParams(cmdline);
             Preferences.SetPropertiesByCmdLine(splittedcmdline);
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            UnhandledException(e.ExceptionObject as Exception);
+        }
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            UnhandledException(e.Exception);
+        }
+
+        void UnhandledException(Exception ex)
+        {
+            var result = "";
+            foreach (DictionaryEntry obj in ex.Data)
+            {
+                result += "  " + obj.Key;
+            }
+
+            if (ConsoleEx.StreamWriter != null)
+                try
+                {
+                    ConsoleEx.StreamWriter.Close();
+                }catch { }
+
+            File.AppendAllText("latest.log",
+                   $"\r\n-----------------------BEGIN-------------------------" +
+                   $"\r\n[MESSAGE]\r\n{ex}" +
+                   $"\r\n[STACK TRACE]\r\n{ex.StackTrace}" +
+                   $"\r\n[SOURCE]\r\n{ex.Source}" +
+                   $"\r\n[TARGET SITE]\r\n{ex.TargetSite}" +
+                   $"\r\n[HRESULT]\r\n{ex.HResult}" +
+                   $"\r\n[DATA]\r\n{result}" +
+                   $"\r\n[HELP LINK]\r\n{ex.HelpLink}" +
+                   $"\r\n-------------------------END-------------------------");
         }
     }
 }

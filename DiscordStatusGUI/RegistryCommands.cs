@@ -26,20 +26,27 @@ namespace DiscordStatusGUI
 
         public static void CreateProtocol()
         {
-            if (!IsProtocolRegistered())
+            try
             {
-                var discordstatus = CLASSES_ROOT.CreateSubKey(protocol);
-                var shell = discordstatus.CreateSubKey("shell");
-                var command = shell.CreateSubKey("open").CreateSubKey("command");
+                if (!IsProtocolRegistered())
+                {
+                    var discordstatus = CLASSES_ROOT.CreateSubKey(protocol);
+                    var shell = discordstatus.CreateSubKey("shell");
+                    var command = shell.CreateSubKey("open").CreateSubKey("command");
 
-                discordstatus.SetValue("", "URL:" + Static.Titile);
-                discordstatus.SetValue("URL Protocol", "");
-                shell.SetValue("", "open");
-                command.SetValue("", open_command);
+                    discordstatus.SetValue("", "URL:" + Static.Titile);
+                    discordstatus.SetValue("URL Protocol", "");
+                    shell.SetValue("", "open");
+                    command.SetValue("", open_command);
 
-                discordstatus.Close();
-                shell.Close();
-                command.Close();
+                    discordstatus.Close();
+                    shell.Close();
+                    command.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Extensions.ConsoleEx.WriteLine("Protocol", "Create protocol error\r\n" + ex.ToString());
             }
         }
 
