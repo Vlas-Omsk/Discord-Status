@@ -37,21 +37,30 @@ namespace DiscordStatusGUI
         public static ResourceDictionary DiscordTheme { get; private set; }
 
         #region Notifications
-        public readonly static Notification CustomStatusOverride = new Notification(Lang.GetResource("Static:CustomStatusOverride:Title"), Lang.GetResource("Static:CustomStatusOverride:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false, LinkText = Lang.GetResource("Static:CustomStatusOverride:LinkText"), LinkAction = async () =>
-        {
-            await Task.Run(() =>
-            {
-                CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = false);
-                Discord.SetCustomStatus();
-                CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = true);
-            });
-        }
-        };
-        public readonly static Notification UpdateAvailable = new Notification(Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), false);
-        public readonly static Notification Reconnect = new Notification(Lang.GetResource("Static:Reconnect:Title"), Lang.GetResource("Static:Reconnect:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false };
+        public static Notification CustomStatusOverride { get; private set; }
+        public static Notification UpdateAvailable { get; private set; }
+        public static Notification Reconnect { get; private set; }
 
         public static async void InitNotifications()
         {
+            CustomStatusOverride = new Notification(Lang.GetResource("Static:CustomStatusOverride:Title"), Lang.GetResource("Static:CustomStatusOverride:Description"), false)
+            {
+                TitleForeground = new SolidColorBrush(Colors.Red),
+                IsClosable = false,
+                LinkText = Lang.GetResource("Static:CustomStatusOverride:LinkText"),
+                LinkAction = async () =>
+                {
+                    await Task.Run(() =>
+                    {
+                        CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = false);
+                        Discord.SetCustomStatus();
+                        CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = true);
+                    });
+                }
+            };
+            UpdateAvailable = new Notification(Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), false);
+            Reconnect = new Notification(Lang.GetResource("Static:Reconnect:Title"), Lang.GetResource("Static:Reconnect:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false };
+
             MainWindow.Notifications.AddNotification(CustomStatusOverride);
             MainWindow.Notifications.AddNotification(UpdateAvailable);
             MainWindow.Notifications.AddNotification(Reconnect);
