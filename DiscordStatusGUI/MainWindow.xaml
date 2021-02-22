@@ -20,9 +20,6 @@
         WindowStartupLocation="CenterScreen"
         
         Loaded="Window_Loaded"
-        SizeChanged="Window_SizeChanged"
-        LocationChanged="Window_LocationChanged"
-        StateChanged="Window_LocationChanged"
         Closing="Window_Closing">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
@@ -40,6 +37,8 @@
             <Image x:Name="StaticAbyse" Visibility="Visible" HorizontalAlignment="Left" Width="{Binding ActualWidth, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" Height="{Binding ActualHeight, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" VerticalAlignment="Top" Source="Resources/StaticAbyse.png"/>
 
             <ContentControl x:Name="CurrentPage" Content="{Binding CurrentPage}"/>
+
+            <dialogs:Notifications x:Name="Notifications" HorizontalAlignment="Right" Margin="10"/>
 
             <views:Initialization x:Name="initialization"/>
 

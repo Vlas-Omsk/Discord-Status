@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5C106643-5AE7-46E0-867F-6331808D8F74}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>DiscordStatusGUI</RootNamespace>
     <AssemblyName>DiscordStatusGUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -87,16 +87,16 @@
     <Compile Include="Controls\SmoothScrollViewer.cs" />
     <Compile Include="Converters\BoolToMarginConverter.cs" />
     <Compile Include="Converters\MultiStringConverter.cs" />
-    <Compile Include="Converters\TagToDouble.cs" />
+    <None Include="Converters\TagToDouble.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
-    <Compile Include="Converters\BoolToIntConverter.cs" />
+    <None Include="Converters\BoolToIntConverter.cs" />
     <Compile Include="Converters\EventBinding.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\IsEqualConverter.cs" />
-    <Compile Include="Converters\MultiMarginConverter.cs" />
+    <None Include="Converters\IsEqualConverter.cs" />
+    <None Include="Converters\MultiMarginConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\SumConverter.cs" />
-    <Compile Include="DiscordStiller.cs" />
+    <Compile Include="DiscordStealer.cs" />
     <Compile Include="Extensions\BitmapExtension.cs" />
     <Compile Include="Extensions\ConsoleExtension.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
@@ -111,8 +111,11 @@
     <Compile Include="Libs\WarfaceApi.cs" />
     <Compile Include="Libs\WEB.cs" />
     <None Include="Libs\WEB_new.cs" />
-    <Compile Include="locales\Lang.cs" />
+    <Compile Include="Locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
+    <Compile Include="Models\Notification.xaml.cs">
+      <DependentUpon>Notification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\PropertiesModel.cs" />
     <Compile Include="Models\NotifyItem.cs" />
     <Compile Include="Models\VerticalTabItem.cs" />
@@ -120,7 +123,9 @@
     <Compile Include="Preferences.cs" />
     <Compile Include="RegistryCommands.cs" />
     <Compile Include="Static.cs" />
+    <Compile Include="UpdateManager.cs" />
     <Compile Include="ViewModels\Dialogs\DateTimePickerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
     <Compile Include="ViewModels\Discord\CodeViewModel.cs" />
@@ -136,6 +141,9 @@
     <Compile Include="ViewModels\VerticalTabControlViewModel.cs" />
     <Compile Include="Views\Dialogs\DateTimePicker.xaml.cs">
       <DependentUpon>DateTimePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Notifications.xaml.cs">
+      <DependentUpon>Notifications.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\SaveChangesBox.xaml.cs">
       <DependentUpon>SaveChangesBox.xaml</DependentUpon>
@@ -186,6 +194,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Models\Notification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\DiscordTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -197,6 +209,10 @@
     <Page Include="Views\Dialogs\DateTimePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\Notifications.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\SaveChangesBox.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -264,11 +280,12 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="locales\default.json">
+    <None Include="Locales\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="locales\ru.json">
+    <None Include="Locales\ru.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">
@@ -367,6 +384,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Plug.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo\logo-bw.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

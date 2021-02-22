@@ -3,7 +3,7 @@ using DiscordStatusGUI.Libs.DiscordApi;
 using DiscordStatusGUI.Locales;
 using DiscordStatusGUI.Views;
 using DiscordStatusGUI.Views.Discord;
-using PinkJson.Parser;
+using PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace DiscordStatusGUI.ViewModels.Discord
                 OnPropertyChanged("LoginButtonEnabled");
             }
         }
-        string _Header2 = Lang.CodeForm_header2;
+        string _Header2 = Lang.GetResource("ViewModels:Discord:CodeViewModel:HeaderMFA");
         public string Header2
         {
             get => _Header2;
@@ -82,7 +82,7 @@ namespace DiscordStatusGUI.ViewModels.Discord
 
                 int code = 0;
                 try { code = Convert.ToInt32(Code); }
-                catch { CodeError = "Invalid code"; goto end; }
+                catch { CodeError = Lang.GetResource("ViewModels:Discord:CodeViewModel:InvalidMFACode"); goto end; }
 
                 var auth = Static.Discord.MFAuth(code, _DiscordMFAuthType);
                 switch (auth)
@@ -141,7 +141,7 @@ namespace DiscordStatusGUI.ViewModels.Discord
                         CodeError = Static.Discord.LastError;
                         break;
                     case MFAuthErrors.Successful:
-                        Header2 = "Мы отправили сообщение на " + Static.Discord.Phone + ". Пожалуйста, введите полученный код.";
+                        Header2 = Lang.GetResource("ViewModels:Discord:CodeViewModel:HeaderMFAPhone").Replace("{phone}", Static.Discord.Phone);
                         _DiscordMFAuthType = MFAuthType.SMS;
                         break;
                 }

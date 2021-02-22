@@ -1,20 +1,11 @@
+using DiscordStatusGUI.Extensions;
 using PinkJson;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using WEBLib;
-using WebSocketSharp;
-using DiscordStatusGUI.Extensions;
-using PinkJson.Parser;
-using System.Security.Cryptography;
-using System.Security.RightsManagement;
 using System.Security;
+using System.Text;
+using WEBLib;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
@@ -27,7 +18,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
         public struct AppImages
         {
-            private static JsonObjectArray _LastAppAssets;
+            private static JsonArray _LastAppAssets;
             private static string _LastAppAssetsResponse;
 
             public static Bitmap GetImageById(string id, string appId)
@@ -51,7 +42,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 {
                     try
                     {
-                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssets = new JsonArray(response);
                         _LastAppAssetsResponse = response;
                     }
                     catch
@@ -60,7 +51,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                     }
                 }
 
-                foreach (Json item in _LastAppAssets)
+                foreach (JsonArrayObject item in _LastAppAssets)
                 {
                     if (item["name"].Value.ToString() == name)
                         return item["id"].Value.ToString();
@@ -69,14 +60,14 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 return null;
             }
 
-            public static JsonObjectArray GetAppAssets(string appId)
+            public static JsonArray GetAppAssets(string appId)
             {
                 var response = WEB.Get("https://discord.com/api/v6/oauth2/applications/" + appId + "/assets");
                 if (_LastAppAssetsResponse != response)
                 {
                     try
                     {
-                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssets = new JsonArray(response);
                         _LastAppAssetsResponse = response;
                     }
                     catch
@@ -284,9 +275,46 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             }
         }
 
+        public bool SetCustomStatus(string text = null, string emoji_name = null, DateTime expires_at = default)
+        {
+            try
+            {
+                if (text is null &&
+                    emoji_name is null &&
+                    expires_at == default)
+                    WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/users/@me/settings", new string[] { "Content-Type: application/json", "Authorization: " + Token, "accept-language: " + Language }, Encoding.UTF8.GetBytes("{\"custom_status\":null}"), "PATCH");
+                else
+                {
+                    var json = Json.FromAnonymous(new
+                    {
+                        custom_status = new { }
+                    });
+                    if (!(text is null))
+                        json["custom_status"].Get<Json>().Add(new JsonObject("text", text));
+                    if (!(emoji_name is null))
+                        json["custom_status"].Get<Json>().Add(new JsonObject("emoji_name", emoji_name));
+                    if (expires_at != default)
+                        json["custom_status"].Get<Json>().Add(new JsonObject("expires_at", expires_at.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")));
+                    //2021-02-08T14:12:22.964+06Z
+                    //yyyy-MM-ddTHH:mm:ss.fffzzZ
+                    //2021-02-08T18:00:00.000Z
+                    //yyyy-MM-ddTHH:mm:ss.fffZ
+
+                    WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/users/@me/settings", new string[] { "Content-Type: application/json", "Authorization: " + Token, "accept-language: " + Language }, Encoding.UTF8.GetBytes(json.ToString()), "PATCH");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LastError = ex.Message;
+                return false;
+            }
+        }
+
         public void test()
         {
-            var avatar = new Bitmap(new Bitmap(@"Z:\Users\Vlas Dergaev\Desktop\Desktop Sorted\images\m1000x1000.png"), 128, 128);
+            var avatar = new Bitmap(new Bitmap(@"m1000x1000.png"), 128, 128);
             var tmpimg = new Guid() + ".png";
             avatar.Save(tmpimg);
             var ImageData = "data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(tmpimg));

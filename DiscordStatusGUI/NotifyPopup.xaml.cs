@@ -30,7 +30,7 @@ namespace DiscordStatusGUI
             var ni = new System.Windows.Forms.NotifyIcon();
             ni.Icon = Properties.Resources.logo;
             ni.Visible = true;
-            ni.Text = Static.Titile;
+            ni.Text = Static.Title;
             ni.MouseUp += Ni_MouseUp;
 
             MouseHook.OnMouseButtonDown += Static_OnMouseButtonClick;

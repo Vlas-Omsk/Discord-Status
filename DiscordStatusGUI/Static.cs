@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Markup.Localizer;
-using System.Windows.Media;
-using DiscordStatusGUI.Extensions;
+﻿using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
 using DiscordStatusGUI.Libs.DiscordApi;
 using DiscordStatusGUI.Models;
 using DiscordStatusGUI.Properties;
 using DiscordStatusGUI.ViewModels;
 using DiscordStatusGUI.ViewModels.Dialogs;
-using DiscordStatusGUI.ViewModels.Discord;
 using DiscordStatusGUI.ViewModels.Tabs;
 using DiscordStatusGUI.Views;
 using DiscordStatusGUI.Views.Discord;
 using DiscordStatusGUI.Views.Tabs;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using DiscordStatusGUI.Locales;
 
 namespace DiscordStatusGUI
 {
@@ -33,29 +28,95 @@ namespace DiscordStatusGUI
         public static MainWindow MainWindow;
         public static MainWindowViewModel MainWindowViewModel;
 
-        public static Discord Discord = new Discord();
+        public static readonly Discord Discord = new Discord();
 
-        public static string Titile = "Discord Status";
-        public static ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
+        public static readonly string Title = "Discord Status";
+        public static readonly ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
+        public static readonly double Version;
         public static ObservableCollection<VerticalTabItem> Tabs;
         public static ResourceDictionary DiscordTheme { get; private set; }
+
+        #region Notifications
+        public readonly static Notification CustomStatusOverride = new Notification(Lang.GetResource("Static:CustomStatusOverride:Title"), Lang.GetResource("Static:CustomStatusOverride:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false, LinkText = Lang.GetResource("Static:CustomStatusOverride:LinkText"), LinkAction = async () =>
+        {
+            await Task.Run(() =>
+            {
+                CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = false);
+                Discord.SetCustomStatus();
+                CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = true);
+            });
+        }
+        };
+        public readonly static Notification UpdateAvailable = new Notification(Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), false);
+        public readonly static Notification Reconnect = new Notification(Lang.GetResource("Static:Reconnect:Title"), Lang.GetResource("Static:Reconnect:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false };
+
+        public static async void InitNotifications()
+        {
+            MainWindow.Notifications.AddNotification(CustomStatusOverride);
+            MainWindow.Notifications.AddNotification(UpdateAvailable);
+            MainWindow.Notifications.AddNotification(Reconnect);
+
+            await Task.Run(() =>
+            {
+                if (UpdateManager.IsUpdateAvailable(out double newversion))
+                {
+                    UpdateAvailable.Dispatcher.Invoke(() =>
+                    {
+                        UpdateAvailable.LinkText = Lang.GetResource("Static:UpdateAvailable:LinkText").Replace("{version}", newversion.ToString());
+                        UpdateAvailable.LinkAction = new Action(() => TemplateViewModel.OpenLink(UpdateManager.download_latest));
+                    });
+                    UpdateAvailable.IsVisible = true;
+                }
+            });
+
+            Discord.Socket.OnUserSettingsChanged += Socket_OnUserSettingsChanged;
+        }
+
+        private static void Socket_OnUserSettingsChanged(string eventtype, object rawdata, PinkJson.Json data)
+        {
+            if (data.IndexByKey("custom_status") != -1)
+            {
+                CustomStatusOverride.IsVisible = data["custom_status"].Value != null;
+            }
+        }
+        #endregion
+
+        static Static()
+        {
+            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            Version = ver.Major + ver.Minor * 0.1 + ver.Build * 0.01 + ver.Revision * 0.001;
+        }
 
         public static void Init()
         {
             DiscordTheme = Application.Current.Resources;
-            
-            Tabs = new System.Collections.ObjectModel.ObservableCollection<Models.VerticalTabItem>()
+
+            Tabs = new ObservableCollection<Models.VerticalTabItem>()
             {
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new Views.Tabs.GameStatus()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, "Settings", new Views.Tabs.Settings()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Views.Tabs.Warface())
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, Lang.GetResource("Static:Tabs:GameStatus"), new Views.Tabs.GameStatus()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, Lang.GetResource("Static:Tabs:Settings"), new Views.Tabs.Settings()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface RU", new Views.Tabs.Warface())
             };
+
+            Discord.Socket.AutoReconnect += Socket_AutoReconnect;
+            Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
+        }
+
+        private static void Socket_OnUserInfoChanged(string eventtype, object rawdata, UserInfo data)
+        {
+            if (eventtype == "READY")
+                Reconnect.IsVisible = false;
+        }
+
+        private static void Socket_AutoReconnect()
+        {
+            Reconnect.IsVisible = true;
         }
 
         #region Activity
         private static Activity[] _Activities;
-        public static IEnumerable<FieldInfo> ActivityFields = typeof(Activity).GetRuntimeFields();
+        public static IEnumerable<PropertyInfo> ActivityFields = typeof(Activity).GetProperties();
 
         public static Activity[] Activities
         {
@@ -66,7 +127,7 @@ namespace DiscordStatusGUI
                     ProfileName = "Discord Status",
                     Name = "Discord Status",
                     ApplicationID = "743507332838981723",
-                    Details = "vlas-omsk.github.io",
+                    State = "vlas-omsk.github.io",
                     ImageLargeKey = "logo",
                     IsAvailableForChange = false
                 },
@@ -84,7 +145,7 @@ namespace DiscordStatusGUI
                     Details = "{wf:State}",
                     StartTime = "{wf:StateStartTime}",
                     ImageLargeKey = "logo",
-                    ImageLargeText = "Warface Status",
+                    ImageLargeText = "Warface RU",
                     ImageSmallKey = "rank{wf:PlayerRank}",
                     ImageSmallText = "Ранк: {wf:PlayerRank} {wf:PlayerRankName}",
                     IsAvailableForChange = true
@@ -119,7 +180,7 @@ namespace DiscordStatusGUI
                 case "win:ForegroundWindowProcessName": return ProcessEx.ForegroundWindowProcess?.ProcessName;
             }
 
-            return "You are idiot?";
+            return name;//"You are idiot?";
         }
 
         public static bool IsPrefixContainsInFields(Activity activity, string prefix)
@@ -134,7 +195,10 @@ namespace DiscordStatusGUI
             {
                 var val = fi.GetValue(activity);
                 if (!(val is string))
+                {
+                    fi.SetValue(result, val);
                     return;
+                }
 
                 fi.SetValue(result, ReplaceFilds(val.ToString() + ""));
             });
@@ -451,8 +515,8 @@ namespace DiscordStatusGUI
             }
 
 
-            public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, "Ok"); }
-            public static ButtonItem ButtonApply { get => new ButtonItem(DateTimePickerHide, "Apply"); }
+            public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, Lang.GetResource("Ok")); }
+            public static ButtonItem ButtonApply { get => new ButtonItem(DateTimePickerHide, Lang.GetResource("Apply")); }
         }
 
 
@@ -466,12 +530,13 @@ namespace DiscordStatusGUI
                 });
             else if (!string.IsNullOrEmpty(Discord?.Token))
             {
-                Dialogs.MessageBoxShow("Oops...", "It seems your Discord token is not valid. Try logging into your Discord account again.", new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
+                Dialogs.MessageBoxShow(Lang.GetResource("Static:InvalidDiscordToken:Title"), Lang.GetResource("Static:InvalidDiscordToken:Text"), new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
                 MainWindow.Dispatcher.Invoke(() =>
                 {
                     CurrentPage = new Login();
                 });
-            } else
+            }
+            else
                 MainWindow.Dispatcher.Invoke(() =>
                 {
                     CurrentPage = new Login();

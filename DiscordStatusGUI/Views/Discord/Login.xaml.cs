@@ -65,7 +65,7 @@ namespace DiscordStatusGUI.Views.Discord
             {
                 Animations.Shake(2, 15, new TimeSpan(00, 00, 00, 00, 500), CatText).Begin();
                 if (CatClickCount == 5)
-                    CatText.Text = "Хватит!";
+                    CatText.Text = Locales.Lang.GetResource("Views:Discord:Login:CatEmotions:Angry");
             }
             else
             {
@@ -93,10 +93,9 @@ namespace DiscordStatusGUI.Views.Discord
                             i = 0;
                     }
                 })
-                {
-                    IsBackground = true,
-                    ApartmentState = ApartmentState.STA
-                };
+#pragma warning disable CS0618 // Тип или член устарел
+                { IsBackground = true, ApartmentState = ApartmentState.STA };
+#pragma warning restore CS0618 // Тип или член устарел
                 t.Start();
 
                 ThicknessAnimation go_out = new ThicknessAnimation()

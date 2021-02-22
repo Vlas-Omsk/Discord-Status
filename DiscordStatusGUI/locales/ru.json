@@ -1,64 +1,154 @@
-﻿{
-	"Language": "ru",
-
-	"InitForm_initialization": "Инициализация",
-	"InitForm_wait": "Пожалуйста, подождите...",
-
-	"LoginForm_email": "E-MAIL",
-	"LoginForm_forgotPassword": "Забыли пароль?",
-	"LoginForm_header": "Войдите или создайте свой дискор аккаунт, чтобы приложение смогло установить вам статус.",
-	"LoginForm_needAccount": "Нужна учётная запись?",
-	"LoginForm_password": "ПАРОЛЬ",
-	"LoginForm_signIn": "Вход",
-	"LoginForm_signUp": "Зарегестрироваться",
-	"LoginForm_skip": "Пропустить",
-
-	"CodeForm_backToLoginForm": "Вернуться ко входу",
-	"CodeForm_caption": "Двухфакторная аутентификация",
-	"CodeForm_header": "ВВЕДИТЕ КОД АУТЕНТИФИКАЦИИ ИЛИ РЕЗЕРВНЫЙ КОД DISCORD",
-	"CodeForm_header2": "Вы можете использовать резервный код или своё мобильное приложение двухфакторной аутентификации.",
-	"CodeForm_sendSMS": "Получить код авторизации по SMS",
-	"CodeForm_signIn": "Вход",
-
-	"ContentForm_Visualizer_caption": "Статус визуализатор",
-	"ContentForm_Visualizer_header": "Здесь вы може увидеть как будет выглядеть ваш статус.",
-	"ContentForm_Visualizer_TabControl_TabItem1": "Полный Профиль",
-	"ContentForm_Visualizer_TabControl_TabItem2": "Всплывающее окно",
-	"ContentForm_Visualizer_TabControl_TabItem1_Playing": "Играет в игру",
-	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1": "Личные данные",
-	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2": "Общие сервера",
-	"ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3": "Общие друзья",
-	"ContentForm_Visualizer_Options_Profiles": "Профили:",
-
-	"ContentForm_Settings_MainBlock": "Основные",
-	"ContentForm_Settings_Volume": "Громкость звуков",
-	"ContentForm_Settings_AutoRun": "Открыть при загрузке Windows",
-	"ContentForm_Settings_StreamStatusDiscord": "Транслировать статус в Discord",
-	"ContentForm_Settings_StatusUpdate": "Обновление статуса",
-	"ContentForm_Settings_StatusUpdate_Automatically": "Автоматически",
-	"ContentForm_Settings_StatusUpdate_Manually": "Вручную",
-	"ContentForm_Settings_StatusUpdate_EveryNSeconds": "Каждые N секунд",
-	"ContentForm_Settings_ConnectedAccounts": "Подключенные аккаунты",
-
-	"ContentForm_WarfaceScr_header": "Используйте эти строки, чтобы транслировать ваш статус из игры:",
-	"ContentForm_WarfaceScr_BlackSamurai": "Cобытие \"Темные самураи\"",
-	"ContentForm_WarfaceScr_BlackSamurai_NotifyOnNewCase": "Получать звуковые уведомления, если доступны кейсы",
-	"ContentForm_WarfaceScr_Analytics": "Аналитика матчей",
-
-	"ContentForm_ScrollMenu_MenuVisualizer": "Статус визуализатор",
-	"ContentForm_ScrollMenu_MenuSettings": "Настройки",
-	"ContentForm_ScrollMenu_MenuConsole": "Консоль разработчика",
-
-	"SaveChangesBox_header": "Вы забыли сохранить изменения!",
-	"SaveChangesBox_SaveChanges": "Сохранить изменения",
-	"SaveChangesBox_Reset": "Сброс",
-
-	"MessageBox_DftButtonOk": "Ок",
-	"MessageBox_DftCaption": "Заголовок",
-	"MessageBox_DftContent": "Контент",
-
-	"NotifyPopup_Hide": "Спрятать это меню...",
-	"NotifyPopup_Exit": "Выйти из Warface Status",
-
-	"CatEmotion_login_default": "Мррр..."
+{
+	"Culture": "ru",
+	"Themes": {
+		"DiscordTheme": {
+			"DataGridStyleDiscord": {
+				"CopyParameterName": "Копировать имя параметра"
+			}
+		}
+	},
+	"ViewModels": {
+		"Discord": {
+			"CodeViewModel": {
+				"HeaderMFA": "Вы можете использовать резервный код или своё мобильное приложение двухфакторной аутентификации.",
+				"HeaderMFAPhone": "Мы отправили сообщение на {phone}. Пожалуйста, введите полученный код.",
+				"InvalidMFACode": "Неверный код"
+			},
+			"LoginViewModel": {
+				"ChangePassword": {
+					"Title": "Инструкции отправлены",
+					"Text": "Мы отправили инструкции по смене пароля на {email}, пожалуйста, проверьте папки «Входящие» и «Спам»."
+				}
+			}
+		},
+		"Tabs": {
+			"SettingsViewModel": {
+				"ChangeDiscordAccount": {
+					"Title": "Учетная запись Discord",
+					"Text": "Вы уже вошли в свою учетную запись Discord, хотите ли вы ее изменить?"
+				}
+			},
+			"WindowsViewModel": {
+				"ForegroundWindowName": "Имя активного окна",
+				"ForegroundWindowProcessName": "Имя процесса активного окна"
+			}
+		}
+	},
+	"Views": {
+		"Dialogs": {
+			"DateTimePicker": {
+				"Title": "Выбор даты и времени",
+				"Hour": " H: ",
+				"Minute": " M: ",
+				"Second": " S: ",
+				"Day": " D: ",
+				"Month": " M: ",
+				"Year": " Y: "
+			},
+			"SaveChangesBox": {
+				"Title": "Вы забыли сохранить изменения!",
+				"Reset": "Сброс",
+				"Save": "Сохранить изменения"
+			}
+		},
+		"Discord": {
+			"Code": {
+				"Title": "Двухфакторная аутентификация",
+				"Description": "ВВЕДИТЕ КОД АУТЕНТИФИКАЦИИ ИЛИ РЕЗЕРВНЫЙ КОД DISCORD",
+				"SignIn": "Вход",
+				"SendSMS": "Получить код авторизации по SMS",
+				"BackToLogin": "Вернуться ко входу"
+			},
+			"Login": {
+				"CatEmotions": {
+					"Default": "Мррр...",
+					"Angry": "Хватит!"
+				},
+				"Skip": "Пропустить",
+				"Description": "Войдите или создайте свой дискор аккаунт, чтобы приложение смогло установить вам статус.",
+				"Email": "E-MAIL",
+				"Password": "ПАРОЛЬ",
+				"ForgotPassword": "Забыли пароль?",
+				"SignIn": "Вход",
+				"NeedAccount": "Нужна учётная запись?",
+				"SignUp": "Зарегестрироваться"
+			}
+		},
+		"Tabs": {
+			"GameStatus": {
+				"Title": "Игровой статус",
+				"Visualizer": {
+					"Item1": {
+						"Title": "Полный Профиль",
+						"UserTabs": {
+							"Item1": "Личные данные",
+							"Item2": "Общие сервера",
+							"Item3": "Общие друзья"
+						}
+					},
+					"Item2": {
+						"Title": "Всплывающее окно"
+					}
+				},
+				"HowToUsePictures": "Как использовать картинки?",
+				"ProfilesDisabled": "В данный момент невозможно изменить профиль",
+				"Profiles": "Профили:"
+			},
+			"Settings": {
+				"Title": "Настройки",
+				"MyAccount": "МОЯ УЧЕТНАЯ ЗАПИСЬ",
+				"Username": "ИМЯ ПОЛЬЗОВАТЕЛЯ",
+				"Email": "E-MAIL",
+				"UserStatuses": {
+					"Online": "В сети",
+					"Idle": "Не активен",
+					"DoNotDisturb": "Не беспокоить",
+					"Invisible": "Невидимый"
+				},
+				"NotAvailable": "В данный момент не доступно.",
+				"Basic": "ОСНОВНЫЕ",
+				"ConnectToDiscord": "Установить соединение с Discord",
+				"OpenAtSystemStartup": "Открывать Discord Status при запуске системы",
+				"ConnectedAccounts": "ПОДКЛЮЧЕННЫЕ АККАУНТЫ"
+			},
+			"Warface": {
+				"FastGameClose": "Ускорить закрытие клиента Warface",
+				"ActiveProfile": "Установить профиль при активации игры:"
+			}
+		},
+		"Initialization": {
+			"Title": "Инициализация",
+			"Description": "Пожалуйста, подождите..."
+		}
+	},
+	"Static": {
+		"CustomStatusOverride": {
+			"Title": "Внимание!",
+			"Description": "Возможно, ваш статус пользователя перекрывает игровой статус.",
+			"LinkText": "Нажмите здесь, чтобы сбросить его"
+		},
+		"UpdateAvailable": {
+			"Title": "Доступно обновление!",
+			"Description": "Доступна новая версия Discord Status.",
+			"LinkText": "Скачать Discord Status v{version}"
+		},
+		"Reconnect": {
+			"Title": "Потеряно соединение с Discord",
+			"Description": "Каждые 30 секунд будет производится попытка переподключения"
+		},
+		"Tabs": {
+			"GameStatus": "Игровой статус",
+			"Settings": "Настройки"
+		},
+		"InvalidDiscordToken": {
+			"Title": "Упс...",
+			"Text": "Похоже ваша сессия Discord недействительная. Попробуйте снова войти в свою учетную запись Discord."
+		}
+	},
+	"Ok": "Ок",
+	"Apply": "Применить",
+	"Cancel": "Отмена",
+	"Yes": "Да",
+	"No": "Нет",
+	"NotAssigned": "Не назначено"
 }

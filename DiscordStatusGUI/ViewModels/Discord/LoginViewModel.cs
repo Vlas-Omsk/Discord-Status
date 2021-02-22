@@ -1,7 +1,7 @@
 ﻿using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Views;
 using DiscordStatusGUI.Views.Discord;
-using PinkJson.Parser;
+using PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,7 +148,7 @@ namespace DiscordStatusGUI.ViewModels.Discord
                         EmailError = Static.Discord.LastError;
                         break;
                     case Libs.DiscordApi.ForgotPasswordErrors.Successful:
-                        Static.Dialogs.MessageBoxShow("Инструкции отправлены", "Мы отправили инструкции по смене пароля на " + Static.Discord.Email + ", пожалуйста, проверьте папки «Входящие» и «Спам».", new System.Collections.ObjectModel.ObservableCollection<Models.ButtonItem>() { Static.Dialogs.ButtonOk });
+                        Static.Dialogs.MessageBoxShow(Locales.Lang.GetResource("ViewModels:Discord:LoginViewModel:ChangePassword:Title"), Locales.Lang.GetResource("ViewModels:Discord:LoginViewModel:ChangePassword:Text").Replace("{email}", Static.Discord.Email), new System.Collections.ObjectModel.ObservableCollection<Models.ButtonItem>() { Static.Dialogs.ButtonOk });
                         break;
                 }
             });

@@ -35,7 +35,7 @@
                         <ColumnDefinition Width="370*"/>
                         <ColumnDefinition MinWidth="540" Width="540*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Grid.ColumnSpan="2" Margin="5" Foreground="White" TextAlignment="Center" Text="Game Status" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Grid.ColumnSpan="2" Margin="5" Foreground="White" TextAlignment="Center" Text="{locales:Lang Views:Tabs:GameStatus:Title}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
                     <Grid x:Name="Preview" Grid.Row="1" Grid.ColumnSpan="2" Margin="10,10,10,10">
                         <Grid.RowDefinitions>
@@ -55,7 +55,7 @@
                         </Border>
 
                         <TabControl Grid.Row="1" Style="{StaticResource TabControlStyleDiscord}" Background="#FF18191C">
-                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1}" Style="{StaticResource TabItemStyleDiscord}">
+                            <TabItem Header="{locales:Lang Views:Tabs:GameStatus:Visualizer:Item1:Title}" Style="{StaticResource TabItemStyleDiscord}">
                                 <Grid Width="510" Height="510" Margin="10">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="110"/>
@@ -103,7 +103,7 @@
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_Playing}" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Grid.ColumnSpan="99"/>
+                                        <TextBlock Text="{Binding ActivityType, Mode=OneWay}" Margin="17,20,0,6" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="13" FontWeight="Bold" Grid.ColumnSpan="99"/>
 
                                         <!-- LargeImage -->
                                         <Grid x:Name="ImageLarge_HelpText" IsHitTestVisible="False" Opacity="0" Width="{Binding ActualWidth, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}"  Height="{Binding ActualHeight, ConverterParameter=5, Converter={converters:SumConverter}, ElementName=LargeImageTextPresenter}" RenderTransformOrigin="0.5,1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="54.5,5,0,0" Grid.RowSpan="22" Grid.ColumnSpan="22">
@@ -173,9 +173,9 @@
 
                                     <!-- ZONE 3 -->
                                     <TabControl Grid.Row="2" Margin="0,0,0,0" Padding="0,0,0,0" Style="{StaticResource TabControlStyleDiscord}" Background="#FF2F3136" Foreground="#FF6C82CF" BorderBrush="White" HorizontalContentAlignment="Center">
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem1}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem2}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
-                                        <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem1_TabControl_TabItem3}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{locales:Lang Views:Tabs:GameStatus:Visualizer:Item1:UserTabs:Item1}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{locales:Lang Views:Tabs:GameStatus:Visualizer:Item1:UserTabs:Item2}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
+                                        <TabItem Header="{locales:Lang Views:Tabs:GameStatus:Visualizer:Item1:UserTabs:Item3}" Style="{StaticResource TabItemStyleDiscord}" FontWeight="Normal" Margin="0,0,0,0" BorderBrush="White" Height="42"/>
                                     </TabControl>
                                     <Border Grid.Row="3" Background="#FF2F3136" CornerRadius="0,0,10,10" RenderTransformOrigin="0.5,0.5">
                                         <Border.RenderTransform>
@@ -185,7 +185,7 @@
                                 </Grid>
                             </TabItem>
 
-                            <TabItem Header="{x:Static locales:Lang.ContentForm_Visualizer_TabControl_TabItem2}" Background="#FF18191C" Style="{StaticResource TabItemStyleDiscord}">
+                            <TabItem Header="{locales:Lang Views:Tabs:GameStatus:Visualizer:Item2:Title}" Background="#FF18191C" Style="{StaticResource TabItemStyleDiscord}">
                                 <Grid>
                                     <TextBlock Margin="5" Foreground="White" Text="&#10;Ты думал что-то здесь будет?&#10;&#10;Оооо... Нееет&#10;" TextAlignment="Center" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                                 </Grid>
@@ -207,6 +207,7 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -254,13 +255,13 @@
                                 <Setter Property="Cursor" Value="Hand"/>
                             </Style>
                             <CorLib:String x:Key="how_to_use_pictures">
-                                https://vlas-omsk.github.io/documentation.html#how_to_use_pictures
+                                https://vlas-omsk.github.io/Discord-Status/documentation.html#how_to_use_pictures
                             </CorLib:String>
                             <ContextMenu x:Key="ContextMenuWithHowToUsePictures" Style="{StaticResource ContextMenuDiscord}">
-                                <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
-                                <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
-                                <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
-                                <MenuItem Header="Как использовать картинки?" Command="{Binding OpenLinkCommand}" CommandParameter="{StaticResource how_to_use_pictures}"/>
+                                <MenuItem Command="ApplicationCommands.Copy"/>
+                                <MenuItem Command="ApplicationCommands.Paste"/>
+                                <MenuItem Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                                <MenuItem Header="{locales:Lang Views:Tabs:GameStatus:HowToUsePictures}" Command="{Binding OpenLinkCommand}" CommandParameter="{StaticResource how_to_use_pictures}"/>
                             </ContextMenu>
                         </Grid.Resources>
 
@@ -274,9 +275,9 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="20"/>
                             </Grid.ColumnDefinitions>
-                            <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="В данный момент невозможно изменить профиль" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
+                            <Label Visibility="{Binding ElementName=ProfilesComboBox, Path=IsEnabled, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Content="{locales:Lang Views:Tabs:GameStatus:ProfilesDisabled}" Grid.Column="1" Grid.Row="0" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
 
-                            <TextBlock Grid.Row="1" Text="{x:Static locales:Lang.ContentForm_Visualizer_Options_Profiles}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                            <TextBlock Grid.Row="1" Text="{locales:Lang Views:Tabs:GameStatus:Profiles}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
                             <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{StaticResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
@@ -294,17 +295,17 @@
 
                         <!-- 0, 0 -->
                         <TextBlock Text="NAME" Grid.Column="0" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="Name" Grid.Column="0" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <TextBox Name="Name" Grid.Column="0" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsAvailableForChange, Converter={converters:BoolInverter}}"/>
                         <!-- 0, 1 -->
                         <TextBlock Text="APPLICATION ID" Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldTitle}"/>
                         <Path Grid.Column="1" Grid.Row="1" Style="{StaticResource FieldHelp}" MouseLeftButtonUp="{converters:EventBinding Command=OpenLinkCommand, CommandParameter={StaticResource how_to_use_pictures}}"/>
-                        <TextBox Name="ApplicationID" Grid.Column="1" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding ApplicationID, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <TextBox Name="ApplicationID" Grid.Column="1" Grid.Row="1" Style="{StaticResource Field}" Text="{Binding ApplicationID, UpdateSourceTrigger=PropertyChanged}" ContextMenu="{StaticResource ContextMenuWithHowToUsePictures}" IsReadOnly="{Binding IsAvailableForChange, Converter={converters:BoolInverter}}"/>
                         <!-- 1, 0 -->
                         <TextBlock Text="STATE" Grid.Column="0" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="State" Grid.Column="0" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding State, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <TextBox Name="State" Grid.Column="0" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding State, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsAvailableForChange, Converter={converters:BoolInverter}}"/>
                         <!-- 1, 1 -->
                         <TextBlock Text="DETAILS" Grid.Column="1" Grid.Row="2" Style="{StaticResource FieldTitle}"/>
-                        <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsAvailableForChange}"/>
+                        <TextBox Name="Details" Grid.Column="1" Grid.Row="2" Style="{StaticResource Field}" Text="{Binding Details, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="{Binding IsAvailableForChange, Converter={converters:BoolInverter}}"/>
                         <!-- 2, 0 -->
                         <TextBlock Text="START TIMESTAMP" Grid.Column="0" Grid.Row="3" Style="{StaticResource FieldTitle}"/>
                         <Grid Grid.Column="0" Grid.Row="3" Margin="10,28,10,10">
@@ -347,6 +348,21 @@
                         <!-- 5, 1 -->
                         <TextBlock Text="IMAGE SMALL TEXT" Grid.Column="1" Grid.Row="6" Style="{StaticResource FieldTitle}"/>
                         <TextBox Name="ImageSmallText" Grid.Column="1" Grid.Row="6" Style="{StaticResource Field}" Text="{Binding ImageSmallText, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- 6, 0 -->
+                        <TextBlock Text="ACTIVITY TYPE" Grid.Column="0" Grid.Row="7" Style="{StaticResource FieldTitle}"/>
+                        <ComboBox Name="ActivityType" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="7" Style="{StaticResource ComboBoxField}" ItemsSource="{Binding ActivityTypes}" IsEditable="False" SelectedItem="{Binding SelectedActivityType}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Grid.Column="1" Text="{Binding Format}" FontSize="14"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <ComboBox.ItemContainerStyle>
+                                <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ComboBoxItemDiscord}">
+                                    <Setter Property="Content" Value="{Binding Format}"/>
+                                    <Setter Property="FontSize" Value="14"/>
+                                </Style>
+                            </ComboBox.ItemContainerStyle>
+                        </ComboBox>
                     </Grid>
                 </Grid>
             </controls:SmoothScrollViewer>

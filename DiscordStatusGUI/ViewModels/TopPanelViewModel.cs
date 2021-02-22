@@ -8,7 +8,7 @@ namespace DiscordStatusGUI.ViewModels
 {
     class TopPanelViewModel : TemplateViewModel
     {
-        public string Title { get => Static.Titile; }
+        public string Title { get => Static.Title; }
 
         public Command MinimizeCommand { get; private set; }
         public Command MaximizeCommand { get; private set; }

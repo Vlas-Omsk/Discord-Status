@@ -1,5 +1,4 @@
-﻿using PinkJson.Parser;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using PinkJson;
 
 namespace DiscordStatusGUI.Extensions
 {
@@ -63,7 +63,7 @@ namespace DiscordStatusGUI.Extensions
             var consoleWriter = Console.Out;
 
             Console.SetOut(new MultiWriter(StreamWriter, consoleWriter));
-            WriteLine("", $"{Static.Titile} v{Assembly.GetExecutingAssembly().GetName().Version}");
+            WriteLine("", $"{Static.Title} v{Static.Version.ToString().Replace(',', '.')}");
 
             var DiscordStatus =
             @" ____                                        __      ____    __             __                      " + Environment.NewLine +

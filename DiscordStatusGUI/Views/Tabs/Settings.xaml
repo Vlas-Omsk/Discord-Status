@@ -9,8 +9,9 @@
              xmlns:tabs="clr-namespace:DiscordStatusGUI.ViewModels.Tabs"
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
              xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
+             xmlns:static="clr-namespace:DiscordStatusGUI"
        mc:Ignorable="d"
-       d:DesignWidth="800" d:DesignHeight="450" Background="#36393f"
+       d:DesignWidth="800" d:DesignHeight="800" Background="#36393f"
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters">
     <UserControl.DataContext>
         <tabs:SettingsViewModel/>
@@ -31,10 +32,11 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Margin="5" Foreground="White" TextAlignment="Center" Text="Settings" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Margin="5" Foreground="White" TextAlignment="Center" Text="{locales:Lang Views:Tabs:Settings:Title}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                 
                 <Grid Margin="0,40, 0, 0">
                     <Grid.RowDefinitions>
@@ -43,7 +45,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="МОЯ УЧЕТНАЯ ЗАПИСЬ" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
+                    <TextBlock Text="{locales:Lang Views:Tabs:Settings:MyAccount}" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
                     <Border Background="#FF292B2F" CornerRadius="5" BorderThickness="1" BorderBrush="#FF202225" Grid.Row="1" Margin="0,10,0,0"/>
                     <Grid Grid.Row="1" Margin="0,10,0,0" Height="140" IsHitTestVisible="{Binding ElementName=DiscordConnectedSwitcher, Path=IsChecked}">
                         <Grid.Effect>
@@ -69,7 +71,7 @@
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="ИМЯ ПОЛЬЗОВАТЕЛЯ" Foreground="#FF8A8E93" FontSize="12" Margin="0,22,0,0"/>
+                            <TextBlock Text="{locales:Lang Views:Tabs:Settings:Username}" Foreground="#FF8A8E93" FontSize="12" Margin="0,22,0,0"/>
                             <Grid Grid.Row="1" Margin="0,5,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
@@ -79,7 +81,7 @@
                                 <TextBlock Text="{Binding DiscordUserName}" FontSize="13" Foreground="#FFB0B6B9"/>
                                 <TextBlock Text="{Binding DiscordUserTag, ConverterParameter=#[Value], Converter={converters:StringConverter}}" FontSize="13" Foreground="#FF6F7275" Grid.Column="1" FontWeight="Normal"/>
                             </Grid>
-                            <TextBlock Text="E-MAIL" Foreground="#FF8A8E93" FontSize="12" Margin="0,20,0,0" Grid.Row="2"/>
+                            <TextBlock Text="{locales:Lang Views:Tabs:Settings:Email}" Foreground="#FF8A8E93" FontSize="12" Margin="0,20,0,0" Grid.Row="2"/>
                             <Grid Grid.Row="3" Margin="0,5,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
@@ -98,7 +100,7 @@
                                             <ColumnDefinition Width="150"/>
                                         </Grid.ColumnDefinitions>
                                         <Ellipse Width="10" Height="10" Fill="#FF43B513" Margin="0,0,5,0"/>
-                                        <TextBlock Grid.Column="1" Text="Online" FontSize="15"/>
+                                        <TextBlock Grid.Column="1" Text="{locales:Lang Views:Tabs:Settings:UserStatuses:Online}" FontSize="15"/>
                                     </Grid>
                                 </ComboBoxItem>
                                 <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
@@ -119,7 +121,7 @@
                                                 </CombinedGeometry>
                                             </Path.Data>
                                         </Path>
-                                        <TextBlock Grid.Column="1" Text="Idle" FontSize="15"/>
+                                        <TextBlock Grid.Column="1" Text="{locales:Lang Views:Tabs:Settings:UserStatuses:Idle}" FontSize="15"/>
                                     </Grid>
                                 </ComboBoxItem>
                                 <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
@@ -140,7 +142,7 @@
                                                 </CombinedGeometry>
                                             </Path.Data>
                                         </Path>
-                                        <TextBlock Grid.Column="1" Text="Do not disturb" FontSize="15"/>
+                                        <TextBlock Grid.Column="1" Text="{locales:Lang Views:Tabs:Settings:UserStatuses:DoNotDisturb}" FontSize="15"/>
                                     </Grid>
                                 </ComboBoxItem>
                                 <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
@@ -161,7 +163,7 @@
                                                 </CombinedGeometry>
                                             </Path.Data>
                                         </Path>
-                                        <TextBlock Grid.Column="1" Text="Invisible" FontSize="15"/>
+                                        <TextBlock Grid.Column="1" Text="{locales:Lang Views:Tabs:Settings:UserStatuses:Invisible}" FontSize="15"/>
                                     </Grid>
                                 </ComboBoxItem>
                             </ComboBox>
@@ -175,7 +177,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="/DiscordStatusGUI;component/Resources/Icons/exclamation.png" Height="20" HorizontalAlignment="Right" Grid.Column="1"/>
-                        <TextBlock Text="В данный момент не доступно." Foreground="White" FontSize="10" HorizontalAlignment="Left" Grid.Column="2" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                        <TextBlock Text="{locales:Lang Views:Tabs:Settings:NotAvailable}" Foreground="White" FontSize="10" HorizontalAlignment="Left" Grid.Column="2" VerticalAlignment="Center" Margin="6,0,0,0"/>
                     </Grid>
                 </Grid>
 
@@ -187,9 +189,9 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="ОСНОВНЫЕ" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
-                    <CheckBox x:Name="DiscordConnectedSwitcher" Content="Установить соединение с Discord" Grid.Row="2" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsDiscordConnected}" IsEnabled="{Binding DiscordConnectedSwitcherEnable}"/>
-                    <CheckBox Content="Открывать Discord Status при запуске системы" Grid.Row="3" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsAutoRunEnabled}"/>
+                    <TextBlock Text="{locales:Lang Views:Tabs:Settings:Basic}" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
+                    <CheckBox x:Name="DiscordConnectedSwitcher" Content="{locales:Lang Views:Tabs:Settings:ConnectToDiscord}" Grid.Row="2" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsDiscordConnected}" IsEnabled="{Binding DiscordConnectedSwitcherEnable}"/>
+                    <CheckBox Content="{locales:Lang Views:Tabs:Settings:OpenAtSystemStartup}" Grid.Row="3" Margin="0,10,0,0" Style="{StaticResource CheckBoxDiscord}" IsChecked="{Binding IsAutoRunEnabled}"/>
                 </Grid>
 
                 <Grid Grid.Row="2" Margin="0,10, 0, 0">
@@ -199,7 +201,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="ПОДКЛЮЧЕННЫЕ АККАУНТЫ" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
+                    <TextBlock Text="{locales:Lang Views:Tabs:Settings:ConnectedAccounts}" Margin="0,20,0,0" Foreground="White" FontSize="13" FontWeight="Bold"/>
                     <Grid Grid.Row="1" Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -209,21 +211,32 @@
                         <Button Content="MyGames" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94" Style="{Binding MyGamesAccountButtonStyle}" Grid.Column="1" Tag="{Binding IsMyGamesLogined}"/>
                     </Grid>
                 </Grid>
-                
+
+                <Grid Grid.Row="3" Margin="2,60,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock HorizontalAlignment="Right" FontSize="12" Text="{Binding Info}" Foreground="#FF686B6E"/>
+                    <TextBlock HorizontalAlignment="Right" FontSize="10" Grid.Row="1" Text="Discord Status" Style="{StaticResource LinkTextBlock}" MouseUp="{converters:EventBinding OpenLinkCommand, CommandParameter=https://vlas-omsk.github.io/Discord-Status}"/>
+                    <TextBlock HorizontalAlignment="Right" FontSize="10" Grid.Row="2" Text="GitHub" Style="{StaticResource LinkTextBlock}" MouseUp="{converters:EventBinding OpenLinkCommand, CommandParameter=https://github.com/Vlas-Omsk/Discord-Status}"/>
+                </Grid>
                 <!--<ComboBox Margin="0,5,10,0" SelectedIndex="0" VerticalContentAlignment="Center" Grid.Row="3" Style="{DynamicResource ComboBoxDiscord}">
                     <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_Automatically}" FontSize="15"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_Automatically}" FontSize="15"/>
                     </ComboBoxItem>
                     <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_Manually}" FontSize="15"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_Manually}" FontSize="15"/>
                     </ComboBoxItem>
                     <ComboBoxItem Style="{StaticResource ComboBoxItemDiscord}">
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_EveryNSeconds}" FontSize="15"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_EveryNSeconds}" FontSize="15"/>
                     </ComboBoxItem>
                 </ComboBox>-->
 
-                <!--<TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_MainBlock}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold"/>
-                <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_Volume}" Margin="0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Row="1"/>
+                <!--<TextBlock Text="{locales:Lang Views:ContentForm_Settings_MainBlock}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="{locales:Lang Views:ContentForm_Settings_Volume}" Margin="0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Row="1"/>
                 <Slider x:Name="Volume" Grid.Row="2" Maximum="100" Minimum="0" Value="50" Style="{StaticResource SliderDiscord}"/>
 
                 <Grid Grid.Row="3" Grid.Column="2">
@@ -233,7 +246,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Rectangle Style="{StaticResource ContentSplitter}" Grid.Row="0"/>
-                    <CheckBox Content="{x:Static locales:Lang.ContentForm_Settings_AutoRun}" Grid.Row="1" Style="{DynamicResource CheckBoxDiscord}"/>
+                    <CheckBox Content="{locales:Lang Views:ContentForm_Settings_AutoRun}" Grid.Row="1" Style="{DynamicResource CheckBoxDiscord}"/>
                     <Rectangle Style="{StaticResource ContentSplitter}" Grid.Row="2"/>
                 </Grid>
 
@@ -242,25 +255,25 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <CheckBox Content="{x:Static locales:Lang.ContentForm_Settings_StreamStatusDiscord}" Grid.Row="0" Style="{DynamicResource CheckBoxDiscord}"/>
+                    <CheckBox Content="{locales:Lang Views:ContentForm_Settings_StreamStatusDiscord}" Grid.Row="0" Style="{DynamicResource CheckBoxDiscord}"/>
                     <Rectangle Style="{StaticResource ContentSplitter}" Grid.Row="1"/>
                 </Grid>
 
-                <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate}" Margin="0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="6"/>
+                <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate}" Margin="0,5" Foreground="#FF8A8E93" FontSize="13" FontWeight="Bold" Grid.Column="2" Grid.Row="6"/>
                 <Grid Grid.Row="7">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="3*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <ComboBox Margin="0,5,10,0" SelectedIndex="0" VerticalContentAlignment="Center">
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_Automatically}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_Manually}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
-                        <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_StatusUpdate_EveryNSeconds}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_Automatically}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_Manually}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{locales:Lang Views:ContentForm_Settings_StatusUpdate_EveryNSeconds}" Foreground="Black" FontSize="12" FontWeight="Bold"/>
                     </ComboBox>
                     <TextBox Margin="0,5,0,0" Grid.Column="1" Text="1000" Padding="5" Style="{DynamicResource RoundedTextBox}" FontSize="11"/>
                 </Grid>
 
-                <TextBlock Text="{x:Static locales:Lang.ContentForm_Settings_ConnectedAccounts}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="15"/>
+                <TextBlock Text="{locales:Lang Views:ContentForm_Settings_ConnectedAccounts}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="15"/>
                 <Grid Grid.Row="16" Grid.Column="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>

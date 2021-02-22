@@ -1,5 +1,5 @@
 ﻿using DiscordStatusGUI.Extensions;
-using PinkJson.Parser;
+using PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

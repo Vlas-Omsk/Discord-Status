@@ -6,6 +6,7 @@
        xmlns:local="clr-namespace:DiscordStatusGUI.Views"
        xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
              xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
        mc:Ignorable="d" 
        d:DesignHeight="450"
        d:DesignWidth="72">
@@ -52,7 +53,7 @@
                             </Rectangle>
 
                             <!--#region ContentPresenter-->
-                            <Popup x:Name="contentPopup" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
+                            <Popup x:Name="contentPopup" IsHitTestVisible="False" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
                                 <Grid Height="50">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -227,6 +228,7 @@
                 <ColumnDefinition Width="72"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
             <ListView ItemsSource="{Binding Tabs}" Background="#FF202225" BorderThickness="0" Foreground="Transparent" ItemContainerStyle="{StaticResource VerticalListViewItemStyle}" SelectedItem="{Binding SelectedTab}" SelectedIndex="0"/>
             <Rectangle Grid.Column="1" Fill="#36393f"/>
             <!--#region Костыль для круглого угла-->
@@ -236,7 +238,7 @@
                 <Rectangle Fill="#36393f" Width="5" Height="9" StrokeThickness="5" Margin="0,6,15,5"/>
             </Grid>
             <!--#endregion-->
-            <ContentControl Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>
+            <ContentControl Grid.RowSpan="2" Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>
         </Grid>
     </UserControl.Content>
 </UserControl>

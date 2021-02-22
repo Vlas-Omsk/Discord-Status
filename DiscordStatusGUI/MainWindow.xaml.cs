@@ -21,7 +21,7 @@ using System.Diagnostics;
 using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
 using System.Text.RegularExpressions;
-using PinkJson.Parser;
+using PinkJson;
 using System.IO;
 
 namespace DiscordStatusGUI
@@ -41,7 +41,7 @@ namespace DiscordStatusGUI
             InitializeComponent();
 
             DataContext = Static.MainWindowViewModel;
-            Title = Static.Titile;
+            Title = Static.Title;
             Icon = Static.Icon;
         }
 
@@ -52,35 +52,61 @@ namespace DiscordStatusGUI
             Static.Discord.Socket.OnWorkingStatusChanged += Socket_OnWorkingStatusChanged;
 
             MouseHook.Create();
+            Static.InitNotifications();
 
             await Task.Run(() =>
             {
                 Preferences.LoadProfiles();
                 Preferences.Load();
+
+                SizeChanged += Window_SizeChanged;
+                LocationChanged += Window_LocationChanged;
+                StateChanged += Window_LocationChanged;
+
                 Preferences.SetPropertiesByCmdLine(Environment.GetCommandLineArgs());
             });
             
             await Task.Run(() =>
             {
                 WarfaceApi.Init();
-                DiscordStiller.Init();
+                DiscordUniversalStealer.Init();
                 ProcessEx.Init();
             });
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Preferences.Save();
             MouseHook.Destroy();
         }
 
+        private Thread WindowStateChangedThread;
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Preferences.Save();
+            if (WindowStateChangedThread == null || !WindowStateChangedThread.IsAlive)
+            {
+                WindowStateChangedThread = new Thread(() =>
+                {
+                    Thread.Sleep(5000);
+                    Preferences.Save();
+                })
+                { IsBackground = true };
+                WindowStateChangedThread.Start();
+            }
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            Preferences.Save();
+            if (WindowStateChangedThread == null || !WindowStateChangedThread.IsAlive)
+            {
+                WindowStateChangedThread = new Thread(() =>
+                {
+                    Thread.Sleep(5000);
+                    Preferences.Save();
+                })
+                { IsBackground = true };
+                WindowStateChangedThread.Start();
+            }
         }
 
         private void Socket_OnWorkingStatusChanged(string msg)

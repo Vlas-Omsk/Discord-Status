@@ -33,9 +33,9 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{x:Static locales:Lang.SaveChangesBox_header}" Margin="20,0,0,0" Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBlock Grid.Column="1" Text="{x:Static locales:Lang.SaveChangesBox_Reset}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="13" Style="{StaticResource LinkTextBlock}" Margin="0,0,10,0" PreviewMouseLeftButtonUp="{converters:EventBinding Command=CancelCommand}"/>
-                <Button Grid.Column="2" Background="#4f8754" Foreground="White" Content="{x:Static locales:Lang.SaveChangesBox_SaveChanges}" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,10,0" Style="{DynamicResource GreenButton}" VerticalAlignment="Center" Padding="10,7" Command="{Binding ApplyCommand}"/>
+                <TextBlock Text="{locales:Lang Views:Dialogs:SaveChangesBox:Title}" Margin="20,0,0,0" Foreground="White" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1" Text="{locales:Lang Views:Dialogs:SaveChangesBox:Reset}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" FontSize="13" Style="{StaticResource LinkTextBlock}" Margin="0,0,10,0" PreviewMouseLeftButtonUp="{converters:EventBinding Command=CancelCommand}"/>
+                <Button Grid.Column="2" Background="#4f8754" Foreground="White" Content="{locales:Lang Views:Dialogs:SaveChangesBox:Save}" FontSize="13" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,0,10,0" Style="{DynamicResource GreenButton}" VerticalAlignment="Center" Padding="10,7" Command="{Binding ApplyCommand}"/>
             </Grid>
         </Grid>
     </UserControl.Content>

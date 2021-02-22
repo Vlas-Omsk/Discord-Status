@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PinkJson.Parser;
+using PinkJson;
 using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 using System.Collections.ObjectModel;
@@ -87,7 +87,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 _SavedAppId = ApplicationID;
                 var tmp = Libs.DiscordApi.Discord.AppImages.GetAppAssets(tmp2);
                 if (tmp != null)
-                    _AppAssets = new ObservableCollection<string>(tmp.Select(o => (o as Json)?["name"]?.Value?.ToString()));
+                    _AppAssets = new ObservableCollection<string>(tmp.Select(o => (o.Value as Json)?["name"]?.Value?.ToString()));
                 else
                     _AppAssets = new ObservableCollection<string>();
                 end:
@@ -104,12 +104,20 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             }
         }
 
+        public List<ActivityType> ActivityTypes { get; } = new List<ActivityType>
+        {
+            Libs.DiscordApi.ActivityType.Game,
+            Libs.DiscordApi.ActivityType.Streaming,
+            Libs.DiscordApi.ActivityType.Listening,
+            Libs.DiscordApi.ActivityType.Custom,
+            Libs.DiscordApi.ActivityType.Competing,
+        };
 
         #region Options
         public List<string> Options = new List<string>(new string[] { "Name", "ApplicationID", "State", "Details", 
             "StartTime", "EndTime", "PartySize", "PartyMax", 
             "ImageLargeKey", "ImageLargeText", "ImageSmallKey", "ImageSmallText", "IsAvailableForChange",
-            "ImageLarge", "ImageSmall", "AppAssets"});
+            "ImageLarge", "ImageSmall", "AppAssets", "ActivityType", "SelectedActivityType"});
         public string Name
         {
             get => Static.CurrentActivity.Name;
@@ -223,6 +231,10 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("ImageSmallText");
             }
         }
+        public string ActivityType
+        {
+            get => Static.ReplaceFilds(Static.CurrentActivity.ActivityType.ToString(Static.CurrentActivity));
+        }
         public bool IsAvailableForChange
         {
             get => Static.CurrentActivity.IsAvailableForChange;
@@ -230,6 +242,19 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             {
                 Static.CurrentActivity.IsAvailableForChange = value;
                 OnPropertyChanged("IsAvailableForChange");
+            }
+        }
+
+        public ActivityType SelectedActivityType
+        {
+            get => Static.CurrentActivity.ActivityType;
+            set
+            {
+                Static.CurrentActivity.ActivityType = value;
+                OnPropertyChanged("SelectedActivityType");
+                OnPropertyChanged("ActivityType");
+
+                GameStatusView.Field_TextChanged("ActivityType", ActivityType);
             }
         }
 
@@ -307,7 +332,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
         public GameStatusViewModel()
         {
-            ButtonItem cancel = new ButtonItem(Static.Dialogs.DateTimePickerHide) { Style = Static.DiscordTheme["RedButton"] as Style, Text = "Cancel" };
+            ButtonItem cancel = new ButtonItem(Static.Dialogs.DateTimePickerHide) { Style = Static.DiscordTheme["RedButton"] as Style, Text = Locales.Lang.GetResource("Cancel") };
             ShowDateTimePickerCommand = new Command(o => {
                 var apply = Static.Dialogs.ButtonApply;
                 var fe = GameStatusView.FindName(o.ToString()) as TextBox;

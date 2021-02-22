@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
              xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
        mc:Ignorable="d"
-       d:DesignWidth="800" d:DesignHeight="450" Background="#36393f"
+       d:DesignWidth="800" d:DesignHeight="800" Background="#36393f"
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters">
     <UserControl.DataContext>
         <tabs:WarfaceViewModel/>
@@ -34,9 +34,9 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="72"/>
                 </Grid.RowDefinitions>
-                <TextBlock Margin="5" Foreground="White" TextAlignment="Center" Text="Warface" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Margin="5" Foreground="White" TextAlignment="Center" Text="Warface RU" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 
-                <CheckBox Grid.Row="1" Style="{StaticResource CheckBoxDiscord}" VerticalAlignment="Top" Content="Ускорить закрытие клиента Warface" IsChecked="{Binding IsFastGameClientClose}"/>
+                <CheckBox Grid.Row="1" Style="{StaticResource CheckBoxDiscord}" VerticalAlignment="Top" Content="{locales:Lang Views:Tabs:Warface:FastGameClose}" IsChecked="{Binding IsFastGameClientClose}"/>
 
                 <Grid Grid.Row="2" Margin="10">
                     <Grid.RowDefinitions>
@@ -70,7 +70,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="20"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="Установить профиль, при активации игры:" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                    <TextBlock Text="{locales:Lang Views:Tabs:Warface:ActiveProfile}" Margin="20,0,10,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
                     <ComboBox x:Name="ProfilesComboBox" VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
@@ -101,7 +101,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="5" Foreground="White" TextWrapping="Wrap" TextAlignment="Center" Text="Warface" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                    <TextBlock Margin="15,35,5,5" Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:Lang.ContentForm_WarfaceScr_header}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Margin="15,35,5,5" Foreground="#FFB9B9BE" TextWrapping="Wrap" TextAlignment="Center" Text="{locales:Lang Views:ContentForm_WarfaceScr_header}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <DataGrid Grid.Column="1" Grid.ColumnSpan="3" Margin="10" IsReadOnly="True" ColumnWidth="*" Grid.Row="1" Loaded="WarfacePropDataGrid_Loaded" Style="{DynamicResource DataGridStyleDiscord}"/>
                 </Grid>
                 <Grid Grid.Column="2" Grid.Row="2">
@@ -109,15 +109,15 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{x:Static locales:Lang.ContentForm_WarfaceScr_BlackSamurai}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
-                    <CheckBox x:Name="NotifyOnNewCase" Content="{x:Static locales:Lang.ContentForm_WarfaceScr_BlackSamurai_NotifyOnNewCase}" Margin="0,0,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Click="NotifyOnNewCaseClick" Checked="NotifyOnNewCaseChecked"/>
+                    <TextBlock Text="{locales:Lang Views:ContentForm_WarfaceScr_BlackSamurai}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
+                    <CheckBox x:Name="NotifyOnNewCase" Content="{locales:Lang Views:ContentForm_WarfaceScr_BlackSamurai_NotifyOnNewCase}" Margin="0,0,0,0" VerticalAlignment="Top" Grid.Row="1" Grid.Column="2" Style="{DynamicResource CheckBoxStyleDiscord}" FontWeight="Bold" VerticalContentAlignment="Center" FontSize="14" Click="NotifyOnNewCaseClick" Checked="NotifyOnNewCaseChecked"/>
                 </Grid>
                 <Grid Grid.Column="2" Grid.Row="3">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{x:Static locales:Lang.ContentForm_WarfaceScr_Analytics}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
+                    <TextBlock Text="{locales:Lang Views:ContentForm_WarfaceScr_Analytics}" Margin="0,20" Foreground="White" FontSize="18" FontWeight="Bold" Grid.Column="2" Grid.Row="0"/>
                     <DataGrid x:Name="AnalyticsDataGrid" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" Loaded="AnalyticsDataGrid_Loaded" IsReadOnly="True" ColumnWidth="*" Grid.Row="1" Style="{DynamicResource DataGridStyleDiscord}"/>
                 </Grid>
             </Grid>-->

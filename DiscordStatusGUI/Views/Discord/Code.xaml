@@ -32,9 +32,9 @@
             </Grid.RowDefinitions>
 
             <Image Height="84" Margin="0,24,0,0" Source="/DiscordStatusGUI;component/Resources/Discord/ImageKey.png" HorizontalAlignment="Center"/>
-            <TextBlock Grid.Row="1" x:Name="Caption" Margin="0,5,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" TextWrapping="Wrap" TextAlignment="Center" Text="{x:Static locales:Lang.CodeForm_caption}" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Row="1" x:Name="Caption" Margin="0,5,0,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" TextWrapping="Wrap" TextAlignment="Center" Text="{locales:Lang Views:Discord:Code:Title}" FontSize="20" FontWeight="Bold"/>
             <TextBlock Grid.Row="2" HorizontalAlignment="Center" Margin="22,0,22,0" VerticalAlignment="Top" Foreground="#FFB8B8B8" TextWrapping="Wrap" TextAlignment="Center" Text="{Binding Header2}"/>
-            <Label Grid.Row="3" x:Name="CodeLabel" Content="{x:Static locales:Lang.CodeForm_header}" Margin="23,5,23,0" Foreground="#FF8A8E93" HorizontalContentAlignment="Center" FontSize="11" FontWeight="Bold"/>
+            <Label Grid.Row="3" x:Name="CodeLabel" Content="{locales:Lang Views:Discord:Code:Description}" Margin="23,5,23,0" Foreground="#FF8A8E93" HorizontalContentAlignment="Center" FontSize="11" FontWeight="Bold"/>
             <Grid Grid.Row="4" Margin="23,0,23,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
@@ -47,9 +47,9 @@
                 <Label Content="{Binding CodeError}" Grid.Column="1" Foreground="#FFF04D47" FontSize="10" FontStyle="Italic"/>
                 <TextBox Grid.ColumnSpan="2" Grid.Row="1" x:Name="CodeField" Text="{Binding Code}" FontSize="14" Padding="7" Style="{DynamicResource RoundedTextBox}" TextChanged="CodeField_TextChanged"/>
             </Grid>
-            <Button Grid.Row="5" Content="{x:Static locales:Lang.CodeForm_signIn}" FontSize="14" FontWeight="Bold" Margin="22,15,22,0" Height="42" Style="{DynamicResource BlueButton}" IsEnabled="{Binding LoginButtonEnabled}" Command="{Binding LoginCommand}"/>
-            <TextBlock Grid.Row="6" Text="{x:Static locales:Lang.CodeForm_sendSMS}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,7,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding SendSMSCommand}"/>
-            <TextBlock Grid.Row="7" Text="{x:Static locales:Lang.CodeForm_backToLoginForm}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,7,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding BackToLoginCommand}"/>
+            <Button Grid.Row="5" Content="{locales:Lang Views:Discord:Code:SignIn}" FontSize="14" FontWeight="Bold" Margin="22,15,22,0" Height="42" Style="{DynamicResource BlueButton}" IsEnabled="{Binding LoginButtonEnabled}" Command="{Binding LoginCommand}"/>
+            <TextBlock Grid.Row="6" Text="{locales:Lang Views:Discord:Code:SendSMS}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,7,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding SendSMSCommand}"/>
+            <TextBlock Grid.Row="7" Text="{locales:Lang Views:Discord:Code:BackToLogin}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="26,7,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding BackToLoginCommand}"/>
         </Grid>
         
         <Image x:Name="CatImage" Source="/DiscordStatusGUI;component/Resources/PixelCat/Sitting.png" Margin="275,68,0,0" HorizontalAlignment="Left" Width="66" Height="60" VerticalAlignment="Top" Cursor="Hand" MouseUp="CatClick"/>

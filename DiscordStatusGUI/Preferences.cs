@@ -3,7 +3,7 @@ using DiscordStatusGUI.Libs;
 using DiscordStatusGUI.Models;
 using DiscordStatusGUI.ViewModels.Tabs;
 using DiscordStatusGUI.Views.Tabs;
-using PinkJson.Parser;
+using PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -21,12 +21,12 @@ namespace DiscordStatusGUI
 {
     class Preferences
     {
-        public static string Discord_Token { get => Static.Discord.Token; set => Static.Discord.Token = value; }
-        public static int CurrentUserStatus { get => (int)Static.Discord.Socket.CurrentUserStatus; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[1].Page as Settings).DataContext as SettingsViewModel).SelectedUserStatusIndex = value); }
-        public static bool IsDiscordConnected { get => Static.Discord.Socket.IsConnected; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[1].Page as Settings).DataContext as SettingsViewModel).IsDiscordConnected = value); }
+        public static string Discord_Token     { get => Static.Discord.Token;                         set => Static.Discord.Token = value; }
+        public static int CurrentUserStatus    { get => (int)Static.Discord.Socket.CurrentUserStatus; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[1].Page as Settings).DataContext as SettingsViewModel).SelectedUserStatusIndex = value); }
+        public static bool IsDiscordConnected  { get => Static.Discord.Socket.IsConnected;            set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[1].Page as Settings).DataContext as SettingsViewModel).IsDiscordConnected = value); }
         public static int WarfaceActivityIndex { get => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[3].Page as Warface).DataContext as WarfaceViewModel).SelectedProfileIndex); set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[3].Page as Warface).DataContext as WarfaceViewModel).SelectedProfileIndex = value); }
-        public static int CurrentActivityIndex { get => Static.CurrentActivityIndex; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[0].Page as GameStatus).DataContext as GameStatusViewModel).SelectedProfileIndex = value); }
-        public static bool FastGameClientClose { get => WarfaceApi.FastGameClientClose; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[3].Page as Warface).DataContext as WarfaceViewModel).IsFastGameClientClose = value); }
+        public static int CurrentActivityIndex { get => Static.CurrentActivityIndex;                  set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[0].Page as GameStatus).DataContext as GameStatusViewModel).SelectedProfileIndex = value); }
+        public static bool FastGameClientClose { get => WarfaceApi.FastGameClientClose;               set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.Tabs[3].Page as Warface).DataContext as WarfaceViewModel).IsFastGameClientClose = value); }
 
         public static double X { get => Static.MainWindow.Dispatcher.Invoke(() => Static.MainWindow.Left); set => Static.MainWindow.Left = value; }
         public static double Y { get => Static.MainWindow.Dispatcher.Invoke(() => Static.MainWindow.Top);  set => Static.MainWindow.Top = value; }
@@ -64,28 +64,24 @@ namespace DiscordStatusGUI
             {
                 LoadingProfiles = true;
 
-                Static.Activities = JsonObjectArray.ToArray<Libs.DiscordApi.Activity>(new JsonObjectArray(FileInfoEx.SafeReadText("profiles.json")));
+                Static.Activities = JsonArray.ToArray<Libs.DiscordApi.Activity>(new JsonArray(FileInfoEx.SafeReadText("profiles.json")));
 
                 LoadingProfiles = false;
             }
             Static.InitializationSteps.IsProfilesLoaded = true;
         }
 
-        public static async void SaveProfiles()
+        public static void SaveProfiles()
         {
             if (!LoadingProfiles)
-            await Task.Run(() =>
-            {
-                File.WriteAllText("profiles.json", JsonObjectArray.FromArray(Static.Activities, true, new string[] { "_SavedState" }).ToFormatString());
-            });
+                File.WriteAllText("profiles.json", JsonArray.FromArray(Static.Activities, false, new string[] { "SavedState" }).ToFormatString());
         }
         #endregion
 
         #region Preferences
-        public static async void Save()
+        public static void Save()
         {
             if (!Loading)
-            await Task.Run(() =>
             {
                 var propjson = Json.FromAnonymous(new
                 {
@@ -98,26 +94,31 @@ namespace DiscordStatusGUI
                         },
                         Warface = new
                         {
-                            WarfaceActivityIndex
+                            WarfaceActivityIndex,
+                            FastGameClientClose
                         }
                     },
                     CurrentUserStatus,
                     CurrentActivityIndex,
-                    FastGameClientClose,
                     Window = new
                     {
-                        X, Y, Width, Height, State
+                        X,
+                        Y,
+                        Width,
+                        Height,
+                        State
                     }
                 });
 
                 try
                 {
                     File.WriteAllText("preferences.json", propjson.ToFormatString());
-                } catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     ConsoleEx.WriteLine(ConsoleEx.Warning, $"Preferences.Save() -> Error {ex.HResult}");
                 }
-            });
+            }
         }
 
         public static void Load()
@@ -128,8 +129,9 @@ namespace DiscordStatusGUI
 
                 try
                 {
-                    var propjson = new Json(FileInfoEx.SafeReadText("preferences.json"));
-                    
+                    var t = FileInfoEx.SafeReadText("preferences.json");
+                    var propjson = new Json(t);
+
                     Static.MainWindow.Dispatcher.Invoke(() =>
                     {
                         X = (int)propjson["Window"]["X"].Value;
@@ -142,12 +144,12 @@ namespace DiscordStatusGUI
                     Discord_Token = AES.DecryptString(propjson["Accounts"]["Discord"]["token"].Value?.ToString(), "Some kind of password");
                     CurrentUserStatus = (int)propjson["CurrentUserStatus"].Value;
                     CurrentActivityIndex = (int)propjson["CurrentActivityIndex"].Value;
-                    FastGameClientClose = (bool)propjson["FastGameClientClose"].Value;
+                    FastGameClientClose = (bool)propjson["Accounts"]["Warface"]["FastGameClientClose"].Value;
                     WarfaceActivityIndex = (int)propjson["Accounts"]["Warface"]["WarfaceActivityIndex"].Value;
 
                     IsDiscordConnected = (bool)propjson["Accounts"]["Discord"]["IsDiscordConnected"].Value;
                 }
-                catch (Exception ex)
+                catch
                 {
                     var name = "preferences";
                     int i = 1;
@@ -268,18 +270,18 @@ namespace DiscordStatusGUI
 
         void SendResponse(string data)
         {
-            var response = new JsonObjectArray();
+            var response = new JsonArray();
 
             try
             {
-                var jsonarr = new JsonObjectArray(data);
+                var jsonarr = new JsonArray(data);
 
                 for (var i = 0; i < jsonarr.Count; i++)
                 {
                     var inresponse = new Json();
                     try
                     {
-                        var json = (Json)jsonarr[i];
+                        var json = (Json)jsonarr[i].Value;
 
                         if (json.IndexByKey("cmd") != -1)
                             switch (json["cmd"].Value.ToString())

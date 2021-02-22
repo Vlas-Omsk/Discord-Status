@@ -33,6 +33,7 @@ namespace DiscordStatusGUI.ViewModels
                     var anim = Animations.VisibleOffSlideDown(_SelectedTab.Page);
                     anim.Completed += (s, e) => On();
                     anim.Begin();
+                    //Static.MainWindow.notifications.AddNotification(new Notification("SelectedTab.set", " To=" + value?.Text, true, 5000));
                 }
                 else
                     On();

@@ -16,11 +16,11 @@ namespace DiscordStatusGUI.ViewModels
             {
                 return new ObservableCollection<NotifyItem>()
                 {
-                    new NotifyItem(null, "/DiscordStatusGUI;component/Resources/logo/logo_small.png", 0.7, Static.Titile) { IsEnabled = false, WithSplitter = true },
+                    new NotifyItem(null, "/DiscordStatusGUI;component/Resources/logo/logo_small.png", 0.7, Static.Title) { IsEnabled = false, WithSplitter = true },
 #if DEBUG
                     new NotifyItem(new Command(() => Static.MainWindow.NotifyPopup.IsOpen = false), "", 0, "Hide this menu...") { WithSplitter = true },
 #endif
-                    new NotifyItem(new Command(() => Static.MainWindow.Close()), "", 0, "Quit " + Static.Titile)
+                    new NotifyItem(new Command(() => Static.MainWindow.Close()), "", 0, "Quit " + Static.Title)
                 };
             }
         }

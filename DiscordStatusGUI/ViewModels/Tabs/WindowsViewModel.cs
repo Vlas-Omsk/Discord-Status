@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PinkJson.Parser;
+using PinkJson;
 using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 using System.Collections.ObjectModel;
@@ -35,8 +35,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         public WindowsViewModel()
         {
 
-            _Properties.Add("{win:ForegroundWindowName}", "Имя активного окна", Static.GetValueByFieldName("win:ForegroundWindowName"));
-            _Properties.Add("{win:ForegroundWindowProcessName}", "Имя процесса активного окна", Static.GetValueByFieldName("win:ForegroundWindowProcessName"));
+            _Properties.Add("{win:ForegroundWindowName}",        Locales.Lang.GetResource("ViewModels:Tabs:WindowsViewModel:ForegroundWindowName"), Static.GetValueByFieldName("win:ForegroundWindowName"));
+            _Properties.Add("{win:ForegroundWindowProcessName}", Locales.Lang.GetResource("ViewModels:Tabs:WindowsViewModel:ForegroundWindowProcessName"), Static.GetValueByFieldName("win:ForegroundWindowProcessName"));
 
             OnPropertyChanged("Properties");
 
