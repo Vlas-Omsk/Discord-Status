@@ -13,19 +13,19 @@ namespace DiscordStatusGUI
         const string release_latest = "https://api.github.com/repos/Vlas-Omsk/Discord-Status/releases/latest";
         public const string download_latest = "https://vlas-omsk.github.io/Discord-Status";
 
-        public static bool IsUpdateAvailable(out double newversion)
+        public static bool IsUpdateAvailable(out double newversion, out string tagname)
         {
-            string tag_name = null;
+            tagname = null;
             try
             {
-                tag_name = new Json(WEB.Get(release_latest))["tag_name"].Value.ToString();
+                tagname = new Json(WEB.Get(release_latest))["tag_name"].Value.ToString();
             }
             catch
             {
                 newversion = double.NaN;
                 return false;
             }
-            if (double.TryParse(tag_name.TrimStart('v').Replace('.', ','), out double version))
+            if (double.TryParse(tagname.TrimStart('v').Replace('.', ','), out double version))
             {
                 newversion = version;
                 return version > Static.Version;

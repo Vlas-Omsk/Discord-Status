@@ -130,7 +130,7 @@
 		"UpdateAvailable": {
 			"Title": "An update is available!",
 			"Description": "New version of Discord Status is available.",
-			"LinkText": "Download Discord Status v{version}"
+			"LinkText": "Download Discord Status {version}"
 		},
 		"Reconnect": {
 			"Title": "Lost connection to Discord",

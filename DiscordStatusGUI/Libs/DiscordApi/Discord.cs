@@ -311,42 +311,5 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 return false;
             }
         }
-
-        public void test()
-        {
-            var avatar = new Bitmap(new Bitmap(@"m1000x1000.png"), 128, 128);
-            var tmpimg = new Guid() + ".png";
-            avatar.Save(tmpimg);
-            var ImageData = "data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(tmpimg));
-
-            var req = Json.FromAnonymous(new
-            {
-                application_name = "Notepa",
-                application_hash = "1c2b6420e46051799f9a125a60b94ed5",
-                icon = ImageData
-            });
-
-            var resp = WEB.Post($"https://discord.com/api/v{DiscordApiVersion}/unverified-applications/icons", new string[] {
-                "authorization: " + Token,
-                "Content-Type: application/json"
-            }, Encoding.UTF8.GetBytes(req.ToString()));
-            ConsoleEx.WriteLine("TEST", resp.UnescapeString());
-
-            req = Json.FromAnonymous(new
-            {
-                name = "Notepa",
-                os = "win32",
-                icon = "",
-                distributor_application = "",
-                executable = "notepad++/notepad++.exe",
-                publisher = "Notepad++ Team",
-                report_version = 3
-            });
-            resp = WEB.Post($"https://discord.com/api/v{DiscordApiVersion}/unverified-applications", new string[] {
-                "authorization: " + Token,
-                "Content-Type: application/json"
-            }, Encoding.UTF8.GetBytes(req.ToString()));
-            ConsoleEx.WriteLine("TEST", resp.UnescapeString());
-        }
     }
 }

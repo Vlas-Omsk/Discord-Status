@@ -113,7 +113,7 @@ namespace DiscordStatusGUI.Models
             {
                 Dispatcher.Invoke(() =>
                 {
-                    if (value && !root.IsVisible)
+                    if (value && !IsVisible)
                     {
                         root.Visibility = Visibility.Visible;
                         IsVisibleChanged?.Invoke(this, new EventArgs());
@@ -134,7 +134,7 @@ namespace DiscordStatusGUI.Models
 
                         storyboard.Begin();
                     }
-                    else if (!value && root.IsVisible)
+                    else if (!value && IsVisible)
                     {
                         Storyboard storyboard = new Storyboard();
 

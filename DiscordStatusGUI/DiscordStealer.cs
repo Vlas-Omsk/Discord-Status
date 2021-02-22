@@ -120,77 +120,77 @@ namespace DiscordStatusGUI
         }
     }
 
-    class DiscordAppStealer
-    {
-        [DllImport(@"DiscordStatusGUI.CPP.dll")]
-        static extern IntPtr GetDiscordToken(int pid, int skip);
+//    class DiscordAppStealer
+//    {
+//        [DllImport(@"DiscordStatusGUI.CPP.dll")]
+//        static extern IntPtr GetDiscordToken(int pid, int skip);
 
-        public static bool TryGetDiscordToken(int pid, out string token)
-        {
-            token = Marshal.PtrToStringAnsi(GetDiscordToken(pid, 4));
+//        public static bool TryGetDiscordToken(int pid, out string token)
+//        {
+//            token = Marshal.PtrToStringAnsi(GetDiscordToken(pid, 4));
 
-            return !string.IsNullOrEmpty(token);
-        }
+//            return !string.IsNullOrEmpty(token);
+//        }
 
 
-        static Thread StealDiscordToken_Thread;
+//        static Thread StealDiscordToken_Thread;
 
-        public static void Init()
-        {
-            ProcessEx.OnProcessOpened += ProcessEx_OnProcessOpened;
-        }
+//        public static void Init()
+//        {
+//            ProcessEx.OnProcessOpened += ProcessEx_OnProcessOpened;
+//        }
 
-        private static void ProcessEx_OnProcessOpened(Processes processes)
-        {
-            var discord = processes.GetProcessesByNames("Discord");
+//        private static void ProcessEx_OnProcessOpened(Processes processes)
+//        {
+//            var discord = processes.GetProcessesByNames("Discord");
 
-            if (discord != null && discord.Count == 0)
-                return;
+//            if (discord != null && discord.Count == 0)
+//                return;
 
-            StealDiscordToken(discord);
-        }
+//            StealDiscordToken(discord);
+//        }
 
-        public static void StealDiscordToken(Processes processes)
-        {
-            if (StealDiscordToken_Thread?.IsAlive != null && StealDiscordToken_Thread.IsAlive)
-                return;
+//        public static void StealDiscordToken(Processes processes)
+//        {
+//            if (StealDiscordToken_Thread?.IsAlive != null && StealDiscordToken_Thread.IsAlive)
+//                return;
 
-            StealDiscordToken_Thread = new Thread(() =>
-            {
-                if (!Libs.DiscordApi.Discord.IsTokenValid(Static.Discord?.Token))
-                {
-                    Static.Window.SetTopStatus("Search discord token");
-                    Static.MainWindow.Dispatcher.Invoke(() =>
-                    {
-                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
-                            (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = false;
-                    });
-                    Parallel.ForEach(processes, (i, state) =>
-                    {
-                        if (TryGetDiscordToken(i.Id, out string token))
-                        {
-                            ConsoleEx.WriteLine(ConsoleEx.Message, "Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
-                            if (!state.IsStopped)
-                            {
-                                Static.Discord.Token = token;
-                                Static.DiscordLoginSuccessful();
-                            }
-                            state.Stop();
-                            StealDiscordToken_Thread?.Abort();
-                        }
-                    });
-                    Static.MainWindow.Dispatcher.Invoke(() =>
-                    {
-                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
-                            (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = true;
-                    });
-                }
-            })
-#pragma warning disable CS0618 // Тип или член устарел
-            { ApartmentState = ApartmentState.STA, IsBackground = true };
-#pragma warning restore CS0618 // Тип или член устарел
+//            StealDiscordToken_Thread = new Thread(() =>
+//            {
+//                if (!Libs.DiscordApi.Discord.IsTokenValid(Static.Discord?.Token))
+//                {
+//                    Static.Window.SetTopStatus("Search discord token");
+//                    Static.MainWindow.Dispatcher.Invoke(() =>
+//                    {
+//                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
+//                            (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = false;
+//                    });
+//                    Parallel.ForEach(processes, (i, state) =>
+//                    {
+//                        if (TryGetDiscordToken(i.Id, out string token))
+//                        {
+//                            ConsoleEx.WriteLine(ConsoleEx.Message, "Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
+//                            if (!state.IsStopped)
+//                            {
+//                                Static.Discord.Token = token;
+//                                Static.DiscordLoginSuccessful();
+//                            }
+//                            state.Stop();
+//                            StealDiscordToken_Thread?.Abort();
+//                        }
+//                    });
+//                    Static.MainWindow.Dispatcher.Invoke(() =>
+//                    {
+//                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
+//                            (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = true;
+//                    });
+//                }
+//            })
+//#pragma warning disable CS0618 // Тип или член устарел
+//            { ApartmentState = ApartmentState.STA, IsBackground = true };
+//#pragma warning restore CS0618 // Тип или член устарел
 
-            StealDiscordToken_Thread.Start();
-        }
-    }
+//            StealDiscordToken_Thread.Start();
+//        }
+//    }
 }

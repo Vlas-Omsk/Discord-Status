@@ -130,7 +130,7 @@
 		"UpdateAvailable": {
 			"Title": "Доступно обновление!",
 			"Description": "Доступна новая версия Discord Status.",
-			"LinkText": "Скачать Discord Status v{version}"
+			"LinkText": "Скачать Discord Status {version}"
 		},
 		"Reconnect": {
 			"Title": "Потеряно соединение с Discord",

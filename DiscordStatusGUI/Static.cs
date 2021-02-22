@@ -67,14 +67,15 @@ namespace DiscordStatusGUI
 
             await Task.Run(() =>
             {
-                if (UpdateManager.IsUpdateAvailable(out double newversion))
+                if (UpdateManager.IsUpdateAvailable(out _, out string tagname))
                 {
                     UpdateAvailable.Dispatcher.Invoke(() =>
                     {
-                        UpdateAvailable.LinkText = Lang.GetResource("Static:UpdateAvailable:LinkText").Replace("{version}", newversion.ToString());
+                        UpdateAvailable.LinkText = Lang.GetResource("Static:UpdateAvailable:LinkText").Replace("{version}", tagname);
                         UpdateAvailable.LinkAction = new Action(() => TemplateViewModel.OpenLink(UpdateManager.download_latest));
                     });
                     UpdateAvailable.IsVisible = true;
+                    MainWindow.NotifyPopup.ShowBalloon(3000, Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), System.Windows.Forms.ToolTipIcon.Info, UpdateAvailable.LinkAction);
                 }
             });
 
