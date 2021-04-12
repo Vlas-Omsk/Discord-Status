@@ -18,7 +18,7 @@ namespace DiscordStatusGUI.Models
         public ButtonItem(Action click, string text = "")
         {
             ClickCommand = new Command(click);
-            Style = Static.DiscordTheme["BlueButton"] as Style;
+            Style = Static.GetResource<Style>("BlueButton");
             Text = text;
         }
     }

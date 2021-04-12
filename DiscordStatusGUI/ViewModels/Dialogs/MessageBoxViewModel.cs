@@ -91,9 +91,7 @@ namespace DiscordStatusGUI.ViewModels.Dialogs
             }
         }
 
-
         public Command BackCommand { get; set; }
-
 
         public MessageBoxViewModel()
         {

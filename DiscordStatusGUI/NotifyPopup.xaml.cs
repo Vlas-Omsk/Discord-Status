@@ -27,16 +27,18 @@ namespace DiscordStatusGUI
 
             this.PopupAnimation = PopupAnimation.Fade;
 
-            var ni = new System.Windows.Forms.NotifyIcon();
-            ni.Icon = Properties.Resources.logo;
-            ni.Visible = true;
-            ni.Text = Static.Titile;
-            ni.MouseUp += Ni_MouseUp;
+            NotifyIcon = new System.Windows.Forms.NotifyIcon();
+            NotifyIcon.Icon = Properties.Resources.logo;
+            NotifyIcon.Visible = true;
+            NotifyIcon.Text = Static.Title;
+            NotifyIcon.MouseUp += Ni_MouseUp;
 
-            Static.OnMouseButtonClick += Static_OnMouseButtonClick;
+            MouseHook.OnMouseButtonDown += Static_OnMouseButtonClick;
         }
 
-        private void Static_OnMouseButtonClick(int x, int y, MouseButton button)
+        public System.Windows.Forms.NotifyIcon NotifyIcon { get; private set; }
+
+        private void Static_OnMouseButtonClick(object sebder, MouseButtonEventArgsEx e)
         {
             if (!this.IsMouseOver)
                 this.IsOpen = false;
@@ -48,6 +50,20 @@ namespace DiscordStatusGUI
                 this.IsOpen = true;
             else if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 Static.Window.Normalize();
+        }
+
+        Action BalloonTipClicked;
+        public void ShowBalloon(int timeout, string tipTitle, string tipText, System.Windows.Forms.ToolTipIcon tipIcon, Action clicked)
+        {
+            NotifyIcon.ShowBalloonTip(timeout, tipTitle, tipText, tipIcon);
+            BalloonTipClicked = clicked;
+            NotifyIcon.BalloonTipClicked += NotifyIcon_BalloonTipClicked;
+        }
+
+        private void NotifyIcon_BalloonTipClicked(object sender, EventArgs e)
+        {
+            NotifyIcon.BalloonTipClicked -= NotifyIcon_BalloonTipClicked;
+            BalloonTipClicked?.Invoke();
         }
     }
 }

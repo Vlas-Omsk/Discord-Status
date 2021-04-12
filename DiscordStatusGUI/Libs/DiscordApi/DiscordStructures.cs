@@ -53,6 +53,13 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         public string PartyMax { get; set; }
         public bool IsAvailableForChange { get; set; }
 
+        private ActivityType? _ActivityType;
+        public ActivityType ActivityType
+        {
+            get => (_ActivityType ?? (_ActivityType = ActivityType.Game)).GetValueOrDefault();
+            set => _ActivityType = value;
+        }
+
         private object _SavedState;
         public object SavedState
         {
@@ -80,10 +87,10 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         invisible
     }
 
-    public class ActivityType
+    public struct ActivityType
     {
-        public string Format;
-        public int ID;
+        public string Format { get; set; }
+        public int ID { get; set; }
 
         public ActivityType(int id, string format)
         {
@@ -105,17 +112,17 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         //    return null;
         //}
 
-        public string ToFormatString(Activity activity)
+        public string ToString(Activity activity)
         {
             var tmp = Format;
             var pattern = @"\{(.*?)\}";
             var matches = Regex.Matches(tmp, pattern);
-            
+
             foreach (Match m in matches)
             {
                 var repl = "";
-                foreach(var a in Static.ActivityFields)
-                    if (a.Name == $"<{m.Groups[1].Value}>k__BackingField")
+                foreach (var a in Static.ActivityFields)
+                    if (a.Name == $"{m.Groups[1].Value}")
                         repl = a.GetValue(activity)?.ToString() + "";
                 tmp = tmp.Replace($"{{{m.Groups[1].Value}}}", repl);
             }
@@ -123,10 +130,15 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             return tmp;
         }
 
+        public override string ToString()
+        {
+            return Format;
+        }
+
         public static readonly ActivityType Game = new ActivityType(0, "Playing {Name}");
         public static readonly ActivityType Streaming = new ActivityType(1, "Streaming {Details}");
         public static readonly ActivityType Listening = new ActivityType(2, "Listening to {Name}");
         public static readonly ActivityType Custom = new ActivityType(4, "{Emoji} {Name}");
         public static readonly ActivityType Competing = new ActivityType(5, "Competing in {Name}");
-    }    
+    }
 }

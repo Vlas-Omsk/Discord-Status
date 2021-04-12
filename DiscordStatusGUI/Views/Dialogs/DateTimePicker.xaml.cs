@@ -26,16 +26,16 @@ namespace DiscordStatusGUI.Views.Dialogs
         {
             InitializeComponent();
 
-            Static.OnMouseButtonClick += Static_OnMouseButtonClick;
-            Static.OnMouseMove += Static_OnMouseMove;
+            MouseHook.OnMouseButtonUp += Static_OnMouseButtonClick;
+            MouseHook.OnMouseMove += Static_OnMouseMove;
         }
 
         private DateTimePickerViewModel DateTimePickerViewModel => DataContext as DateTimePickerViewModel;
         private bool IsHourArrowCaptured = false, IsMinuteArrowCaptured = false, IsSecondArrowCaptured = false;
 
-        private void Static_OnMouseButtonClick(int x, int y, MouseButton button)
+        private void Static_OnMouseButtonClick(object sender, MouseButtonEventArgsEx e)
         {
-            if (button == MouseButton.Left)
+            if (e.MouseButton == MouseButton.Left)
             {
                 IsMinuteArrowCaptured = false;
                 IsHourArrowCaptured = false;
@@ -56,25 +56,30 @@ namespace DiscordStatusGUI.Views.Dialogs
         private const int MinuteAngle = 360 / 60;
         private const int HourAngle2 = HourAngle / 2;
         private const int MinuteAngle2 = MinuteAngle / 2;
-        private void Static_OnMouseMove(int x, int y)
+        private void Static_OnMouseMove(object sender, MouseEventArgsEx e)
         {
             if (IsSecondArrowCaptured || IsMinuteArrowCaptured || IsHourArrowCaptured)
             {
-                var w2 = ClockBody.ActualHeight / 2;
-                var center = ClockBody.PointToScreen(new Point(w2, w2));
-                var p1 = ClockBody.PointToScreen(new Point(w2, w2 - 1));
-                var mul = x < center.X ? -1 : 1;
-                var angle = mul * (GetAngle(p1, center, new Point(x, y)) + (x < center.X ? -360 : 0));
+                var w2 = Dispatcher.Invoke(() => ClockBody.ActualHeight / 2);
+                var center = Dispatcher.Invoke(() => ClockBody.PointToScreen(new Point(w2, w2)));
+                var p1 = Dispatcher.Invoke(() => ClockBody.PointToScreen(new Point(w2, w2 - 1)));
+                var mul = e.X < center.X ? -1 : 1;
+                var angle = mul * (GetAngle(p1, center, new Point(e.X, e.Y)) + (e.X < center.X ? -360 : 0));
 
-                if (IsMinuteArrowCaptured)
-                    DateTimePickerViewModel.SelectedMinute = (int)((angle + MinuteAngle2) / MinuteAngle);
-                if (IsHourArrowCaptured)
-                    if (DateTimePickerViewModel.SelectedHour > 11)
-                        DateTimePickerViewModel.SelectedHour = (int)((angle + HourAngle2) / HourAngle) + 12;
-                    else
-                        DateTimePickerViewModel.SelectedHour = (int)((angle + HourAngle2) / HourAngle);
-                if (IsSecondArrowCaptured)
-                    DateTimePickerViewModel.SelectedSecond = (int)((angle + MinuteAngle2) / MinuteAngle);
+                Dispatcher.Invoke(() =>
+                {
+                    if (IsMinuteArrowCaptured)
+                        DateTimePickerViewModel.SelectedMinute = (int)((angle + MinuteAngle2) / MinuteAngle);
+                    else if(IsHourArrowCaptured)
+                    {
+                        if (DateTimePickerViewModel.SelectedHour > 12)
+                            DateTimePickerViewModel.SelectedHour = (int)((angle + HourAngle2) / HourAngle) + 12;
+                        else
+                            DateTimePickerViewModel.SelectedHour = (int)((angle + HourAngle2) / HourAngle);
+                    }
+                    else if (IsSecondArrowCaptured)
+                        DateTimePickerViewModel.SelectedSecond = (int)((angle + MinuteAngle2) / MinuteAngle);
+                });
             }
         }
 

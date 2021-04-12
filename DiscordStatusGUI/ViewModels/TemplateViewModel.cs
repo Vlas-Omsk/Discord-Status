@@ -18,7 +18,7 @@ namespace DiscordStatusGUI.ViewModels
             OpenLinkCommand = new Command(e => OpenLink(e+""));
         }
 
-        public void OpenLink(string link)
+        public static void OpenLink(string link)
         {
             ProcessEx.GetOutput("cmd", "/c start " + link);
         }

@@ -67,7 +67,7 @@ namespace DiscordStatusGUI.Extensions
                 while (true)
                 {
                     _ProcessTracking_Update();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                 }
             })
             { IsBackground=true };
@@ -78,7 +78,7 @@ namespace DiscordStatusGUI.Extensions
                 while (true)
                 {
                     _ForegroundWindowTracking_Update();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(3000);
                 }
             })
             { IsBackground = true };

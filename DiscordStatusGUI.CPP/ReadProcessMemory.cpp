@@ -60,6 +60,7 @@ char* __stdcall GetStringFromProcessMemory (
 
 char* __stdcall GetStringFromProcessMemoryByPid(int pid, const char* from, const char* to, int from_len, int to_len, PVOID offset, int skip) {
     HANDLE ProcessHandle;
+    
     if (GetProcessHandle(pid, &ProcessHandle)) {
         return NULL;
     }

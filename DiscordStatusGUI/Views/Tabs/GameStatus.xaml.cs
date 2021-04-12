@@ -38,10 +38,10 @@ namespace DiscordStatusGUI.Views.Tabs
         public void ProfilesComboBox_IsEnabled(bool value, bool isGame = false)
         {
             if (!LockedByGame || isGame)
-            Dispatcher.Invoke(() =>
-                ProfilesComboBox.IsEnabled = value);
-            //if (isGame)
-            LockedByGame = isGame;
+                Dispatcher.Invoke(() =>
+                    ProfilesComboBox.IsEnabled = value);
+            if (isGame)
+                LockedByGame = !value;
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)

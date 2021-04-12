@@ -10,21 +10,13 @@
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
        mc:Ignorable="d" 
        d:DesignWidth="800" d:DesignHeight="450">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <dialogs:MessageBoxViewModel/>
     </UserControl.DataContext>
 
     <UserControl.Content>
         <Grid>
-            <Rectangle x:Name="background" Fill="#CC1D1D1D" Visibility="Hidden" PreviewMouseLeftButtonUp="{converters:EventBinding Command=BackCommand}"/>
+            <Rectangle x:Name="background" Fill="#CC1D1D1D" Visibility="Hidden" PreviewMouseLeftButtonDown="{converters:EventBinding Command=BackCommand}"/>
             <Grid x:Name="body" Height="160" Width="440" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Hidden">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>

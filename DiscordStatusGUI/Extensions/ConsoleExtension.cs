@@ -1,5 +1,4 @@
-﻿using PinkJson.Parser;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using PinkJson;
 
 namespace DiscordStatusGUI.Extensions
 {
@@ -20,6 +20,9 @@ namespace DiscordStatusGUI.Extensions
         public const string Message = "Message";
         public const string WarfaceStringParser = "StringParser";
 
+        static System.Drawing.Point lastpoint = System.Drawing.Point.Empty;
+        static string lastcontent = "", lastdate = "", lastprefix = "";
+
         public static void WriteLine(string prefix, string content)
         {
             ColoredWriteLine(prefix, content, new Color(System.Drawing.Color.DarkGray), new Color(System.Drawing.Color.White));
@@ -27,18 +30,40 @@ namespace DiscordStatusGUI.Extensions
 
         public static void ColoredWriteLine(string prefix, string content, Color prefixcolor, Color contentcolor)
         {
-            Console.Write($"{prefixcolor.ToAnsiForegroundEscapeCode()}[{prefix}][{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {contentcolor.ToAnsiForegroundEscapeCode()}{content}\r\n");
+            prefix = $"{prefixcolor.ToAnsiForegroundEscapeCode()}[{prefix}]";
+            content = $"{contentcolor.ToAnsiForegroundEscapeCode()}{content}";
+
+#if DEBUG
+            if (lastcontent == content && lastprefix == prefix)
+            {
+                Console.SetCursorPosition(lastpoint.X, lastpoint.Y);
+                Console.Write($"{prefix}[{lastdate} - {DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {content}\r\n");
+            }
+            else
+            {
+                lastpoint = new System.Drawing.Point(Console.CursorLeft, Console.CursorTop);
+                lastdate = $"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}";
+#endif
+                Console.Write($"{prefix}[{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {content}\r\n");
+#if DEBUG
+            }
+
+            lastcontent = content;
+            lastprefix = prefix;
+#endif
         }
+
+        public static StreamWriter StreamWriter;
 
         public static void InitLogger()
         {
             SyntaxHighlighting.EnableVirtualTerminalProcessing();
 
-            var stringWriter = new StreamWriter("latest.log") { AutoFlush = true };
+            StreamWriter = new StreamWriter("latest.log") { AutoFlush = true };
             var consoleWriter = Console.Out;
 
-            Console.SetOut(new MultiWriter(stringWriter, consoleWriter));
-            WriteLine("", $"{Static.Titile} v{Assembly.GetExecutingAssembly().GetName().Version}");
+            Console.SetOut(new MultiWriter(StreamWriter, consoleWriter));
+            WriteLine("", $"{Static.Title} v{Static.Version.ToString().Replace(',', '.')}");
 
             var DiscordStatus =
             @" ____                                        __      ____    __             __                      " + Environment.NewLine +
@@ -56,6 +81,8 @@ namespace DiscordStatusGUI.Extensions
     {
         private readonly List<TextWriter> _writers;
 
+        bool ansiescapeskip = false;
+
         public MultiWriter(params TextWriter[] writers)
         {
             _writers = new List<TextWriter>(writers);
@@ -63,7 +90,14 @@ namespace DiscordStatusGUI.Extensions
 
         public override void Write(char value)
         {
-            _writers.ForEach(_ => _.Write(value));
+            if (value == '\x1b')
+                ansiescapeskip = true;
+
+            if (!ansiescapeskip)
+                _writers.ForEach(_ => _.Write(value));
+
+            if (value == 'm')
+                ansiescapeskip = false;
         }
 
         public override Encoding Encoding

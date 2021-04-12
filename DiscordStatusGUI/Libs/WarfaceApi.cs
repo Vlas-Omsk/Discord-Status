@@ -1,5 +1,5 @@
 ﻿using DiscordStatusGUI.Extensions;
-using PinkJson.Parser;
+using PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,6 +22,7 @@ namespace DiscordStatusGUI.Libs
         public static Json Servers;
         public static Json States;
         public static Json Ranks;
+        public static bool Screens_open_UseNativeNames = false, Levels_UseNativeNames;
 
         public static bool FastGameClientClose;
 
@@ -38,10 +39,26 @@ namespace DiscordStatusGUI.Libs
         public delegate void OnGameProcessStateChangedEventHandler(bool opened);
         public static event OnGameProcessStateChangedEventHandler OnGameProcessStateChanged;
 
+        public static void InvokeOnGameProcessStateChanged(bool opened)
+        {
+            OnGameProcessStateChanged?.Invoke(opened);
+        }
+
         public static void Init()
         {
-            try { Levels = new Json(File.ReadAllText("strings\\Levels.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Levels.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Levels.json' " + ex.ToString()); }
-            try { Screens_open = new Json(File.ReadAllText("strings\\Screens_open.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Screens_open.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Screens_open.json' " + ex.ToString()); }
+            try { 
+                Levels = new Json(File.ReadAllText("strings\\Levels.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Levels.json'");
+                Levels_UseNativeNames = Levels["_UseNativeNames"].Get<bool>();
+            } catch (Exception ex) {
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Levels.json' " + ex.ToString());
+            }
+            try {
+                Screens_open = new Json(File.ReadAllText("strings\\Screens_open.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Screens_open.json'");
+                Screens_open_UseNativeNames = Screens_open["_UseNativeNames"].Get<bool>();
+            } 
+            catch (Exception ex) {
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Screens_open.json' " + ex.ToString());
+            }
             try { Servers = new Json(File.ReadAllText("strings\\Servers.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Servers.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Servers.json' " + ex.ToString()); }
             try { States = new Json(File.ReadAllText("strings\\States.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\States.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\States.json' " + ex.ToString()); }
             try { Ranks = new Json(File.ReadAllText("strings\\Ranks.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Ranks.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Ranks.json' " + ex.ToString()); }
@@ -148,6 +165,8 @@ namespace DiscordStatusGUI.Libs
                         {
                             if (Screens_open[val] != null)
                                 CurrentGameState.Screen = Screens_open[val].Value.ToString();
+                            else if (Screens_open_UseNativeNames)
+                                CurrentGameState.Screen = val;
                         }
                         catch { }
                         IsScreenChanged = true;
@@ -162,6 +181,8 @@ namespace DiscordStatusGUI.Libs
                         {
                             if (Levels[val] != null)
                                 CurrentGameState.Map = Levels[val].Value.ToString();
+                            else if (Levels_UseNativeNames)
+                                CurrentGameState.Map = val;
                         }
                         catch { }
                         CurrentGameState.Screen = string.Format(States["InGame"].Value.ToString(), val.Substring(0, val.IndexOf('/')).ToUpper());
@@ -185,10 +206,10 @@ namespace DiscordStatusGUI.Libs
                     if ((line.Contains("result 2") && line.Contains("@messagebox_quit_question")) ||
                         (line.Contains("result 0") && line.Contains("@ui_cryonline_connection_lost")))
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Fast client closing enabled, process " + GameProcess.Id + " killed");
                         try
                         {
                             GameProcess.Kill();
+                            ConsoleEx.WriteLine(ConsoleEx.Warface, "Fast client closing enabled, process " + GameProcess.Id + " killed");
                         }
                         catch { }
                     }

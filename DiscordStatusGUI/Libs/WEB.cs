@@ -69,18 +69,18 @@ namespace WEBLib
                 {
                     using (WebResponse response = ex.Response)
                     {
-                        headers2 = response.Headers;
-                        using (Stream xdata = response.GetResponseStream())
-                        using (var reader = new StreamReader(xdata))
+                        if (response != null)
                         {
-                            content = reader.ReadToEnd();
+                            headers2 = response.Headers;
+                            using (Stream xdata = response.GetResponseStream())
+                            using (var reader = new StreamReader(xdata))
+                            {
+                                content = reader.ReadToEnd();
+                            }
                         }
                     }
                 }
-                catch (Exception exe)
-                {
-                    content = exe.ToString();
-                }
+                finally { }
             }
 
             return content;

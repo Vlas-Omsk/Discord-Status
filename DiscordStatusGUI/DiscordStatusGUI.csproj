@@ -73,9 +73,11 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -97,7 +99,7 @@
     <Compile Include="Converters\MultiMarginConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\SumConverter.cs" />
-    <Compile Include="DiscordStiller.cs" />
+    <Compile Include="DiscordStealer.cs" />
     <Compile Include="Extensions\BitmapExtension.cs" />
     <Compile Include="Extensions\ConsoleExtension.cs" />
     <Compile Include="Extensions\DateTimeExtension.cs" />
@@ -105,27 +107,37 @@
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\SecureStringExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
+    <Compile Include="Extensions\XmlNodeEx.cs" />
     <Compile Include="Libs\DiscordApi\Discord.cs" />
     <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />
     <Compile Include="Libs\DiscordApi\DiscordStructures.cs" />
     <Compile Include="Libs\PathAnimate.cs" />
+    <Compile Include="Libs\SteamApi.cs" />
     <Compile Include="Libs\WarfaceApi.cs" />
     <Compile Include="Libs\WEB.cs" />
     <None Include="Libs\WEB_new.cs" />
     <Compile Include="locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
+    <Compile Include="Models\Notification.xaml.cs">
+      <DependentUpon>Notification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\PropertiesModel.cs" />
     <Compile Include="Models\NotifyItem.cs" />
     <Compile Include="Models\VerticalTabItem.cs" />
+    <Compile Include="MouseHook.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="RegistryCommands.cs" />
     <Compile Include="Static.cs" />
+    <Compile Include="UpdateManager.cs" />
     <Compile Include="ViewModels\Dialogs\DateTimePickerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\PopupViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
     <Compile Include="ViewModels\Discord\CodeViewModel.cs" />
     <Compile Include="ViewModels\Discord\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\GameTemplateViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\SteamViewModel.cs" />
     <Compile Include="ViewModels\Tabs\WindowsViewModel.cs" />
     <Compile Include="ViewModels\Tabs\WarfaceViewModel.cs" />
     <Compile Include="ViewModels\Tabs\GameStatusViewModel.cs" />
@@ -136,6 +148,12 @@
     <Compile Include="ViewModels\VerticalTabControlViewModel.cs" />
     <Compile Include="Views\Dialogs\DateTimePicker.xaml.cs">
       <DependentUpon>DateTimePicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Notifications.xaml.cs">
+      <DependentUpon>Notifications.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\Popup.xaml.cs">
+      <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Dialogs\SaveChangesBox.xaml.cs">
       <DependentUpon>SaveChangesBox.xaml</DependentUpon>
@@ -152,8 +170,15 @@
     <Compile Include="Views\Initialization.xaml.cs">
       <DependentUpon>Initialization.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Popups\IPopupContent.cs" />
+    <Compile Include="Views\Popups\SteamLogin.xaml.cs">
+      <DependentUpon>SteamLogin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tabs\GameStatus.xaml.cs">
       <DependentUpon>GameStatus.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tabs\Steam.xaml.cs">
+      <DependentUpon>Steam.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Tabs\Windows.xaml.cs">
       <DependentUpon>Windows.xaml</DependentUpon>
@@ -186,17 +211,25 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Models\Notification.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Themes\DiscordTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Themes\SmoothScrollViewer.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\Dialogs\DateTimePicker.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Dialogs\Notifications.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\Popup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Dialogs\SaveChangesBox.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -218,7 +251,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Popups\SteamLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Tabs\GameStatus.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tabs\Steam.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -309,6 +350,10 @@
       <Project>{94acfcd4-6447-4b17-b1b5-ff9451cc874a}</Project>
       <Name>PinkJson</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\CookieGrabber\CookieGrabber\CookieGrabber.csproj">
+      <Project>{c369f5be-184a-48a7-bab4-a439bb10dd33}</Project>
+      <Name>CookieGrabber</Name>
+    </ProjectReference>
     <ProjectReference Include="..\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
@@ -368,5 +413,27 @@
   <ItemGroup>
     <Resource Include="Resources\Plug.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Tabs\Steam.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="strings\Levels.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="strings\Ranks.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="strings\Screens_open.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="strings\Servers.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="strings\States.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TODO.txt" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

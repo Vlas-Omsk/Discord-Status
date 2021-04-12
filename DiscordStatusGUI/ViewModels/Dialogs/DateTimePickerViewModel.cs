@@ -49,6 +49,8 @@ namespace DiscordStatusGUI.ViewModels.Dialogs
             set
             {
                 _SelectedHour = value;
+                if (_SelectedHour >= 24)
+                    _SelectedHour = 0;
                 OnPropertyChanged("SelectedHour");
                 OnPropertyChanged("HourArrowAngle");
             }
@@ -60,6 +62,8 @@ namespace DiscordStatusGUI.ViewModels.Dialogs
             set
             {
                 _SelectedMinute = value;
+                if (_SelectedMinute >= 60)
+                    _SelectedMinute = 0;
                 OnPropertyChanged("SelectedMinute");
                 OnPropertyChanged("MinuteArrowAngle");
             }
@@ -71,6 +75,8 @@ namespace DiscordStatusGUI.ViewModels.Dialogs
             set
             {
                 _SelectedSecond = value;
+                if (_SelectedSecond >= 60)
+                    _SelectedSecond = 0;
                 OnPropertyChanged("SelectedSecond");
                 OnPropertyChanged("SecondArrowAngle");
             }

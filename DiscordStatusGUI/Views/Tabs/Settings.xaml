@@ -15,14 +15,6 @@
     <UserControl.DataContext>
         <tabs:SettingsViewModel/>
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <UserControl.Content>
         <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}">
@@ -204,9 +196,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Button Content="Discord" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94" Style="{Binding DiscordAccountButtonStyle}" Tag="{Binding IsDiscordLogined}" Command="{Binding DiscordLoginCommand}"/>
-                        <Button Content="MyGames" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94" Style="{Binding MyGamesAccountButtonStyle}" Grid.Column="1" Tag="{Binding IsMyGamesLogined}"/>
+                        <Button Content="Discord" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94" Style="{Binding DiscordAccountButtonStyle}" Command="{Binding DiscordLoginCommand}"/>
+                        <Button Content="MyGames" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94" Style="{Binding MyGamesAccountButtonStyle}" Grid.Column="1"/>
+                        <Button Content="Steam" FontSize="14" FontWeight="Bold" Margin="10,0,10,0" Padding="5" Width="94"   Style="{Binding SteamAccountButtonStyle}"   Command="{Binding SteamLoginCommand}" Grid.Column="2"/>
                     </Grid>
                 </Grid>
                 

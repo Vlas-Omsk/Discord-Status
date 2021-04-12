@@ -1,4 +1,4 @@
-using PinkJson;
+Ôªøusing PinkJson;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +11,7 @@ using System.Threading;
 using WEBLib;
 using WebSocketSharp;
 using DiscordStatusGUI.Extensions;
-using PinkJson.Parser;
+using PinkJson;
 using System.Security.Cryptography;
 using System.Security.RightsManagement;
 using System.Security;
@@ -23,11 +23,11 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         //private static readonly string _TempFolder = ProcessEx.GetOutput("cmd", "/c echo %TEMP%").Trim();
         private const string _DiscordAppUserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36";
         public const string DiscordApiVersion = "6";
-        public string Language = "en-US, en;q=0.9, *;q=0.8";
+        public string Language = Locales.Lang.CurrentWebLanguage;
 
         public struct AppImages
         {
-            private static JsonObjectArray _LastAppAssets;
+            private static JsonArray _LastAppAssets;
             private static string _LastAppAssetsResponse;
 
             public static Bitmap GetImageById(string id, string appId)
@@ -51,7 +51,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 {
                     try
                     {
-                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssets = new JsonArray(response);
                         _LastAppAssetsResponse = response;
                     }
                     catch
@@ -60,7 +60,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                     }
                 }
 
-                foreach (Json item in _LastAppAssets)
+                foreach (JsonArrayObject item in _LastAppAssets)
                 {
                     if (item["name"].Value.ToString() == name)
                         return item["id"].Value.ToString();
@@ -69,14 +69,14 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 return null;
             }
 
-            public static JsonObjectArray GetAppAssets(string appId)
+            public static JsonArray GetAppAssets(string appId)
             {
                 var response = WEB.Get("https://discord.com/api/v6/oauth2/applications/" + appId + "/assets");
                 if (_LastAppAssetsResponse != response)
                 {
                     try
                     {
-                        _LastAppAssets = new JsonObjectArray(response);
+                        _LastAppAssets = new JsonArray(response);
                         _LastAppAssetsResponse = response;
                     }
                     catch
@@ -163,7 +163,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 }
                 if (respJson.IndexByKey("captcha_key") != -1)
                 {
-                    LastError = "ÕÂÓ·ıÓ‰ËÏ captcha_key, ÒÌ‡˜‡Î‡ ÔÓÔÓ·ÛÈÚÂ ‚ÓÈÚË ˜ÂÂÁ ·‡ÛÁÂ";
+                    LastError = "√ç√•√Æ√°√µ√Æ√§√®√¨ captcha_key, √±√≠√†√∑√†√´√† √Ø√Æ√Ø√∞√Æ√°√≥√©√≤√• √¢√Æ√©√≤√® √∑√•√∞√•√ß √°√∞√†√≥√ß√•√∞";
                     return AuthErrors.Error;
                 }
                 if (respJson.IndexByKey("message") != -1)
@@ -284,41 +284,41 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             }
         }
 
-        public void test()
+        public bool SetCustomStatus(string text = null, string emoji_name = null, DateTime expires_at = default)
         {
-            var avatar = new Bitmap(new Bitmap(@"Z:\Users\Vlas Dergaev\Desktop\Desktop Sorted\images\m1000x1000.png"), 128, 128);
-            var tmpimg = new Guid() + ".png";
-            avatar.Save(tmpimg);
-            var ImageData = "data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(tmpimg));
-
-            var req = Json.FromAnonymous(new
+            try
             {
-                application_name = "Notepa",
-                application_hash = "1c2b6420e46051799f9a125a60b94ed5",
-                icon = ImageData
-            });
+                if (text is null &&
+                    emoji_name is null &&
+                    expires_at == default)
+                    WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/users/@me/settings", new string[] { "Content-Type: application/json", "Authorization: " + Token, "accept-language: " + Language }, Encoding.UTF8.GetBytes("{\"custom_status\":null}"), "PATCH");
+                else
+                {
+                    var json = Json.FromAnonymous(new
+                    {
+                        custom_status = new { }
+                    });
+                    if (!(text is null))
+                        json["custom_status"].Get<Json>().Add(new JsonObject("text", text));
+                    if (!(emoji_name is null))
+                        json["custom_status"].Get<Json>().Add(new JsonObject("emoji_name", emoji_name));
+                    if (expires_at != default)
+                        json["custom_status"].Get<Json>().Add(new JsonObject("expires_at", expires_at.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")));
+                    //2021-02-08T14:12:22.964+06Z
+                    //yyyy-MM-ddTHH:mm:ss.fffzzZ
+                    //2021-02-08T18:00:00.000Z
+                    //yyyy-MM-ddTHH:mm:ss.fffZ
 
-            var resp = WEB.Post($"https://discord.com/api/v{DiscordApiVersion}/unverified-applications/icons", new string[] {
-                "authorization: " + Token,
-                "Content-Type: application/json"
-            }, Encoding.UTF8.GetBytes(req.ToString()));
-            ConsoleEx.WriteLine("TEST", resp.UnescapeString());
+                    WEB.Post("https://discord.com/api/v" + DiscordApiVersion + "/users/@me/settings", new string[] { "Content-Type: application/json", "Authorization: " + Token, "accept-language: " + Language }, Encoding.UTF8.GetBytes(json.ToString()), "PATCH");
+                }
 
-            req = Json.FromAnonymous(new
+                return true;
+            }
+            catch (Exception ex)
             {
-                name = "Notepa",
-                os = "win32",
-                icon = "",
-                distributor_application = "",
-                executable = "notepad++/notepad++.exe",
-                publisher = "Notepad++ Team",
-                report_version = 3
-            });
-            resp = WEB.Post($"https://discord.com/api/v{DiscordApiVersion}/unverified-applications", new string[] {
-                "authorization: " + Token,
-                "Content-Type: application/json"
-            }, Encoding.UTF8.GetBytes(req.ToString()));
-            ConsoleEx.WriteLine("TEST", resp.UnescapeString());
+                LastError = ex.Message;
+                return false;
+            }
         }
     }
 }

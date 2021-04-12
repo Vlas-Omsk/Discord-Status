@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PinkJson.Parser;
+using PinkJson;
 using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 using System.Collections.ObjectModel;
@@ -21,7 +21,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 {
     class GameStatusViewModel : TemplateViewModel
     {
-        private ImageSource _DiscordUserAvatar = BitmapEx.ToImageSource(DiscordStatusGUI.Properties.Resources.DefaultAvatar);
+        private ImageSource _DiscordUserAvatar = BitmapEx.ToImageSource(Properties.Resources.DefaultAvatar);
         public ImageSource DiscordUserAvatar
         {
             get => _DiscordUserAvatar;
@@ -87,7 +87,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 _SavedAppId = ApplicationID;
                 var tmp = Libs.DiscordApi.Discord.AppImages.GetAppAssets(tmp2);
                 if (tmp != null)
-                    _AppAssets = new ObservableCollection<string>(tmp.Select(o => (o as Json)?["name"]?.Value?.ToString()));
+                    _AppAssets = new ObservableCollection<string>(tmp.Select(o => o.Get<Json>()?["name"]?.Value?.ToString()));
                 else
                     _AppAssets = new ObservableCollection<string>();
                 end:
@@ -307,7 +307,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
         public GameStatusViewModel()
         {
-            ButtonItem cancel = new ButtonItem(Static.Dialogs.DateTimePickerHide) { Style = Static.DiscordTheme["RedButton"] as Style, Text = "Cancel" };
+            ButtonItem cancel = new ButtonItem(Static.Dialogs.DateTimePickerHide) { Style = Static.GetResource<Style>("RedButton"), Text = Locales.Lang.GetResource("Cancel") };
             ShowDateTimePickerCommand = new Command(o => {
                 var apply = Static.Dialogs.ButtonApply;
                 var fe = GameStatusView.FindName(o.ToString()) as TextBox;

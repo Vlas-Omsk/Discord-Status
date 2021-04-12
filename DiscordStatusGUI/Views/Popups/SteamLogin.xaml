@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="DiscordStatusGUI.Views.Popups.SteamLogin"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DiscordStatusGUI.Views.Popups"
+             Loaded="UserControl_Loaded"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Background="White" CornerRadius="5">
+        <Grid Margin="5">
+            <WebBrowser x:Name="webbrowser" Visibility="Hidden" Source="https://google.com/"/>
+        </Grid>
+    </Border>
+</UserControl>

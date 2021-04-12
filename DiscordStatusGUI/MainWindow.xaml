@@ -20,9 +20,6 @@
         WindowStartupLocation="CenterScreen"
         
         Loaded="Window_Loaded"
-        SizeChanged="Window_SizeChanged"
-        LocationChanged="Window_LocationChanged"
-        StateChanged="Window_LocationChanged"
         Closing="Window_Closing">
     <Window.DataContext>
         <viewmodels:MainWindowViewModel/>
@@ -41,11 +38,15 @@
 
             <ContentControl x:Name="CurrentPage" Content="{Binding CurrentPage}"/>
 
+            <dialogs:Notifications x:Name="Notifications" HorizontalAlignment="Right" Margin="10"/>
+
             <views:Initialization x:Name="initialization"/>
 
             <ContentControl x:Name="messagebox"/>
 
             <ContentControl x:Name="datetimepicker"/>
+
+            <ContentControl x:Name="popup"/>
         </Grid>
 
         <views:TopPanel x:Name="toppanel"/>

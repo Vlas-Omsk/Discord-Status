@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebSocketSharp;
-using PinkJson.Parser;
+using PinkJson;
 using System.Diagnostics;
 using System.Windows.Controls;
 using DiscordStatusGUI.Extensions;
+using System.Threading;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
@@ -16,7 +17,6 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         public WebSocket WebSocket;
         public bool IsConnected => WebSocket?.IsAlive ?? false;
         public UserStatus CurrentUserStatus;
-        public ActivityType CurrentActivityType = ActivityType.Game;
 
         private bool _DisconnectedManually = false;
         private System.Timers.Timer _KeepAliveTimer;
@@ -48,7 +48,10 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             await Task.Run(() =>
             {
                 _DisconnectedManually = true;
-                WebSocket?.Close();
+                if (WebSocket != null)
+                    WebSocket?.Close();
+                else
+                    _DisconnectedManually = false;
                 _KeepAliveTimer?.Stop();
             });
         }
@@ -65,12 +68,8 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
                 if (IsConnected)
                 {
-                    try
-                    {
-                        var str = statusJson.ToString();
-                        WebSocket.Send(str);
-                    }
-                    catch { }
+                    var str = statusJson.ToString();
+                    WebSocket.Send(str);
                 }
             });
         }
@@ -90,7 +89,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             _KeepAliveTimer?.Stop();
             if (!_DisconnectedManually)
             {
-                Connect();
+                OnAutoReconnect();
                 //Parent.setStatus();
             }
             else
@@ -119,13 +118,33 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             InitKeepAliveTimer();
         }
 
+        Thread AutoReconnectThread;
+        private void OnAutoReconnect()
+        {
+            if (AutoReconnectThread?.IsAlive != true)
+            {
+                AutoReconnectThread = new Thread(OnAutoReconnectThread) { IsBackground = true, ApartmentState = ApartmentState.STA };
+                AutoReconnectThread.Start();
+            }
+        }
+
+        private void OnAutoReconnectThread()
+        {
+            while (!_DisconnectedManually && !IsConnected)
+            {
+                AutoReconnect?.Invoke();
+                Connect();
+                Thread.Sleep(30000);
+            }
+        }
+
 
         private Json CreateActivityJson(Activity Activity)
         {
-            ConsoleEx.WriteLine(ConsoleEx.Info, CurrentActivityType.ToFormatString(Activity));
+            ConsoleEx.WriteLine(ConsoleEx.Info, Activity.ActivityType.ToString(Activity));
             var activity = Json.FromAnonymous(new
             {
-                type = CurrentActivityType?.ID,
+                type = Activity.ActivityType.ID,
                 assets = new
                 {
                     //empty = ""
@@ -156,7 +175,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             }
             if (!string.IsNullOrEmpty(Activity.ImageLargeText))
                 (activity["assets"].Value as Json).Add(new JsonObject("large_text", Activity.ImageLargeText));
-            if (!string.IsNullOrEmpty(Activity.ImageSmallKey)) 
+            if (!string.IsNullOrEmpty(Activity.ImageSmallKey))
             {
                 string i;
                 if ((i = Discord.AppImages.GetImageIdByName(Activity.ImageSmallKey, Activity.ApplicationID)) != null)
@@ -170,7 +189,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                 (activity["timestamps"].Value as Json).Add(new JsonObject("end", Activity.EndTime));
             if (!string.IsNullOrEmpty(Activity.PartyMax) && !string.IsNullOrEmpty(Activity.PartySize))
             {
-                var obj = new JsonObjectArray();
+                var obj = new JsonArray();
                 obj.Add(Activity.PartySize);
                 obj.Add(Activity.PartyMax);
                 (activity["party"].Value as Json).Add(new JsonObject("size", obj));
@@ -180,7 +199,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             var statusJson = Json.FromAnonymous(new
             {
                 status = CurrentUserStatus.ToString(),
-                activities = new JsonObjectArray(),
+                activities = new JsonArray(),
                 active = true,
                 since = 0,
                 afk = false
@@ -188,7 +207,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             if (CurrentUserStatus == UserStatus.online && !string.IsNullOrEmpty(Activity.Name))
             {
-                (statusJson["activities"].Value as JsonObjectArray).Add(activity);
+                (statusJson["activities"].Value as JsonArray).Add(activity);
             }
 
             return statusJson;
@@ -236,14 +255,15 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         {
             await Task.Run(() =>
             {
-                if (data.Contains("READY"))
+                if (data.Contains("READY") || data.Contains("USER_UPDATE") || data.Contains("USER_SETTINGS_UPDATE"))
                 {
-                    OnWorkingStatusChanged?.Invoke("Authorization in Discord (READY)");
-                    var s = new Stopwatch();
-                    s.Start();
+                    //var s = new Stopwatch();
+                    //s.Start();
+
                     var json = new Json(data);
                     if (json["t"].Value.ToString() == "READY")
                     {
+                        OnWorkingStatusChanged?.Invoke("Authorization in Discord (READY)");
                         OnUserInfoChanged?.Invoke("READY", json, new UserInfo()
                         {
                             UserName = (json["d"]["user"]["username"].Value ?? "").ToString(),
@@ -253,18 +273,42 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             Discriminator = (json["d"]["user"]["discriminator"].Value ?? "").ToString(),
                             AvatarId = (json["d"]["user"]["avatar"].Value ?? "").ToString()
                         });
+                        OnUserSettingsChanged?.Invoke("READY", json, json["d"]["user_settings"].Get<Json>());
                     }
-                    s.Stop();
-                    OnWorkingStatusChanged?.Invoke(s.ElapsedMilliseconds + " ms");
+                    else if (json["t"].Value.ToString() == "USER_UPDATE")
+                    {
+                        OnWorkingStatusChanged?.Invoke("User info changed (USER_UPDATE)");
+                        OnUserInfoChanged?.Invoke("USER_UPDATE", json, new UserInfo()
+                        {
+                            UserName = (json["d"]["username"].Value ?? "").ToString(),
+                            Phone = (json["d"]["phone"].Value ?? "").ToString(),
+                            Id = (json["d"]["id"].Value ?? "").ToString(),
+                            Email = (json["d"]["email"].Value ?? "").ToString(),
+                            Discriminator = (json["d"]["discriminator"].Value ?? "").ToString(),
+                            AvatarId = (json["d"]["avatar"].Value ?? "").ToString()
+                        });
+                    }
+                    else if (json["t"].Value.ToString() == "USER_SETTINGS_UPDATE")
+                    {
+                        OnWorkingStatusChanged?.Invoke("User settings changed (USER_SETTINGS_UPDATE)");
+                        OnUserSettingsChanged?.Invoke("USER_SETTINGS_UPDATE", json, json["d"].Get<Json>());
+                    }
+
+                    //s.Stop();
+                    //OnWorkingStatusChanged?.Invoke(s.ElapsedMilliseconds + " ms");
                 }
             });
         }
 
-        public delegate void OnUserInfoChangedEventHandler(string eventtype, object data, UserInfo userInfo);
-        public event OnUserInfoChangedEventHandler OnUserInfoChanged;
+        public delegate void EventHandler(string eventtype, object rawdata);
+        public delegate void EventHandler<T>(string eventtype, object rawdata, T data);
+        public event EventHandler<UserInfo> OnUserInfoChanged;
+        public event EventHandler<Json> OnUserSettingsChanged;
 
         public delegate void OnWorkingStatusChangedEventHandler(string msg);
         public event OnWorkingStatusChangedEventHandler OnWorkingStatusChanged;
+        public delegate void OnAutoReconnectEventHandler();
+        public event OnAutoReconnectEventHandler AutoReconnect;
 
         private void InitKeepAliveTimer()
         {

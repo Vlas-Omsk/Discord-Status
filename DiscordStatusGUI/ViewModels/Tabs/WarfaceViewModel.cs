@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PinkJson.Parser;
+using PinkJson;
 using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 using System.Collections.ObjectModel;
@@ -19,7 +19,7 @@ using System.Threading;
 
 namespace DiscordStatusGUI.ViewModels.Tabs
 {
-    class WarfaceViewModel : TemplateViewModel
+    class WarfaceViewModel : GameTemplateViewModel
     {
         public bool IsFastGameClientClose
         {
@@ -32,57 +32,9 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             }
         }
 
-        private PropertiesModel _Properties = new PropertiesModel();
-        public ObservableCollection<PropertyModel> Properties
-        {
-            get => new ObservableCollection<PropertyModel>(_Properties);
-            set
-            {
-                _Properties = new PropertiesModel(value);
-                OnPropertyChanged("Properties");
-            }
-        }
-
-        private PropertyModel _SelectedProperty;
-        public PropertyModel SelectedProperty
-        {
-            get => _SelectedProperty;
-            set
-            {
-                _SelectedProperty = value;
-                OnPropertyChanged("SelectedProperty");
-            }
-        }
-
-        public Activity[] Profiles
-        {
-            get
-            {
-                var t = new List<Activity>(Static.Activities);
-                t.Add(new Activity() { ProfileName = "Not assigned" });
-                return t.ToArray();
-            }
-        }
-
-        private int _SelectedProfileIndex = 6;
-        public int SelectedProfileIndex
-        {
-            get => _SelectedProfileIndex;
-            set
-            {
-                _SelectedProfileIndex = value;
-                OnPropertyChanged("SelectedProfileIndex");
-                WarfaceApi_OnGameProcessStateChanged(_SavedState);
-                Preferences.Save();
-            }
-        }
-
-        private int _SavedLastProfileIndex = -1;
-        private bool _SavedState = false;
-
-
         public WarfaceViewModel()
         {
+            DefaultProfileIndex = 6;
 
             _Properties.Add("{wf:AppName}", "Название приложения", Static.GetValueByFieldName("wf:AppName"));
             _Properties.Add("{wf:AppID}", "ID приложения", Static.GetValueByFieldName("wf:AppID"));
@@ -104,11 +56,10 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             WarfaceApi.CurrentPlayer.OnPlayerInfoChanged += () => UpdateDiscordActivityIf();
             WarfaceApi.CurrentPlayer.OnUserInfoChanged += (p) => UpdateDiscordActivityIf();
 
-
-            WarfaceApi.OnGameProcessStateChanged += WarfaceApi_OnGameProcessStateChanged;
+            WarfaceApi.OnGameProcessStateChanged += OnGameProcessStateChanged;
         }
 
-        private void UpdateDiscordActivityIf()
+        protected override void UpdateDiscordActivityIf()
         {
             _Properties[2].Value = Static.GetValueByFieldName("wf:Map");
             _Properties[3].Value = Static.GetValueByFieldName("wf:State");
@@ -126,11 +77,6 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
             if (Static.IsPrefixContainsInFields(Static.CurrentActivity, "wf"))
                 Static.UpdateDiscordActivity();
-        }
-
-        private void WarfaceApi_OnGameProcessStateChanged(bool opened)
-        {
-            Static.OnGameStatusChanged(opened, SelectedProfileIndex, ref _SavedLastProfileIndex, ref _SavedState);
         }
     }
 }

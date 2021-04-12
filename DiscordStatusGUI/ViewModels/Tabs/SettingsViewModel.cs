@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using PinkJson.Parser;
+using PinkJson;
 using System.Windows;
 using DiscordStatusGUI.Views.Discord;
 
@@ -16,7 +16,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 {
     class SettingsViewModel : TemplateViewModel
     {
-        private ImageSource _DiscordUserAvatar = BitmapEx.ToImageSource(DiscordStatusGUI.Properties.Resources.DefaultAvatar);
+        private ImageSource _DiscordUserAvatar = BitmapEx.ToImageSource(Properties.Resources.DefaultAvatar);
         public ImageSource DiscordUserAvatar
         {
             get => _DiscordUserAvatar;
@@ -102,6 +102,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("DiscordConnectedSwitcherEnable");
             }
         }
+
+        
         private bool _IsDiscordAccountLogined = false;
         public bool IsDiscordAccountLogined
         {
@@ -129,6 +131,23 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("MyGamesAccountButtonStyle");
             }
         }
+        private bool _IsSteamAccountLogined = false;
+        public bool IsSteamAccountLogined
+        {
+            get => _IsSteamAccountLogined;
+            set
+            {
+                _IsSteamAccountLogined = value;
+                OnPropertyChanged("IsSteamAccountLogined");
+                OnPropertyChanged("SteamAccountButtonStyle");
+            }
+        }
+        public Style SteamAccountButtonStyle
+        {
+            get => _IsSteamAccountLogined ? _GreenButton : _BlueButton;
+        }
+
+
         public bool IsAutoRunEnabled
         {
             get
@@ -159,6 +178,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         public Style _GreenButton { get; private set; }
 
         public Command DiscordLoginCommand { get; private set; }
+        public Command SteamLoginCommand { get; private set; }
 
         public SettingsViewModel()
         {
@@ -167,6 +187,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             _GreenButton = (Style)resd["GreenButton"];
 
             DiscordLoginCommand = new Command(DiscordLogin);
+            SteamLoginCommand = new Command(SteamLogin);
 
             Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
         }
@@ -191,6 +212,11 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                     HorizontalAlignment.Right, No);
             else
                 Static.CurrentPage = new Login();
+        }
+
+        private void SteamLogin()
+        {
+            Static.Dialogs.PopupShow(new Views.Popups.SteamLogin(), Static.Dialogs.PopupHide);
         }
 
 

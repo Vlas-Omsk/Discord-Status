@@ -8,23 +8,16 @@
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
              xmlns:dialogs="clr-namespace:DiscordStatusGUI.ViewModels.Dialogs"
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+             xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
        mc:Ignorable="d" 
        d:DesignWidth="800" d:DesignHeight="450">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
     <UserControl.DataContext>
         <dialogs:DateTimePickerViewModel/>
     </UserControl.DataContext>
 
     <UserControl.Content>
         <Grid>
-            <Rectangle x:Name="background" Fill="#CC1D1D1D" Visibility="Visible" PreviewMouseLeftButtonUp="{converters:EventBinding Command=BackCommand}"/>
+            <Rectangle x:Name="background" Fill="#CC1D1D1D" Visibility="Visible" PreviewMouseLeftButtonDown="{converters:EventBinding Command=BackCommand}"/>
             <Grid x:Name="body" Height="160" Width="440" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Visible">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -61,6 +54,11 @@
                         <Ellipse Width="6" Height="6" Fill="#FFD0D1D3"/>
                     </Grid>
                     <Grid Grid.Row="1" Grid.Column="1" Margin="0,0,10,0">
+                        <Grid.Resources>
+                            <Style x:Key="ComboBoxDiscord2" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxDiscord}">
+                                <Setter Property="Height" Value="30"/>
+                            </Style>
+                        </Grid.Resources>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
@@ -75,18 +73,13 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid.Resources>
-                                <Style x:Key="ComboBoxDiscord2" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxDiscord}">
-                                    <Setter Property="Height" Value="30"/>
-                                </Style>
-                            </Grid.Resources>
 
-                            <TextBlock Text=" H: " Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-                            <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Hours}"   SelectedIndex="{Binding SelectedHour}"/>
-                            <TextBlock Text=" M: " Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-                            <ComboBox VerticalContentAlignment="Center" Grid.Column="3" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Minutes}" SelectedIndex="{Binding SelectedMinute}"/>
-                            <TextBlock Text=" S: " Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
-                            <ComboBox VerticalContentAlignment="Center" Grid.Column="5" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Seconds}" SelectedIndex="{Binding SelectedSecond}"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Hour}" Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{StaticResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Hours}"   SelectedIndex="{Binding SelectedHour}"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Minute}" Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="3" Style="{StaticResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Minutes}" SelectedIndex="{Binding SelectedMinute}"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Second}" Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <ComboBox VerticalContentAlignment="Center" Grid.Column="5" Style="{StaticResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Seconds}" SelectedIndex="{Binding SelectedSecond}"/>
                         </Grid>
                         <Grid Grid.Row="1" VerticalAlignment="Center">
                             <Grid.ColumnDefinitions>
@@ -97,11 +90,6 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Grid.Resources>
-                                <Style x:Key="ComboBoxDiscord2" TargetType="{x:Type ComboBox}" BasedOn="{StaticResource ComboBoxDiscord}">
-                                    <Setter Property="Height" Value="30"/>
-                                </Style>
-                            </Grid.Resources>
 
                             <TextBlock Text=" D: " Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                             <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Days}"   SelectedIndex="{Binding SelectedDay}"/>

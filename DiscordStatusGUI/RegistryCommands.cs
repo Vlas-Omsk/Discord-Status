@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PinkJson.Parser;
+using PinkJson;
 
 namespace DiscordStatusGUI
 {
@@ -32,7 +32,7 @@ namespace DiscordStatusGUI
                 var shell = discordstatus.CreateSubKey("shell");
                 var command = shell.CreateSubKey("open").CreateSubKey("command");
 
-                discordstatus.SetValue("", "URL:" + Static.Titile);
+                discordstatus.SetValue("", "URL:" + Static.Title);
                 discordstatus.SetValue("URL Protocol", "");
                 shell.SetValue("", "open");
                 command.SetValue("", open_command);
@@ -52,9 +52,9 @@ namespace DiscordStatusGUI
 
         public static AutoRun AutoRunStatus()
         {
-            if (AUTORUN?.GetValue(Static.Titile)?.ToString() == autorun_command)
+            if (AUTORUN?.GetValue(Static.Title)?.ToString() == autorun_command)
                 return AutoRun.Registered;
-            else if (AUTORUN.GetValueNames().Contains(Static.Titile))
+            else if (AUTORUN.GetValueNames().Contains(Static.Title))
                 return AutoRun.OtherPath;
             else
                 return AutoRun.UnRegistered;
@@ -64,7 +64,7 @@ namespace DiscordStatusGUI
         {
             if (AutoRunStatus() != AutoRun.Registered)
             {
-                AUTORUN.SetValue(Static.Titile, autorun_command);
+                AUTORUN.SetValue(Static.Title, autorun_command);
                 AUTORUN.Flush();
             }
         }
@@ -73,7 +73,7 @@ namespace DiscordStatusGUI
         {
             if (AutoRunStatus() == AutoRun.Registered)
             {
-                AUTORUN.DeleteValue(Static.Titile);
+                AUTORUN.DeleteValue(Static.Title);
                 AUTORUN.Flush();
             }
         }

@@ -15,14 +15,6 @@
     <UserControl.DataContext>
         <tabs:WindowsViewModel/>
     </UserControl.DataContext>
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/DiscordTheme.xaml"/>
-                <ResourceDictionary Source="/DiscordStatusGUI;component/Themes/SmoothScrollViewer.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
 
     <UserControl.Content>
         <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}">

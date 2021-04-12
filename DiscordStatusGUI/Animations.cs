@@ -379,7 +379,8 @@ namespace DiscordStatusGUI
             Storyboard storyboard = new Storyboard();
 
             var opacity = new DoubleAnimation(1, 0, new Duration(TimeSpan.FromMilliseconds(100)));
-            opacity.Completed += (s, a) => control.Visibility = Visibility.Hidden;
+            opacity.Completed += (s, a) => 
+                control.Visibility = Visibility.Hidden;
             storyboard.Children.Add(opacity);
 
             Storyboard.SetTargetProperty(opacity, new PropertyPath(UIElement.OpacityProperty));
