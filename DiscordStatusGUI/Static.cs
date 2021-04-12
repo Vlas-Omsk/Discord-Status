@@ -1,26 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Baml2006;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Markup.Localizer;
-using System.Windows.Media;
-using DiscordStatusGUI.Extensions;
+﻿using DiscordStatusGUI.Extensions;
 using DiscordStatusGUI.Libs;
 using DiscordStatusGUI.Libs.DiscordApi;
 using DiscordStatusGUI.Models;
 using DiscordStatusGUI.Properties;
 using DiscordStatusGUI.ViewModels;
 using DiscordStatusGUI.ViewModels.Dialogs;
-using DiscordStatusGUI.ViewModels.Discord;
 using DiscordStatusGUI.ViewModels.Tabs;
 using DiscordStatusGUI.Views;
 using DiscordStatusGUI.Views.Discord;
@@ -45,7 +29,7 @@ namespace DiscordStatusGUI
         public static MainWindow MainWindow;
         public static MainWindowViewModel MainWindowViewModel;
 
-        public static Discord Discord = new Discord();
+        public static readonly Discord Discord = new Discord();
 
         public static readonly string Title = "Discord Status";
         public static readonly ImageSource Icon = BitmapEx.ToImageSource(Resources.logo.ToBitmap());
@@ -153,7 +137,7 @@ namespace DiscordStatusGUI
 
         #region Activity
         private static Activity[] _Activities;
-        public static IEnumerable<FieldInfo> ActivityFields = typeof(Activity).GetRuntimeFields();
+        public static IEnumerable<PropertyInfo> ActivityFields = typeof(Activity).GetProperties();
 
         public static Activity[] Activities
         {
@@ -164,7 +148,7 @@ namespace DiscordStatusGUI
                     ProfileName = "Discord Status",
                     Name = "Discord Status",
                     ApplicationID = "743507332838981723",
-                    Details = "vlas-omsk.github.io",
+                    State = "vlas-omsk.github.io",
                     ImageLargeKey = "logo",
                     IsAvailableForChange = false
                 },
@@ -182,7 +166,7 @@ namespace DiscordStatusGUI
                     Details = "{wf:State}",
                     StartTime = "{wf:StateStartTime}",
                     ImageLargeKey = "logo",
-                    ImageLargeText = "Warface Status",
+                    ImageLargeText = "Warface RU",
                     ImageSmallKey = "rank{wf:PlayerRank}",
                     ImageSmallText = "Ранк: {wf:PlayerRank} {wf:PlayerRankName}",
                     IsAvailableForChange = true
@@ -251,7 +235,10 @@ namespace DiscordStatusGUI
             {
                 var val = fi.GetValue(activity);
                 if (!(val is string))
+                {
+                    fi.SetValue(result, val);
                     return;
+                }
 
                 fi.SetValue(result, ReplaceFilds(val.ToString() + ""));
             });
@@ -278,8 +265,11 @@ namespace DiscordStatusGUI
             get => _CurrentActivityIndex;
             set
             {
-                _CurrentActivityIndex = value;
-                UpdateDiscordActivity();
+                if (_CurrentActivityIndex != value)
+                {
+                    _CurrentActivityIndex = value;
+                    UpdateDiscordActivity();
+                }
             }
         }
         public static void UpdateDiscordActivity()
@@ -599,7 +589,7 @@ namespace DiscordStatusGUI
                 });
             else if (!string.IsNullOrEmpty(Discord?.Token))
             {
-                Dialogs.MessageBoxShow("Oops...", "It seems your Discord token is not valid. Try logging into your Discord account again.", new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
+                Dialogs.MessageBoxShow(Lang.GetResource("Static:InvalidDiscordToken:Title"), Lang.GetResource("Static:InvalidDiscordToken:Text"), new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
                 MainWindow.Dispatcher.Invoke(() =>
                 {
                     CurrentPage = new Login();

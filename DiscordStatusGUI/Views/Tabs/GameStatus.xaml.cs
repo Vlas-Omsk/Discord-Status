@@ -135,27 +135,35 @@ namespace DiscordStatusGUI.Views.Tabs
         #endregion HelpText
 
 
-        public IEnumerable<FieldInfo> ActivityFields = typeof(Activity).GetRuntimeFields();
+        public IEnumerable<PropertyInfo> ActivityFields = typeof(Activity).GetProperties();
         private void Field_TextChanged(object sender, TextChangedEventArgs e)
         {
             var field = e.OriginalSource as TextBox;
             var name = field.TemplatedParent is ComboBox ? (field.TemplatedParent as ComboBox).Name : field.Name;
-            var activity_value = ActivityFields.Where(x => x.Name.Contains($"<{name}>")).Single().GetValue(Static.CurrentActivity.SavedState)?.ToString();
-            if ((field.Text == "" ? null : field.Text) != activity_value)
+            Field_TextChanged(name, field.Text);
+        }
+
+        public void Field_TextChanged(string name, string text)
+        {
+            var tmp = ActivityFields.Where(x => x.Name.Equals($"{name}"));
+            var activity_value = tmp.Single().GetValue(Static.CurrentActivity.SavedState)?.ToString();
+            if ((text == "" ? null : text) != activity_value)
             {
                 IsChanged = true;
             }
-            
+
             if (ActivityFields.All(element => {
-                    if (!(DataContext as GameStatusViewModel).Options.Contains(element.Name.Replace(">k__BackingField", "").Replace("<", "")))
-                        return true;
-                    var f = element.GetValue(Static.CurrentActivity.SavedState);
-                    var s = element.GetValue(Static.CurrentActivity);
-                    return (f?.ToString() ?? "") == (s?.ToString() ?? "");//(f?.ToString() == "" ? null : f) == (s == "" ? null : s);
-                }))
+                if (!(DataContext as GameStatusViewModel).Options.Contains(element.Name.Replace(">k__BackingField", "").Replace("<", "")))
+                    return true;
+                var f = element.GetValue(Static.CurrentActivity.SavedState)?.ToString();
+                var s = element.GetValue(Static.CurrentActivity)?.ToString();
+                return (f ?? "") == (s ?? "");//(f?.ToString() == "" ? null : f) == (s == "" ? null : s);
+            }))
             {
                 IsChanged = false;
             }
+
+            (DataContext as GameStatusViewModel).OnPropertyChanged("ActivityType");
         }
 
         public bool IsChanged

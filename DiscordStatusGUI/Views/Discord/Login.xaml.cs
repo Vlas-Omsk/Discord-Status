@@ -65,7 +65,7 @@ namespace DiscordStatusGUI.Views.Discord
             {
                 Animations.Shake(2, 15, new TimeSpan(00, 00, 00, 00, 500), CatText).Begin();
                 if (CatClickCount == 5)
-                    CatText.Text = "Хватит!";
+                    CatText.Text = Locales.Lang.GetResource("Views:Discord:Login:CatEmotions:Angry");
             }
             else
             {

@@ -12,8 +12,8 @@
         <Grid Background="#FF36393F">
             <!--<Rectangle RadiusX="7" RadiusY="7" Fill="#FF36393F"/>-->
             <Image Source="/DiscordStatusGUI;component/Resources/logo/logo_small.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="130" Margin="10,0,0,100" />
-            <TextBlock Text="Initialization" Margin="0,0,0,-100" Foreground="White" FontSize="18" FontFamily="/DiscordStatusGUI;component/Resources/#New_Zelek" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <TextBlock Text="Please, wait" Margin="0,0,0,-200" Foreground="#FF8A8E93" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="{locales:Lang Views:Initialization:Title}" Margin="0,0,0,-100" Foreground="White" FontSize="18" FontFamily="/DiscordStatusGUI;component/Resources/#New_Zelek" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="{locales:Lang Views:Initialization:Description}" Margin="0,0,0,-200" Foreground="#FF8A8E93" FontSize="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </Grid>
     </UserControl.Content>
 </UserControl>

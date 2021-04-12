@@ -52,7 +52,7 @@
                             </Rectangle>
 
                             <!--#region ContentPresenter-->
-                            <Popup x:Name="contentPopup" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
+                            <Popup x:Name="contentPopup" IsHitTestVisible="False" PlacementRectangle="66,0,0,0" Style="{StaticResource PopupTextPresenter}">
                                 <Grid Height="50">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -236,7 +236,7 @@
                 <Rectangle Fill="#36393f" Width="5" Height="9" StrokeThickness="5" Margin="0,6,15,5"/>
             </Grid>
             <!--#endregion-->
-            <ContentControl Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>
+            <ContentControl Grid.RowSpan="2" Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>
         </Grid>
     </UserControl.Content>
 </UserControl>

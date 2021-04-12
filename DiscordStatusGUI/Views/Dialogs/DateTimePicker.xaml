@@ -33,7 +33,7 @@
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.ColumnSpan="2" Content="Date time picker" Foreground="White" Margin="16,0" FontSize="16" FontWeight="Bold"/>
+                    <Label Grid.ColumnSpan="2" Content="{locales:Lang Views:Dialogs:DateTimePicker:Title}" Foreground="White" Margin="16,0" FontSize="16" FontWeight="Bold"/>
                     <Grid Grid.Row="1">
                         <Ellipse x:Name="ClockBody" Width="{Binding ElementName=ClockBody, Path=ActualHeight}" Margin="8" Fill="#FF2F3136" Stroke="Black" StrokeThickness="0.2"/>
                         <Border x:Name="HourArrow" HorizontalAlignment="Center" VerticalAlignment="Center" Width="5" Height="30" Margin="0,0,0,30" RenderTransformOrigin="0.5,1" Background="#FFD0D1D3" MouseLeftButtonDown="HourArrow_MouseLeftButtonDown">
@@ -91,11 +91,11 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text=" D: " Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Day}" Grid.Column="0" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                             <ComboBox VerticalContentAlignment="Center" Grid.Column="1" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Days}"   SelectedIndex="{Binding SelectedDay}"/>
-                            <TextBlock Text=" M: " Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Month}" Grid.Column="2" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                             <ComboBox VerticalContentAlignment="Center" Grid.Column="3" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Months}" SelectedIndex="{Binding SelectedMonth}"/>
-                            <TextBlock Text=" Y: " Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{locales:Lang Views:Dialogs:DateTimePicker:Year}" Grid.Column="4" Foreground="#FFD0D1D3" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
                             <ComboBox VerticalContentAlignment="Center" Grid.Column="5" Style="{DynamicResource ComboBoxDiscord2}" ItemContainerStyle="{StaticResource ComboBoxItemDiscord}" ItemsSource="{Binding Years}"  SelectedIndex="{Binding SelectedYear}"/>
                         </Grid>
                     </Grid>

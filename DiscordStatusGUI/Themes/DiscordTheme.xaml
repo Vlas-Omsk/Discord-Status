@@ -2,7 +2,9 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:DiscordStatusGUI.Themes"
                     xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
-                    xmlns:converters="clr-namespace:DiscordStatusGUI.Converters" xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                    xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+                    xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
 
     <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -412,9 +414,9 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu Style="{StaticResource ContextMenuDiscord}">
-                    <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
-                    <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
-                    <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                    <MenuItem Command="ApplicationCommands.Copy"/>
+                    <MenuItem Command="ApplicationCommands.Paste"/>
+                    <MenuItem Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
                 </ContextMenu>
             </Setter.Value>
         </Setter>
@@ -463,9 +465,9 @@
         <Setter Property="ContextMenu">
             <Setter.Value>
                 <ContextMenu Style="{StaticResource ContextMenuDiscord}">
-                    <MenuItem Header="Копировать" Command="ApplicationCommands.Copy"/>
-                    <MenuItem Header="Вставить" Command="ApplicationCommands.Paste"/>
-                    <MenuItem Header="Вырезать" Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
+                    <MenuItem Command="ApplicationCommands.Copy"/>
+                    <MenuItem Command="ApplicationCommands.Paste"/>
+                    <MenuItem Command="ApplicationCommands.Cut" Style="{StaticResource RedMenuItem}"/>
                 </ContextMenu>
             </Setter.Value>
         </Setter>
@@ -1779,7 +1781,7 @@
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu Style="{StaticResource ContextMenuDiscord}">
-                                <MenuItem Header="Копировать имя параметра" Command="{Binding CopyCommand}"></MenuItem>
+                                <MenuItem Header="{locales:Lang Themes:DiscordTheme:DataGridStyleDiscord:CopyParameterName}" Command="{Binding CopyCommand}"></MenuItem>
                                 <MenuItem Header="¯\_(ツ)_/¯" Style="{StaticResource RedMenuItem}"></MenuItem>
                             </ContextMenu>
                         </Setter.Value>

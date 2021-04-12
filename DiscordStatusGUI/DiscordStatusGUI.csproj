@@ -53,8 +53,7 @@
     <StartupObject>DiscordStatusGUI.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Resources\logo\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero2" />
@@ -73,11 +72,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -90,13 +87,13 @@
     <Compile Include="Controls\SmoothScrollViewer.cs" />
     <Compile Include="Converters\BoolToMarginConverter.cs" />
     <Compile Include="Converters\MultiStringConverter.cs" />
-    <Compile Include="Converters\TagToDouble.cs" />
+	<None Include="Converters\TagToDouble.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
-    <Compile Include="Converters\BoolToIntConverter.cs" />
+	<None Include="Converters\BoolToIntConverter.cs" />
     <Compile Include="Converters\EventBinding.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\IsEqualConverter.cs" />
-    <Compile Include="Converters\MultiMarginConverter.cs" />
+	<None Include="Converters\IsEqualConverter.cs" />
+    <None Include="Converters\MultiMarginConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\SumConverter.cs" />
     <Compile Include="DiscordStealer.cs" />
@@ -116,7 +113,7 @@
     <Compile Include="Libs\WarfaceApi.cs" />
     <Compile Include="Libs\WEB.cs" />
     <None Include="Libs\WEB_new.cs" />
-    <Compile Include="locales\Lang.cs" />
+    <Compile Include="Locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
     <Compile Include="Models\Notification.xaml.cs">
       <DependentUpon>Notification.xaml</DependentUpon>
@@ -130,6 +127,7 @@
     <Compile Include="Static.cs" />
     <Compile Include="UpdateManager.cs" />
     <Compile Include="ViewModels\Dialogs\DateTimePickerViewModel.cs" />
+    <Compile Include="ViewModels\Dialogs\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\PopupViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\SaveChangesBoxViewModel.cs" />
     <Compile Include="ViewModels\Dialogs\MessageBoxViewModel.cs" />
@@ -305,11 +303,12 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="locales\default.json">
+    <None Include="Locales\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="locales\ru.json">
+    <None Include="Locales\ru.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Properties\Settings.settings">

@@ -68,10 +68,10 @@ namespace DiscordStatusGUI
 
             List<byte> encrypted = new List<byte>();
 
-            using (Aes myAes = Aes.Create())
+            using (Aes aes = Aes.Create())
             {
-                encrypted.AddRange(EncryptStringToBytes(value, CreateKey(key, 32), myAes.IV));
-                encrypted.AddRange(myAes.IV);
+                encrypted.AddRange(EncryptStringToBytes(value, CreateKey(key, 32), aes.IV));
+                encrypted.AddRange(aes.IV);
             }
 
             return Convert.ToBase64String(encrypted.ToArray());

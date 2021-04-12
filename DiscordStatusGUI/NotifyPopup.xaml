@@ -6,6 +6,7 @@
        xmlns:local="clr-namespace:DiscordStatusGUI.Views"
        xmlns:viewmodels="clr-namespace:DiscordStatusGUI.ViewModels"
        xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
+       xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
        mc:Ignorable="d" 
        d:DesignHeight="200" d:DesignWidth="200" Placement="MousePoint">
     <Popup.DataContext>

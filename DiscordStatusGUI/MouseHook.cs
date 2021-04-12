@@ -88,7 +88,6 @@ namespace DiscordStatusGUI
         static IntPtr hModule = IntPtr.Zero;
         static bool hookInstall = false;
         static HookProc hookDel;
-        static Thread hookThread;
 
         public static bool IsHookInstalled => hookInstall && hHook != IntPtr.Zero;
 

@@ -82,6 +82,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 if (!_IsDiscordConnected)
                 {
                     Static.Discord.Socket.Disconnect();
+                    Static.Reconnect.IsVisible = false;
                     SettingsView.ShowUserInfoPlug();
                 }
                 else
@@ -172,6 +173,11 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             get => _IsMyGamesAccountLogined ? _GreenButton : _BlueButton;
         }
 
+        public string Info
+        {
+            get => Static.Title + " v" + Static.Version.ToString().Replace(',', '.');
+        }
+
         public Settings SettingsView;
 
         public Style _BlueButton { get; private set; }
@@ -190,6 +196,13 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             SteamLoginCommand = new Command(SteamLogin);
 
             Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
+            Static.Discord.Socket.AutoReconnect += Socket_AutoReconnect;
+        }
+
+        private void Socket_AutoReconnect()
+        {
+            DiscordConnectedSwitcherEnable = true;
+            SettingsView.HideUserInfoPlug();
         }
 
         private void DiscordLogin()
@@ -207,8 +220,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             }
 
             if (IsDiscordAccountLogined)
-                Static.Dialogs.MessageBoxShow("Discord Account", "You are already signed in to your account, would you like to change it?",
-                    new System.Collections.ObjectModel.ObservableCollection<Models.ButtonItem>() { new Models.ButtonItem(Yes, "Yes"), new Models.ButtonItem(No, "No") },
+                Static.Dialogs.MessageBoxShow(Locales.Lang.GetResource("ViewModels:Tabs:SettingsViewModel:ChangeDiscordAccount:Title"), Locales.Lang.GetResource("ViewModels:Tabs:SettingsViewModel:ChangeDiscordAccount:Text"),
+                    new System.Collections.ObjectModel.ObservableCollection<Models.ButtonItem>() { new Models.ButtonItem(Yes, Locales.Lang.GetResource("Yes")), new Models.ButtonItem(No, Locales.Lang.GetResource("No")) },
                     HorizontalAlignment.Right, No);
             else
                 Static.CurrentPage = new Login();

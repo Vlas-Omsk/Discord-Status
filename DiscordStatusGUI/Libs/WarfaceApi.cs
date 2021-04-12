@@ -22,7 +22,7 @@ namespace DiscordStatusGUI.Libs
         public static Json Servers;
         public static Json States;
         public static Json Ranks;
-        public static bool Screens_open_UseNativeNames = false, Levels_UseNativeNames;
+        public static bool Screens_open_UseNativeNames = false, Levels_UseNativeNames = false;
 
         public static bool FastGameClientClose;
 
@@ -38,11 +38,6 @@ namespace DiscordStatusGUI.Libs
 
         public delegate void OnGameProcessStateChangedEventHandler(bool opened);
         public static event OnGameProcessStateChangedEventHandler OnGameProcessStateChanged;
-
-        public static void InvokeOnGameProcessStateChanged(bool opened)
-        {
-            OnGameProcessStateChanged?.Invoke(opened);
-        }
 
         public static void Init()
         {
