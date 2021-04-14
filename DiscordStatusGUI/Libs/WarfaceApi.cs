@@ -128,7 +128,7 @@ namespace DiscordStatusGUI.Libs
                 {
                     if (line.IndexOf(Servers["_PREFIX"].Value.ToString()) != -1)
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Server: " + line);
+                        ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Server: " + line);
                         Regex regex = new Regex(@"\((.*?)\)");
                         MatchCollection matches = regex.Matches(line);
                         var val1 = matches[0].Value.Substring(1, matches[0].Value.Length - 2).Trim();
@@ -144,7 +144,7 @@ namespace DiscordStatusGUI.Libs
                     }
                     else if (line.IndexOf(Screens_open["_PREFIX"].Value.ToString()) != -1)
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Screen open: " + line);
+                        ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Screen open: " + line);
                         Regex regex = new Regex(@"'(.*?)'");
                         MatchCollection matches = regex.Matches(line);
                         var val = matches[0].Value.Substring(1, matches[0].Value.Length - 2);
@@ -160,7 +160,7 @@ namespace DiscordStatusGUI.Libs
                     }
                     else if (line.IndexOf(Levels["_PREFIX"].Value.ToString()) != -1)
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Level: " + line);
+                        ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Level: " + line);
                         Regex regex = new Regex(@"[ Level]\s(.*?)\s");
                         MatchCollection matches = regex.Matches(line);
                         var val = matches[0].Value.Substring(1).Trim();
@@ -179,13 +179,13 @@ namespace DiscordStatusGUI.Libs
                     //States optional
                     if (line.IndexOf("MS is insufficient to perform the desired action(s), trying to switch to another MS in search of a better life") != -1)
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Screen: " + line);
+                        ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Screen: " + line);
                         CurrentGameState.Screen = States["Lobby_PVE"].Value.ToString();
                         IsScreenChanged = true;
                     }
                     if (line.IndexOf("System:Quit") != -1)
                     {
-                        ConsoleEx.WriteLine(ConsoleEx.Warface, "Status: " + line);
+                        ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Status: " + line);
                         CurrentGameState.Screen = States["System_Quit"].Value.ToString();
                         IsScreenChanged = true;
                     }
@@ -196,7 +196,7 @@ namespace DiscordStatusGUI.Libs
                         try
                         {
                             GameProcess.Kill();
-                            ConsoleEx.WriteLine(ConsoleEx.Warface, "Fast client closing enabled, process " + GameProcess.Id + " killed");
+                            ConsoleEx.WriteLine(ConsoleEx.WarfaceApi, "Fast client closing enabled, process " + GameProcess.Id + " killed");
                         }
                         catch { }
                     }

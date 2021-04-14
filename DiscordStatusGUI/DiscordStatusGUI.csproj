@@ -107,7 +107,7 @@
     <Compile Include="Extensions\ProcessExtension.cs" />
     <Compile Include="Extensions\SecureStringExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
-    <Compile Include="Extensions\XmlNodeEx.cs" />
+    <None Include="Extensions\XmlNodeEx.cs" />
     <Compile Include="Libs\DiscordApi\Discord.cs" />
     <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />
     <Compile Include="Libs\DiscordApi\DiscordStructures.cs" />

@@ -46,7 +46,7 @@ namespace DiscordStatusGUI
             }
             catch (Exception ex)
             {
-                Extensions.ConsoleEx.WriteLine("Protocol", "Create protocol error\r\n" + ex.ToString());
+                Extensions.ConsoleEx.WriteLine(Extensions.ConsoleEx.Warning, "Create protocol error\r\n" + ex.ToString());
             }
         }
 

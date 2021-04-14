@@ -89,10 +89,10 @@ namespace DiscordStatusGUI
                 result += "  " + obj.Key;
             }
 
-            if (ConsoleEx.StreamWriter != null)
+            if (ConsoleEx.LogFileWriter != null)
                 try
                 {
-                    ConsoleEx.StreamWriter.Close();
+                    ConsoleEx.LogFileWriter.Close();
                 }
                 catch { }
 

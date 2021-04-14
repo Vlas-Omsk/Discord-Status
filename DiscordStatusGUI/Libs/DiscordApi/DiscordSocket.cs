@@ -78,13 +78,13 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         private void WSOnError(object sender, ErrorEventArgs e)
         {
             //c.u("WebSocket", "Error: " + e.Exception.ToString());
-            ConsoleEx.WriteLine(ConsoleEx.WebSocket, e.Message);
+            ConsoleEx.WriteLine(ConsoleEx.DiscordWebSocket, e.Message);
         }
 
         private void WSOnClose(object sender, CloseEventArgs e)
         {
             //c.u("WebSocket", "Closed " + (e.WasClean ? "clean" : "") + ": " + e.Reason + "(" + e.Code + ")");
-            ConsoleEx.WriteLine(ConsoleEx.WebSocket, "Closed" + (e.WasClean ? " clean" : "") + ": " + e.Reason + "(" + e.Code + ")");
+            ConsoleEx.WriteLine(ConsoleEx.DiscordWebSocket, "Closed" + (e.WasClean ? " clean" : "") + ": " + e.Reason + "(" + e.Code + ")");
 
             _KeepAliveTimer?.Stop();
             if (!_DisconnectedManually)
@@ -98,7 +98,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
         private void WSOnMessage(object sender, MessageEventArgs e)
         {
-            ConsoleEx.WriteLine(ConsoleEx.WebSocket, e.Data);
+            ConsoleEx.WriteLine(ConsoleEx.DiscordWebSocket, e.Data);
             //if (e.Data.Length > 200)
             //    c.u("WebSocket", "Message [Truncated]: " + e.Data.Substring(0, 200) + "[...]");
             //else
@@ -108,7 +108,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
         private void WSOnOpen(object sender, EventArgs e)
         {
-            ConsoleEx.WriteLine(ConsoleEx.WebSocket, "Opened");
+            ConsoleEx.WriteLine(ConsoleEx.DiscordWebSocket, "Opened");
             //c.u("WebSocket", "Opened");
 
             AuthClear();

@@ -359,7 +359,7 @@ namespace DiscordStatusGUI
 
             public static void SetTopStatus(string msg)
             {
-                ConsoleEx.WriteLine(ConsoleEx.Message, msg);
+                ConsoleEx.WriteLine(ConsoleEx.Info, msg);
 
                 MainWindow?.Dispatcher.Invoke(() =>
                     MainWindow.toppanel.TopStatus.Content = msg);

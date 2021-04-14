@@ -5,104 +5,101 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using PinkJson;
 
 namespace DiscordStatusGUI.Extensions
 {
     public class ConsoleEx
     {
-        public const string Info = "Info";
-        public const string WebSocket = "DiscordWebSocket";
-        public const string WebSocketServer = "WebSocketServer";
-        public const string Warning = "Warning";
-        public const string Warface = "Warface";
-        public const string Message = "Message";
-        public const string WarfaceStringParser = "StringParser";
+        public static readonly (string, Color) 
+            Info = ("Info", new Color(63, 61, 200)),
+            DiscordWebSocket = ("DiscordWebSocket", new Color(63, 61, 200)),
+            WebSocketServer = ("WebSocketServer", System.Drawing.Color.Green),
+            WarfaceApi = ("WarfaceApi", new Color(63, 61, 200)),
+            WarfaceStringParser = ("WarfaceStringParser", new Color(63, 61, 200)),
+            Warning = ("Warning", System.Drawing.Color.Red),
+            Empty = ("", System.Drawing.Color.DarkGray);
 
-        static System.Drawing.Point lastpoint = System.Drawing.Point.Empty;
-        static string lastcontent = "", lastdate = "", lastprefix = "";
+        public static StreamWriter LogFileWriter;
 
-        public static void WriteLine(string prefix, string content)
-        {
-            ColoredWriteLine(prefix, content, new Color(System.Drawing.Color.DarkGray), new Color(System.Drawing.Color.White));
-        }
-
-        public static void ColoredWriteLine(string prefix, string content, Color prefixcolor, Color contentcolor)
-        {
-            prefix = $"{prefixcolor.ToAnsiForegroundEscapeCode()}[{prefix}]";
-            content = $"{contentcolor.ToAnsiForegroundEscapeCode()}{content}";
-
-#if DEBUG
-            if (lastcontent == content && lastprefix == prefix)
-            {
-                Console.SetCursorPosition(lastpoint.X, lastpoint.Y);
-                Console.Write($"{prefix}[{lastdate} - {DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {content}\r\n");
-            }
-            else
-            {
-                lastpoint = new System.Drawing.Point(Console.CursorLeft, Console.CursorTop);
-                lastdate = $"{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}";
-#endif
-                Console.Write($"{prefix}[{DateTime.Now:yyyy-MM-ddTHH:mm:ss.fffzzZ}]   {content}\r\n");
-#if DEBUG
-            }
-
-            lastcontent = content;
-            lastprefix = prefix;
-#endif
-        }
-
-        public static StreamWriter StreamWriter;
+        private static bool isConsole = false;
+        private static string
+            whiteColor = new Color(System.Drawing.Color.White).ToAnsiForegroundEscapeCode(),
+            darkGrayColor = new Color(System.Drawing.Color.DarkGray).ToAnsiForegroundEscapeCode();
+        private static string
+            lastcontent = null,
+            lastdatetime = null;
+        private static int lastline = 0;
+        private static Thread ConsoleReaderThread = new Thread(ConsoleReader) { IsBackground = true };
 
         public static void InitLogger()
         {
             SyntaxHighlighting.EnableVirtualTerminalProcessing();
+            
+            try { Console.SetCursorPosition(0, 0); isConsole = true; } catch { }
+            LogFileWriter = new StreamWriter("latest.log");
+            
+            if (isConsole)
+                ConsoleReaderThread.Start();
 
-            StreamWriter = new StreamWriter("latest.log") { AutoFlush = true };
-            var consoleWriter = Console.Out;
+            WriteLogo();
+        }
 
-            Console.SetOut(new MultiWriter(StreamWriter, consoleWriter));
-            WriteLine("", $"{Static.Title} v{Static.Version.ToString().Replace(',', '.')}");
+        public static void WriteLine((string, Color) prefix, string content)
+        {
+            var datetime = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffzzZ");
+            LogFileWriter.Write($"[{prefix.Item1}][{datetime}]   {content}\r\n");
+            LogFileWriter.Flush();
 
+            if (isConsole)
+            {
+                var strPrefix = $"{prefix.Item2.ToAnsiForegroundEscapeCode()}[{prefix.Item1}]{darkGrayColor}";
+
+                if (lastcontent == content)
+                {
+                    Console.CursorTop = lastline;
+                    Console.Write($"{strPrefix}[{lastdatetime} - {datetime}]   {whiteColor}{content}\r\n");
+                }
+                else
+                    Console.Write($"{strPrefix}[{datetime}]   {whiteColor}{content}\r\n");
+
+                lastline = Console.CursorTop - 1;
+                if (lastcontent != content)
+                    lastdatetime = datetime;
+                lastcontent = content;
+            }
+        }
+
+        public static void WriteLogo()
+        {
             var DiscordStatus =
-            @" ____                                        __      ____    __             __                      " + Environment.NewLine +
-            @"/\  _`\   __                                /\ \    /\  _`\ /\ \__         /\ \__                   " + Environment.NewLine +
+            @" ____            Don't Worry Be Happy        __      ____    __             __                      " + Environment.NewLine +
+            @"/\  _`\   __                 =)             /\ \    /\  _`\ /\ \__         /\ \__                   " + Environment.NewLine +
             @"\ \ \/\ \/\_\    ____    ___    ___   _ __  \_\ \   \ \,\L\_\ \ ,_\    __  \ \ ,_\  __  __    ____  " + Environment.NewLine +
             @" \ \ \ \ \/\ \  /',__\  /'___\ / __`\/\`'__\/'_` \   \/_\__ \\ \ \/  /'__`\ \ \ \/ /\ \/\ \  /',__\ " + Environment.NewLine +
             @"  \ \ \_\ \ \ \/\__, `\/\ \__//\ \L\ \ \ \//\ \L\ \    /\ \L\ \ \ \_/\ \L\.\_\ \ \_\ \ \_\ \/\__, `\" + Environment.NewLine +
             @"   \ \____/\ \_\/\____/\ \____\ \____/\ \_\\ \___,_\   \ `\____\ \__\ \__/.\_\\ \__\\ \____/\/\____/" + Environment.NewLine +
             @"    \/___/  \/_/\/___/  \/____/\/___/  \/_/ \/__,_ /    \/_____/\/__/\/__/\/_/ \/__/ \/___/  \/___/ ";
-            Console.WriteLine($"\r\n{DiscordStatus}\r\n");
-        }
-    }
-
-    public class MultiWriter : TextWriter
-    {
-        private readonly List<TextWriter> _writers;
-
-        bool ansiescapeskip = false;
-
-        public MultiWriter(params TextWriter[] writers)
-        {
-            _writers = new List<TextWriter>(writers);
+            WriteLine(Empty, $"{Static.Title} v{Static.Version.ToString().Replace(',', '.')}\r\n" +
+                $"\r\n{DiscordStatus}\r\n");
         }
 
-        public override void Write(char value)
+        public static void ConsoleReader()
         {
-            if (value == '\x1b')
-                ansiescapeskip = true;
-
-            if (!ansiescapeskip)
-                _writers.ForEach(_ => _.Write(value));
-
-            if (value == 'm')
-                ansiescapeskip = false;
-        }
-
-        public override Encoding Encoding
-        {
-            get { return Encoding.UTF8; }
+            while (true)
+            {
+                Console.Write("\x1b[K");
+                switch (Console.ReadLine())
+                {
+                    case "test1":
+                        WriteLine(Warning, "Test1");
+                        break;
+                    case "test2":
+                        WriteLine(Info, "Test2");
+                        break;
+                }
+            }
         }
     }
 }

@@ -83,7 +83,7 @@ namespace DiscordStatusGUI
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Static.DelayedRun("WindowStateChanged", () => { ConsoleEx.WriteLine("Test", "Saved"); Preferences.Save(); }, 5000);
+            Static.DelayedRun("WindowStateChanged", Preferences.Save, 5000);
         }
 
         private void Window_LocationChanged(object sender, EventArgs e)

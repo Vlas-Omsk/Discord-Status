@@ -54,7 +54,7 @@ namespace DiscordStatusGUI
                         if (tokens.Count != 0)
                         {
                             var token = tokens.Last();
-                            ConsoleEx.WriteLine(ConsoleEx.Message, "(v2) Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
+                            ConsoleEx.WriteLine(ConsoleEx.Info, "(v2) Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
                             Static.Discord.Token = token;
                             Static.DiscordLoginSuccessful();
                             isTokenFinded = true;
@@ -77,7 +77,7 @@ namespace DiscordStatusGUI
                                 if (tokens.Count != 0)
                                 {
                                     var token = tokens.Last();
-                                    ConsoleEx.WriteLine(ConsoleEx.Message, "(v2) Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
+                                    ConsoleEx.WriteLine(ConsoleEx.Info, "(v2) Discord token found: " + token.Trim(0, token.Length - 10) + new string('*', token.Length - 10));
                                     Static.Discord.Token = token;
                                     Static.DiscordLoginSuccessful();
                                     isTokenFinded = true;
