@@ -51,7 +51,7 @@ namespace DiscordStatusGUI
 
             Static.Discord.Socket.OnWorkingStatusChanged += Socket_OnWorkingStatusChanged;
 
-            MouseHook.InstallHook();
+            MouseHook.Create();
             Static.InitNotifications();
 
             await Task.Run(() =>
@@ -78,7 +78,7 @@ namespace DiscordStatusGUI
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Preferences.Save();
-            MouseHook.UnInstallHook();
+            MouseHook.Destroy();
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)

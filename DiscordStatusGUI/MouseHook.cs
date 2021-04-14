@@ -14,145 +14,58 @@ namespace DiscordStatusGUI
     class MouseHook
     {
         #region WinAPI
-        [StructLayout(LayoutKind.Sequential)]
-        struct POINT
-        {
-            public int X;
-            public int Y;
-
-            public POINT(int x, int y)
-            {
-                this.X = x;
-                this.Y = y;
-            }
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        struct MSLLHOOKSTRUCT
-        {
-            public POINT pt;
-            public int mouseData;
-            public int flags;
-            public int time;
-            public IntPtr dwExtraInfo;
-        }
-
-        enum HookType : int
-        {
-            WH_JOURNALRECORD = 0,
-            WH_JOURNALPLAYBACK = 1,
-            WH_KEYBOARD = 2,
-            WH_GETMESSAGE = 3,
-            WH_CALLWNDPROC = 4,
-            WH_CBT = 5,
-            WH_SYSMSGFILTER = 6,
-            WH_MOUSE = 7,
-            WH_HARDWARE = 8,
-            WH_DEBUG = 9,
-            WH_SHELL = 10,
-            WH_FOREGROUNDIDLE = 11,
-            WH_CALLWNDPROCRET = 12,
-            WH_KEYBOARD_LL = 13,
-            WH_MOUSE_LL = 14
-        }
-
-        enum WM
-        {
-            LBUTTONDOWN = 0x201,
-            LBUTTONUP = 0x202,
-            MOUSEMOVE = 0x0200,
-            MOUSEWHEEL = 0x020A,
-            RBUTTONDOWN = 0x0204,
-            RBUTTONUP = 0x0205,
-            MBUTTONUP = 0x208,
-            MBUTTONDOWN = 0x207,
-            XBUTTONDOWN = 0x20B,
-            XBUTTONUP = 0x20C
-        }
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn,
-            IntPtr hMod, uint dwThreadId);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
         [DllImport("user32.dll")]
-        static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, [In] IntPtr lParam);
+        public static extern short GetAsyncKeyState(int key);
         #endregion
 
-        #region LowLevel
-        public delegate IntPtr HookProc(int nCode, IntPtr wParam, [In] IntPtr lParam);
+        #region SimpleHook
+        public static System.Timers.Timer CyclicCheckingEventsThread;
+        private static Point Point = new Point(), PointOld = new Point();
+        private static bool
+            Left, LeftOld,
+            Right, RightOld;
 
-        static IntPtr hHook = IntPtr.Zero;
-        static IntPtr hModule = IntPtr.Zero;
-        static bool hookInstall = false;
-        static HookProc hookDel;
-
-        public static bool IsHookInstalled => hookInstall && hHook != IntPtr.Zero;
-
-        public static void InstallHook()
+        public static void Create()
         {
-            hModule = Marshal.GetHINSTANCE(AppDomain.CurrentDomain.GetAssemblies()[0].GetModules()[0]);
-            hookDel = new HookProc(HookProcFunction);
-
-            hHook = SetWindowsHookEx(HookType.WH_MOUSE_LL,
-                hookDel, IntPtr.Zero, 0);
-
-            if (hHook != IntPtr.Zero)
-            {
-                hookInstall = true;
-                ConsoleEx.WriteLine(ConsoleEx.Info, "Low level mouse hook installed");
-            }
-            else
-                ConsoleEx.WriteLine(ConsoleEx.Info, "Can't install low level mouse hook!");
+            CyclicCheckingEventsThread = new System.Timers.Timer(5);
+            CyclicCheckingEventsThread.Elapsed += (s, e) => ProcFunction();
+            CyclicCheckingEventsThread.AutoReset = true;
+            CyclicCheckingEventsThread.Enabled = true;
+            CyclicCheckingEventsThread.Start();
         }
 
-        public static void UnInstallHook()
+        public static void Destroy()
         {
-            if (IsHookInstalled)
-            {
-                if (!UnhookWindowsHookEx(hHook))
-                    ConsoleEx.WriteLine(ConsoleEx.Info, "Can't uninstall low level mouse hook!");
-                hHook = IntPtr.Zero;
-                hModule = IntPtr.Zero;
-                hookInstall = false;
-                ConsoleEx.WriteLine(ConsoleEx.Info, "Low level mouse hook uninstalled");
-            }
+            CyclicCheckingEventsThread.Dispose();
         }
 
-        static IntPtr HookProcFunction(int nCode, IntPtr wParam, IntPtr lParam)
+        public static bool IsKeyPushedDown(int vKey)
         {
-            var result = CallNextHookEx(hHook, nCode, wParam, lParam);
+            return 0 != GetAsyncKeyState(vKey);
+        }
 
-            if (nCode == 0)
-            {
-                MSLLHOOKSTRUCT mhs = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-                switch ((WM)wParam.ToInt32())
-                {
-                    case WM.MOUSEMOVE:
-                        //OnMouseMove?.BeginInvoke(null, new MouseEventArgsEx(mhs.pt.X, mhs.pt.Y), null, null);
-                        InvokeAsync(OnMouseMove, new MouseEventArgsEx(mhs.pt.X, mhs.pt.Y));
-                        break;
-                    case WM.LBUTTONUP:
-                        //ConsoleEx.WriteLine("LBUTTONUP", mhs.pt.X + " " + mhs.pt.Y);
-                        //OnMouseButtonUp?.BeginInvoke(null, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Left), null, null);
-                        InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Left));
-                        break;
-                    case WM.RBUTTONUP:
-                        //ConsoleEx.WriteLine("RBUTTONUP", mhs.pt.X + " " + mhs.pt.Y);
-                        //OnMouseButtonUp?.BeginInvoke(null, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Right), null, null);
-                        InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Right));
-                        break;
-                    case WM.MBUTTONUP:
-                        //ConsoleEx.WriteLine("MBUTTONUP", mhs.pt.X + " " + mhs.pt.Y);
-                        //OnMouseButtonUp?.BeginInvoke(null, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Center), null, null);
-                        InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(mhs.pt.X, mhs.pt.Y, MouseButton.Center));
-                        break;
-                }
-            }
+        private static void ProcFunction()
+        {
+            Point = new Point(System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y);
+            Left = IsKeyPushedDown((int)MouseButton.Left);
+            Right = IsKeyPushedDown((int)MouseButton.Right);
 
-            return result;
+            if (Left != LeftOld)
+                if (Left == false)
+                    InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
+                else
+                    InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
+            if (Right != RightOld)
+                if (Right == false)
+                    InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
+                else
+                    InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
+            if (Point.X != PointOld.X || Point.Y != PointOld.Y)
+                InvokeAsync(OnMouseMove, new MouseEventArgsEx(Point.X, Point.Y));
+
+            PointOld = Point;
+            LeftOld = Left;
+            RightOld = Right;
         }
         #endregion
 

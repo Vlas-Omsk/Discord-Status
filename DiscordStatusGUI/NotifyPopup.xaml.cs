@@ -41,7 +41,8 @@ namespace DiscordStatusGUI
         private void Static_OnMouseButtonClick(object sebder, MouseButtonEventArgsEx e)
         {
             if (!this.IsMouseOver)
-                this.IsOpen = false;
+                Dispatcher.Invoke(() => 
+                    this.IsOpen = false);
         }
 
         private void Ni_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
