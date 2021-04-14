@@ -121,6 +121,9 @@
 			"Warface": {
 				"FastGameClose": "Speed up the closure of the Warface client",
 				"ActiveProfile": "Set a profile when activating the game:"
+			},
+			"Steam": {
+				"WhySteamParametersAreNotUpdated": "Why Steam parameters are not updated?"
 			}
 		},
 		"Initialization": {

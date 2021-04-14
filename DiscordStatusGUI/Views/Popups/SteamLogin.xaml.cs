@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
+using mshtml;
+using DiscordStatusGUI.ViewModels.Popups;
 
 namespace DiscordStatusGUI.Views.Popups
 {
@@ -27,12 +30,19 @@ namespace DiscordStatusGUI.Views.Popups
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            Application.SetCookie(new Uri("https://steampowered.com"), Libs.SteamApi.CurrentSteamProfile.Cookies);
             Static.DelayedRun("SteamLoginWebBrowserShowing", () => Dispatcher.Invoke(() => webbrowser.Visibility = Visibility.Visible), 200);
         }
 
         void IPopupContent.OnClose()
         {
             webbrowser.Visibility = Visibility.Hidden;
+        }
+
+        private void webbrowser_Navigated(object sender, NavigationEventArgs e)
+        {
+            Libs.SteamApi.CurrentSteamProfile.ResearchSteamLoginSecure(webbrowser);
+            Libs.WebBrowserTools.SetSilent(webbrowser, true);
         }
     }
 }

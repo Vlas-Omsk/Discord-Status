@@ -10,7 +10,7 @@
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
              xmlns:CorLib="clr-namespace:System;assembly=mscorlib"
        mc:Ignorable="d"
-       d:DesignWidth="800" d:DesignHeight="800" Background="#36393f"
+       d:DesignWidth="800" d:DesignHeight="800" Background="{StaticResource BackgroundBrush}"
              xmlns:converters="clr-namespace:DiscordStatusGUI.Converters">
     <UserControl.DataContext>
         <tabs:WarfaceViewModel/>
@@ -18,7 +18,7 @@
 
     <UserControl.Content>
         <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}">
-            <Grid HorizontalAlignment="Center" Width="660">
+            <Grid MaxWidth="{StaticResource TabContentMaxWidth}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>

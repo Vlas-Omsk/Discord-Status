@@ -35,6 +35,10 @@ namespace DiscordStatusGUI
 
             Directory.SetCurrentDirectory(CurrentDir);
             ConsoleEx.WriteLine(ConsoleEx.Info, "Working directory: " + Directory.GetCurrentDirectory());
+            if (Libs.WebBrowserTools.EnableLastIEVer(CurrentExe))
+                ConsoleEx.WriteLine(ConsoleEx.Info, "Last IE version enabled");
+            else
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Last IE version enable error");
 
             InitializeComponent();
 

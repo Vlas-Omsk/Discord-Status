@@ -15,7 +15,8 @@
     </StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments></StartArguments>
+    <StartArguments>
+    </StartArguments>
     <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>

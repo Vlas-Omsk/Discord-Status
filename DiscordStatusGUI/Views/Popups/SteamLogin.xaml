@@ -4,12 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DiscordStatusGUI.Views.Popups"
+             xmlns:popup="clr-namespace:DiscordStatusGUI.ViewModels.Popups"
+             xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
              Loaded="UserControl_Loaded"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Border Background="White" CornerRadius="5">
+    <UserControl.DataContext>
+        <popup:SteamLoginViewModel/>
+    </UserControl.DataContext>
+    <Border Background="{StaticResource BackgroundBrush}" CornerRadius="5">
         <Grid Margin="5">
-            <WebBrowser x:Name="webbrowser" Visibility="Hidden" Source="https://google.com/"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid x:Name="Profiles" Grid.ColumnSpan="2" Margin="0 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="SteamLoginSecure" Margin="20,0,0,0" Foreground="#FFADBBBE" Height="16" FontWeight="Bold"/>
+                <TextBox Grid.Column="1" Style="{StaticResource TextBoxField}" Margin="10,0" Text="{Binding SteamLoginSecure}"/>
+                <Button Grid.Column="2" Style="{StaticResource BlueButton}" Padding="5" Content="↺" Margin="5,0,0,0" Command="{Binding ResearchSteamLoginSecureCommand}"/>
+            </Grid>
+            <WebBrowser x:Name="webbrowser" Grid.Row="1" Visibility="Hidden" Source="https://steampowered.com/login" Navigated="webbrowser_Navigated"/>
         </Grid>
     </Border>
 </UserControl>

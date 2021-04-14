@@ -10,13 +10,15 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using DiscordStatusGUI.Extensions;
 using WEBLib;
+using CookieGrabber;
 
 namespace DiscordStatusGUI.Libs
 {
     public class SteamApi
     {
         public const string SteamUserAgent = "Mozilla/5.0 (Windows; U; Windows NT 10.0; en-US; Valve Steam Client/default/1613176728; ) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36";
-        
+        public const string DataFolder = "Data\\Steam\\";
+
         static readonly string UserDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + "\\Steam\\userdata";
 
         public static SteamProfile CurrentSteamProfile = new SteamProfile();
@@ -42,14 +44,20 @@ namespace DiscordStatusGUI.Libs
                     OnGameProcessStateChanged?.Invoke(false);
 
                 LastGameName = CurrentSteamProfile.GameName;
-                Thread.Sleep(CurrentSteamProfile.GameName == null ? 10000 : 5000);
+                Thread.Sleep(CurrentSteamProfile.GameName == null ? 10000 : 8000);
             }
         }
 
         public static void Init()
         {
-            TryGetSteamIDs(out string[] ids);
-            CurrentSteamProfile.ID = ids[0];
+            if (string.IsNullOrEmpty(CurrentSteamProfile.ID))
+            {
+                if ((TryGetSteamIDs(out string[] ids) && string.IsNullOrEmpty(CurrentSteamProfile.SteamLoginSecure)) || string.IsNullOrEmpty(CurrentSteamProfile.SteamLoginSecure))
+                {
+                    CurrentSteamProfile.ResearchSteamLoginSecure();
+                }
+                CurrentSteamProfile.ID = ids[0];
+            }
             UpdateProfileThread.IsBackground = true;
             UpdateProfileThread.Start();
         }
@@ -157,6 +165,20 @@ namespace DiscordStatusGUI.Libs
         }
         public string ID { get; set; }
 
+        public string Cookies => "steamLoginSecure=" + SteamLoginSecure;
+
+        private string _SteamLoginSecure = "";
+        public string SteamLoginSecure
+        {
+            get => _SteamLoginSecure;
+            set
+            {
+                _SteamLoginSecure = value;
+                OnPropertyChanged("SteamLoginSecure");
+            }
+        }
+
+
         public SteamProfile()
         {
         }
@@ -180,14 +202,12 @@ namespace DiscordStatusGUI.Libs
             InvokeOnPropertyChanged(false, null, true);
         }
 
-        public string cookies = "steamLoginSecure=76561198327698680%7C%7C7A2364E5237DCCDB613E2A3CF775B548688C6C51";
-
         public bool Refresh()
         {
             var data = WEB.Post(Miniprofile + ID, new string[] { 
                 "User-Agent: " + SteamApi.SteamUserAgent, 
                 "accept-language: " + Locales.Lang.CurrentWebLanguage,
-                "Cookie: " + cookies}, null, "GET");
+                "Cookie: " + Cookies}, null, "GET");
             if (data == null) { return false; }
             data = Regex.Replace(data, @"\<img.*?\>", new MatchEvaluator((obj) => obj.Value + "</img>"));
 
@@ -297,22 +317,50 @@ namespace DiscordStatusGUI.Libs
             return true;
         }
 
+        List<string> notremovedProperties = new List<string>();
         List<string> changedProperties = new List<string>();
         string[] clearProperties = { nameof(ImageUrl), nameof(Status), nameof(GameLogoUrl), nameof(GameState), nameof(GameName), nameof(RichPresence) };
-        private void InvokeOnPropertyChanged(bool reserved, string property, bool invoke = false)
+        private void InvokeOnPropertyChanged(bool changed, string property, bool invoke = false)
         {
-            changedProperties.Add(property);
-            if (invoke && changedProperties.Count != 0)
+            notremovedProperties.Add(property);
+            if (changed)
+                changedProperties.Add(property);
+            if (invoke && notremovedProperties.Count != 0)
             {
                 foreach (var clrProp in clearProperties)
-                    if (!changedProperties.Contains(clrProp))
+                    if (!notremovedProperties.Contains(clrProp))
                         typeof(SteamProfile).GetProperty(clrProp).SetValue(this, null);
+                notremovedProperties.Clear();
+            }
+            if (invoke && changedProperties.Count != 0)
+            {
                 changedProperties.Clear();
-                OnPropertyChanged?.Invoke();
+                OnPropertyChanged?.Invoke(null);
             }
         }
 
-        public delegate void OnPropertyChangedEventHandler();
+        public void ResearchSteamLoginSecure()
+        {
+            SteamLoginSecure = CookieTool.GetNewestCookieByKey("steamLoginSecure")?.Value;
+        }
+
+        public void ResearchSteamLoginSecure(System.Windows.Controls.WebBrowser webbrowser)
+        {
+            var cookies = WebBrowserTools.GetUriCookies("https://steampowered.com")["steamLoginSecure"];
+            if (cookies != null)
+            {
+                SteamLoginSecure = cookies.Value;
+                return;
+            }
+            cookies = WebBrowserTools.GetUriCookies("https://store.steampowered.com")["steamLoginSecure"];
+            if (cookies != null)
+            {
+                SteamLoginSecure = cookies.Value;
+                return;
+            }
+        }
+
+        public delegate void OnPropertyChangedEventHandler(string name);
         public event OnPropertyChangedEventHandler OnPropertyChanged;
     }
 

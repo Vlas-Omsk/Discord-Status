@@ -132,20 +132,9 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 OnPropertyChanged("MyGamesAccountButtonStyle");
             }
         }
-        private bool _IsSteamAccountLogined = false;
-        public bool IsSteamAccountLogined
-        {
-            get => _IsSteamAccountLogined;
-            set
-            {
-                _IsSteamAccountLogined = value;
-                OnPropertyChanged("IsSteamAccountLogined");
-                OnPropertyChanged("SteamAccountButtonStyle");
-            }
-        }
         public Style SteamAccountButtonStyle
         {
-            get => _IsSteamAccountLogined ? _GreenButton : _BlueButton;
+            get => !string.IsNullOrEmpty(Libs.SteamApi.CurrentSteamProfile.SteamLoginSecure) ? _GreenButton : _BlueButton;
         }
 
 
@@ -197,6 +186,12 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
             Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
             Static.Discord.Socket.AutoReconnect += Socket_AutoReconnect;
+
+            Libs.SteamApi.CurrentSteamProfile.OnPropertyChanged += (n) =>
+            {
+                if (n == "SteamLoginSecure")
+                    OnPropertyChanged("SteamAccountButtonStyle");
+            };
         }
 
         private void Socket_AutoReconnect()

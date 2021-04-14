@@ -33,7 +33,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
             OnPropertyChanged("Properties");
 
-            SteamApi.CurrentSteamProfile.OnPropertyChanged += UpdateDiscordActivityIf;
+            SteamApi.CurrentSteamProfile.OnPropertyChanged += (n) => UpdateDiscordActivityIf();
 
             SteamApi.OnGameProcessStateChanged += OnGameProcessStateChanged;
         }

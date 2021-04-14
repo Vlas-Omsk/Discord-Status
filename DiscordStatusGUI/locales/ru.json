@@ -121,6 +121,9 @@
 			"Warface": {
 				"FastGameClose": "Ускорить закрытие клиента Warface",
 				"ActiveProfile": "Установить профиль при активации игры:"
+			},
+			"Steam": {
+				"WhySteamParametersAreNotUpdated": "Почему не обновляются параметры Steam?"
 			}
 		},
 		"Initialization": {

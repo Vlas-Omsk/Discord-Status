@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5C106643-5AE7-46E0-867F-6331808D8F74}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>DiscordStatusGUI</RootNamespace>
     <AssemblyName>DiscordStatusGUI</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -56,6 +56,9 @@
     <ApplicationIcon>Resources\logo\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -87,12 +90,12 @@
     <Compile Include="Controls\SmoothScrollViewer.cs" />
     <Compile Include="Converters\BoolToMarginConverter.cs" />
     <Compile Include="Converters\MultiStringConverter.cs" />
-	<None Include="Converters\TagToDouble.cs" />
+    <None Include="Converters\TagToDouble.cs" />
     <Compile Include="Converters\BoolInverter.cs" />
-	<None Include="Converters\BoolToIntConverter.cs" />
+    <None Include="Converters\BoolToIntConverter.cs" />
     <Compile Include="Converters\EventBinding.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-	<None Include="Converters\IsEqualConverter.cs" />
+    <None Include="Converters\IsEqualConverter.cs" />
     <None Include="Converters\MultiMarginConverter.cs" />
     <Compile Include="Converters\StringConverter.cs" />
     <Compile Include="Converters\SumConverter.cs" />
@@ -113,6 +116,7 @@
     <Compile Include="Libs\WarfaceApi.cs" />
     <Compile Include="Libs\WEB.cs" />
     <None Include="Libs\WEB_new.cs" />
+    <Compile Include="Libs\WebBrowserTools.cs" />
     <Compile Include="Locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
     <Compile Include="Models\Notification.xaml.cs">
@@ -134,6 +138,7 @@
     <Compile Include="ViewModels\Discord\CodeViewModel.cs" />
     <Compile Include="ViewModels\Discord\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\Popups\SteamLoginViewModel.cs" />
     <Compile Include="ViewModels\Tabs\GameTemplateViewModel.cs" />
     <Compile Include="ViewModels\Tabs\SteamViewModel.cs" />
     <Compile Include="ViewModels\Tabs\WindowsViewModel.cs" />
@@ -303,7 +308,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-	  <SubType>Designer</SubType>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Locales\default.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -416,23 +421,25 @@
     <Resource Include="Resources\Tabs\Steam.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="strings\Levels.json">
+    <None Include="Data\WarfaceRU\Levels.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="strings\Ranks.json">
+    <None Include="Data\WarfaceRU\Ranks.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="strings\Screens_open.json">
+    <None Include="Data\WarfaceRU\Screens_open.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="strings\Servers.json">
+    <None Include="Data\WarfaceRU\Servers.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="strings\States.json">
+    <None Include="Data\WarfaceRU\States.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TODO.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\Steam\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

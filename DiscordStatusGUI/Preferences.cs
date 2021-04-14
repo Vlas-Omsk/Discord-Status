@@ -100,6 +100,8 @@ namespace DiscordStatusGUI
                         },
                         Steam = new
                         {
+                            SteamApi.CurrentSteamProfile.SteamLoginSecure,
+                            SteamApi.CurrentSteamProfile.ID,
                             SteamActivityIndex
                         }
                     },
@@ -147,6 +149,8 @@ namespace DiscordStatusGUI
                     FastGameClientClose = (bool)propjson["Accounts"]["Warface"]["FastGameClientClose"].Value;
                     WarfaceActivityIndex = (int)propjson["Accounts"]["Warface"]["WarfaceActivityIndex"].Value;
                     SteamActivityIndex = (int)propjson["Accounts"]["Steam"]["SteamActivityIndex"].Value;
+                    SteamApi.CurrentSteamProfile.SteamLoginSecure = propjson["Accounts"]["Steam"]["SteamLoginSecure"].Get<string>();
+                    SteamApi.CurrentSteamProfile.ID = propjson["Accounts"]["Steam"]["ID"].Get<string>();
 
                     IsDiscordConnected = (bool)propjson["Accounts"]["Discord"]["IsDiscordConnected"].Value;
                 }

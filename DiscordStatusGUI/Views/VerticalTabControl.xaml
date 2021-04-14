@@ -228,12 +228,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <ListView ItemsSource="{Binding Tabs}" Background="#FF202225" BorderThickness="0" Foreground="Transparent" ItemContainerStyle="{StaticResource VerticalListViewItemStyle}" SelectedItem="{Binding SelectedTab}" SelectedIndex="0"/>
-            <Rectangle Grid.Column="1" Fill="#36393f"/>
+            <Rectangle Grid.Column="1" Fill="{StaticResource BackgroundBrush}"/>
             <!--#region Костыль для круглого угла-->
             <Grid Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Width="20" Height="20">
                 <Ellipse Stroke="#FF202225" Width="20" Height="20" StrokeThickness="5" Margin="-5,-5,5,5" />
-                <Rectangle Fill="#36393f" Width="10" Height="15" StrokeThickness="5" Margin="5,0,5,5"/>
-                <Rectangle Fill="#36393f" Width="5" Height="9" StrokeThickness="5" Margin="0,6,15,5"/>
+                <Rectangle Fill="{StaticResource BackgroundBrush}" Width="10" Height="15" StrokeThickness="5" Margin="5,0,5,5"/>
+                <Rectangle Fill="{StaticResource BackgroundBrush}" Width="5" Height="9" StrokeThickness="5" Margin="0,6,15,5"/>
             </Grid>
             <!--#endregion-->
             <ContentControl Grid.RowSpan="2" Grid.Column="1" x:Name="PagePresenter" Content="{Binding SelectedTab.Page}"/>

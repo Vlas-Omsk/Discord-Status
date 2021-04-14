@@ -24,8 +24,8 @@ namespace DiscordStatusGUI.Locales
         public static CultureInfo CurrentCultureInfo = CultureInfo.CurrentCulture;
 #if DEBUG
 #warning Set your location to locale file for constructor
-        public static Json DefaultLanguage = LoadLocale(@"G:\CSharp\_WPF\DiscordStatusGUI\DiscordStatusGUI\Locales\default.json");
-        public static Json CurrentLanguage = LoadLocale(@"G:\CSharp\_WPF\DiscordStatusGUI\DiscordStatusGUI\Locales\ru.json");
+        public static Json DefaultLanguage = LoadLocale(@"G:\GitBuh\Discord_Status\DiscordStatusGUI\Locales\default.json");
+        public static Json CurrentLanguage = LoadLocale(@"G:\GitBuh\Discord_Status\DiscordStatusGUI\Locales\ru.json");
 #else
         public static Json DefaultLanguage = null;
         public static Json CurrentLanguage = null;
@@ -53,7 +53,9 @@ namespace DiscordStatusGUI.Locales
 
         private static Json LoadLocale(string path)
         {
-            return new Json(File.ReadAllText(path));
+            if (File.Exists(path))
+                return new Json(File.ReadAllText(path));
+            return null;
         }
 
         private static bool TryGetResource(Json language, string key, out string value)

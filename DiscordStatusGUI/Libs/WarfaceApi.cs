@@ -16,13 +16,14 @@ namespace DiscordStatusGUI.Libs
     public class WarfaceApi
     {
         public const string MailUserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Downloader/15810 MyComGameCenter/1581 Safari/537.36";
+        public const string DataFolder = "Data\\WarfaceRU\\";
 
         public static Json Screens_open;
         public static Json Levels;
         public static Json Servers;
         public static Json States;
         public static Json Ranks;
-        public static bool Screens_open_UseNativeNames = false, Levels_UseNativeNames = false;
+        public static bool Screens_open_UseNativeNames = true, Levels_UseNativeNames = true;
 
         public static bool FastGameClientClose;
 
@@ -41,22 +42,13 @@ namespace DiscordStatusGUI.Libs
 
         public static void Init()
         {
-            try { 
-                Levels = new Json(File.ReadAllText("strings\\Levels.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Levels.json'");
+            if (TryLoadResource("Levels.json", out Levels))
                 Levels_UseNativeNames = Levels["_UseNativeNames"].Get<bool>();
-            } catch (Exception ex) {
-                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Levels.json' " + ex.ToString());
-            }
-            try {
-                Screens_open = new Json(File.ReadAllText("strings\\Screens_open.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Screens_open.json'");
+            if (TryLoadResource("Screens_open.json", out Screens_open))
                 Screens_open_UseNativeNames = Screens_open["_UseNativeNames"].Get<bool>();
-            } 
-            catch (Exception ex) {
-                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Screens_open.json' " + ex.ToString());
-            }
-            try { Servers = new Json(File.ReadAllText("strings\\Servers.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Servers.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Servers.json' " + ex.ToString()); }
-            try { States = new Json(File.ReadAllText("strings\\States.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\States.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\States.json' " + ex.ToString()); }
-            try { Ranks = new Json(File.ReadAllText("strings\\Ranks.json")); ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource 'strings\\Ranks.json'"); } catch (Exception ex) { ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource 'strings\\Ranks.json' " + ex.ToString()); }
+            TryLoadResource("Servers.json", out Servers);
+            TryLoadResource("States.json", out States);
+            TryLoadResource("Ranks.json", out Ranks);
 
             ProcessEx.OnProcessOpened += ProcessEx_OnProcessOpened;
             ProcessEx.OnProcessClosed += ProcessEx_OnProcessClosed;
@@ -324,6 +316,34 @@ namespace DiscordStatusGUI.Libs
             end:
             args = null;
             return false;
+        }
+
+        private static bool TryLoadResource(string path, out Json json)
+        {
+            json = null;
+
+            path = DataFolder + path;
+            if (!File.Exists(path))
+            {
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Resource not found '" + path + "'");
+                return false;
+            }
+            string data = null;
+            if (string.IsNullOrEmpty(data = File.ReadAllText(path)))
+            {
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Empty resource '" + path + "'");
+                return false;
+            }
+            try
+            {
+                json = new Json(data);
+                ConsoleEx.WriteLine(ConsoleEx.Info, "Successfully load resource '" + path + "'");
+                return true;
+            } catch
+            {
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error loading resource '" + path + "'");
+                return false;
+            }
         }
     }
 

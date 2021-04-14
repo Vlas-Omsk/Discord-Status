@@ -4,7 +4,11 @@
                     xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
                     xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
                     xmlns:locales="clr-namespace:DiscordStatusGUI.Locales"
-                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2">
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:Double x:Key="TabContentMaxWidth">700</sys:Double>
+    <SolidColorBrush x:Key="BackgroundBrush">#36393f</SolidColorBrush>
 
     <Style x:Key="RepeatButtonTransparent" TargetType="{x:Type RepeatButton}">
         <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -1804,5 +1808,11 @@
                 <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
             </MultiTrigger>
         </Style.Triggers>
+    </Style>
+
+    <Style x:Key="TextBoxField" TargetType="TextBox" BasedOn="{StaticResource RoundedTextBox}">
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Padding" Value="7"/>
     </Style>
 </ResourceDictionary>
