@@ -36,15 +36,15 @@ namespace GitHashes
         public override int ReadByte()
         {
             var b = base.ReadByte();
-            //if (b == 13)
-            //{
-            //    b = base.ReadByte();
-            //    if (b != 10)
-            //    {
-            //        b = 13;
-            //        Position--;
-            //    }
-            //}
+            if (b == 13)
+            {
+                b = base.ReadByte();
+                if (b != 10)
+                {
+                    b = 13;
+                    Position--;
+                }
+            }
             return b;
         }
 
