@@ -12,12 +12,15 @@ namespace DiscordStatusGUI.Extensions
 {
     public class ConsoleEx
     {
+        public static Color BlueColor = new Color(63, 61, 200);
+
         public static readonly (string, Color) 
-            Info = ("Info", new Color(63, 61, 200)),
-            DiscordWebSocket = ("DiscordWebSocket", new Color(63, 61, 200)),
+            Info = ("Info", BlueColor),
+            DiscordWebSocket = ("DiscordWebSocket", BlueColor),
             WebSocketServer = ("WebSocketServer", System.Drawing.Color.Green),
-            WarfaceApi = ("WarfaceApi", new Color(63, 61, 200)),
-            WarfaceStringParser = ("WarfaceStringParser", new Color(63, 61, 200)),
+            WarfaceApi = ("WarfaceApi", BlueColor),
+            WarfaceStringParser = ("WarfaceStringParser", BlueColor),
+            UpdateManager = ("UpdateManager", BlueColor),
             Warning = ("Warning", System.Drawing.Color.Red),
             Empty = ("", System.Drawing.Color.DarkGray);
 

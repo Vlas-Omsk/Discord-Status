@@ -68,6 +68,7 @@ namespace DiscordStatusGUI
             
             await Task.Run(() =>
             {
+                UpdateManager.Init();
                 WarfaceApi.Init();
                 DiscordUniversalStealer.Init();
                 SteamApi.Init();

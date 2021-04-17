@@ -101,6 +101,8 @@ namespace DiscordStatusGUI.Extensions
             {
                 try
                 {
+                    if (processes[i].HandleCount == 0)
+                        continue;
                     if (processes[i].StartTime > DateTime.Now - TimeSpan.FromMilliseconds(1100) || _LatestProcessList != null)
                         openedprocess.Add(processes[i]);
                 }
@@ -110,6 +112,8 @@ namespace DiscordStatusGUI.Extensions
             {
                 try
                 {
+                    if (_LatestProcessList[i].HandleCount == 0)
+                        continue;
                     if (_LatestProcessList[i].HasExited)
                         closedprocess.Add(_LatestProcessList[i]);
                 }

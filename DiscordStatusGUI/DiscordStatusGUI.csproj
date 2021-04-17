@@ -111,6 +111,9 @@
     <Compile Include="Libs\DiscordApi\Discord.cs" />
     <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />
     <Compile Include="Libs\DiscordApi\DiscordStructures.cs" />
+    <Compile Include="Libs\GitHashes\EntityChange.cs" />
+    <Compile Include="Libs\GitHashes\Hashes.cs" />
+    <Compile Include="Libs\GitHashes\StreamFormatReader.cs" />
     <Compile Include="Libs\PathAnimate.cs" />
     <Compile Include="Libs\SteamApi.cs" />
     <Compile Include="Libs\WarfaceApi.cs" />
