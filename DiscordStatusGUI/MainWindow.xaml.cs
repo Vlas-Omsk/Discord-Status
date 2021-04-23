@@ -98,7 +98,7 @@ namespace DiscordStatusGUI
             Static.Window.SetTopStatus(msg);
         }
 
-#region NoBorderWindow
+        #region NoBorderWindow
         IntPtr Handle;
         int xborder;
         int yborder;
@@ -291,6 +291,7 @@ namespace DiscordStatusGUI
         {
             var save = Static.MainWindowViewModel._CurrentPage;
             Static.MainWindowViewModel._CurrentPage = newControl;
+            newControl.Visibility = Visibility.Hidden;
             Static.MainWindowViewModel.OnPropertyChanged("CurrentPage");
             if (save != null)
                 Container.Children.Add(save);

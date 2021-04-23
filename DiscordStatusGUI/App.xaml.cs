@@ -31,18 +31,20 @@ namespace DiscordStatusGUI
             string CurrentExe = Environment.GetCommandLineArgs()[0];
             string CurrentDir = Path.GetDirectoryName(CurrentExe);
 
+            Directory.SetCurrentDirectory(CurrentDir);
+
             ConsoleEx.InitLogger();
 
-            Directory.SetCurrentDirectory(CurrentDir);
             ConsoleEx.WriteLine(ConsoleEx.Info, "Working directory: " + Directory.GetCurrentDirectory());
             if (Libs.WebBrowserTools.EnableLastIEVer(CurrentExe))
-                ConsoleEx.WriteLine(ConsoleEx.Info, "Last IE version enabled");
+                ConsoleEx.WriteLine(ConsoleEx.Info, "Latest IE version enabled");
             else
-                ConsoleEx.WriteLine(ConsoleEx.Warning, "Last IE version enable error");
+                ConsoleEx.WriteLine(ConsoleEx.Warning, "Error enabling latest version of IE");
+
+            Locales.Lang.Init();
 
             InitializeComponent();
 
-            Locales.Lang.Init();
             Static.Init();
 
             Preferences.OpenLocalServer();

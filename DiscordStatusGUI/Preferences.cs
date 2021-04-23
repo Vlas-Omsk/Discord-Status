@@ -105,6 +105,7 @@ namespace DiscordStatusGUI
                             SteamActivityIndex
                         }
                     },
+                    Static.Version,
                     CurrentUserStatus,
                     CurrentActivityIndex,
                     FastGameClientClose,

@@ -29,8 +29,8 @@
                         <RowDefinition MinHeight="72" Height="72*"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="370*"/>
-                        <ColumnDefinition MaxWidth="{StaticResource TabContentMaxWidth}" Width="540*"/>
+                        <ColumnDefinition MaxWidth="{StaticResource TabContentMaxWidth}" Width="370*"/>
+                        <ColumnDefinition Width="540*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.ColumnSpan="2" Margin="5" Foreground="White" TextAlignment="Center" Text="{locales:Lang Views:Tabs:GameStatus:Title}" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
 

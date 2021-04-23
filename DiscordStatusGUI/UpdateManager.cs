@@ -17,7 +17,7 @@ namespace DiscordStatusGUI
         const string user = "Vlas-Omsk";
         const string repository = "Discord-Status";
         const string branch = "dev";
-        const string token = "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";
+        const string token = "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";
 
         static string release_latest = $"https://api.github.com/repos/{user}/{repository}/releases/latest";
         public const string download_latest = "https://vlas-omsk.github.io/Discord-Status";

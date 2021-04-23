@@ -101,22 +101,24 @@ namespace DiscordStatusGUI
             Storyboard storyboard = new Storyboard();
 
             DoubleAnimation scalex = new DoubleAnimation();
-            scalex.Duration = TimeSpan.FromMilliseconds(120);
+            scalex.Duration = TimeSpan.FromMilliseconds(200);
             scalex.From = 1;
             scalex.To = 1.3;
             storyboard.Children.Add(scalex);
 
             DoubleAnimation scaley = new DoubleAnimation();
-            scaley.Duration = TimeSpan.FromMilliseconds(120);
+            scaley.Duration = TimeSpan.FromMilliseconds(200);
             scaley.From = 1;
             scaley.To = 1.3;
             storyboard.Children.Add(scaley);
 
             DoubleAnimation opacity = new DoubleAnimation();
-            opacity.Duration = TimeSpan.FromMilliseconds(120);
+            opacity.Duration = TimeSpan.FromMilliseconds(200);
             opacity.From = 1;
             opacity.To = 0;
-            opacity.Completed += (s, e) => { control.Visibility = Visibility.Hidden; };
+            opacity.Completed += (s, e) => { 
+                control.Visibility = Visibility.Hidden;
+            };
             storyboard.Children.Add(opacity);
 
             Storyboard.SetTargetProperty(opacity, new PropertyPath("Opacity"));
@@ -356,14 +358,14 @@ namespace DiscordStatusGUI
                 HorizontalAlignment = HorizontalAlignment.Left, VerticalAlignment = VerticalAlignment.Top,
                 Source = BitmapEx.ToImageSource(Properties.Resources.Plug), IsHitTestVisible = true };
             var plug = new Grid() { Width = parent.ActualWidth * 3, Height = parent.ActualHeight * 3,
-                Margin = new Thickness(-(parent.ActualWidth * 1.5), -(parent.ActualHeight * 1.5), 0, 0),
+                Margin = new Thickness(-(parent.ActualWidth * 1.84), -(parent.ActualHeight * 1.84), 0, 0),
                 Background = new SolidColorBrush(Colors.Transparent), IsHitTestVisible = true };
             plug.Children.Add(plug_img);
 
             parent.Children.Add(plug);
 
             var opacity = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(300));
-            var location = new ThicknessAnimation(new Thickness(0, 0, 0, 0), new Duration(TimeSpan.FromMilliseconds(1000)));
+            var location = new ThicknessAnimation(new Thickness(0, 0, 0, 0), new Duration(TimeSpan.FromMilliseconds(1200)));
 
             location.Completed += (s, ev) =>
             {

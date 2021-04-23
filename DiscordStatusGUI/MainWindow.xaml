@@ -33,11 +33,13 @@
 
         <Grid x:Name="ActualSize" Visibility="Hidden" Height="{Binding ActualHeight, ConverterParameter=-4, Converter={converters:SumConverter}, ElementName=window}" Width="{Binding ActualWidth, ConverterParameter=-12, Converter={converters:SumConverter}, ElementName=window}"/>
 
-        <Grid x:Name="Container" Grid.Row="1">
+        <Grid Grid.Row="1">
             <Image x:Name="StaticAbyse" Visibility="Visible" HorizontalAlignment="Left" Width="{Binding ActualWidth, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" Height="{Binding ActualHeight, ConverterParameter=0\,7, Converter={converters:PercentageConverter}, ElementName=ActualSize}" VerticalAlignment="Top" Source="Resources/StaticAbyse.png"/>
 
-            <ContentControl x:Name="CurrentPage" Content="{Binding CurrentPage}"/>
-
+            <Grid  x:Name="Container">
+                <ContentControl x:Name="CurrentPage" Content="{Binding CurrentPage}"/>
+            </Grid>
+                
             <dialogs:Notifications x:Name="Notifications" HorizontalAlignment="Right" Margin="10"/>
 
             <views:Initialization x:Name="initialization"/>

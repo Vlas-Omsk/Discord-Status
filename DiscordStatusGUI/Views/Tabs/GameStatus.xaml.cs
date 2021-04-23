@@ -60,6 +60,8 @@ namespace DiscordStatusGUI.Views.Tabs
                 Grid.SetColumn(Preview, 1);
                 Grid.SetRowSpan(Preview, 3);
             }
+
+            //(DataContext as GameStatusViewModel).OnPropertyChanged("MaxWidth");
         }
 
         #region HelpText

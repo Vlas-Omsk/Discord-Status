@@ -438,12 +438,16 @@ namespace DiscordStatusGUI
                     {
                         if (value)
                         {
-                            Animations.VisibleOff(MainWindow.initialization).Begin();
-                            if (_FirstInitialization)
+                            var visibleoff = Animations.VisibleOff(MainWindow.initialization);
+                            visibleoff.Completed += (s, e) =>
                             {
-                                _FirstInitialization = false;
-                                OnFirstInitialization();
-                            }
+                                if (_FirstInitialization)
+                                {
+                                    _FirstInitialization = false;
+                                    OnFirstInitialization();
+                                }
+                            };
+                            visibleoff.Begin();
                         }
                         else
                             Animations.VisibleOn(MainWindow.initialization).Begin();

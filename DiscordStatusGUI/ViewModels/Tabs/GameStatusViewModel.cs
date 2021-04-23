@@ -72,6 +72,14 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             get => Static.CurrentActivity;
         }
 
+        //public double MaxWidth
+        //{
+        //    get
+        //    {
+        //        return GameStatusView == null || GameStatusView.ActualWidth - 510 < 370 ? Static.GetResource<double>("TabContentMaxWidth") : 1400;
+        //    }
+        //}
+
         private ObservableCollection<string> _AppAssets;
         private string _SavedAppId;
         private async void AppAssets_Set()
@@ -310,6 +318,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             set
             {
                 _GameStatusView = value;
+
+                //OnPropertyChanged("MaxWidth");
 
                 GameStatusView.SaveChangesBox.ApplyCommand = new Command(() =>
                 {
