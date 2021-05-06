@@ -48,11 +48,16 @@ namespace DiscordStatusGUI.ViewModels.Tabs
             get => DefaultProfileIndex;
             set
             {
-                DefaultProfileIndex = value;
-                OnPropertyChanged("SelectedProfileIndex");
+                SetProfileIndex(value);
                 OnGameProcessStateChanged(_SavedState);
                 Preferences.Save();
             }
+        }
+
+        public void SetProfileIndex(int index)
+        {
+            DefaultProfileIndex = index;
+            OnPropertyChanged("SelectedProfileIndex");
         }
 
         private int _SavedLastProfileIndex = 0;

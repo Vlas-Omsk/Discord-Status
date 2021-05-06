@@ -7,6 +7,7 @@ using System.IO;
 using System.Xml;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using DiscordStatusGUI.Extensions;
 using WEBLib;
@@ -174,7 +175,7 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _SteamLoginSecure = value;
-                OnPropertyChanged("SteamLoginSecure");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("SteamLoginSecure"), this);
             }
         }
 
@@ -335,7 +336,7 @@ namespace DiscordStatusGUI.Libs
             if (invoke && changedProperties.Count != 0)
             {
                 changedProperties.Clear();
-                OnPropertyChanged?.Invoke(null);
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs(null), this);
             }
         }
 
@@ -360,9 +361,10 @@ namespace DiscordStatusGUI.Libs
             }
         }
 
-        public delegate void OnPropertyChangedEventHandler(string name);
-        public event OnPropertyChangedEventHandler OnPropertyChanged;
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
     }
+
+
 
     public class SteamProfileDetail
     {

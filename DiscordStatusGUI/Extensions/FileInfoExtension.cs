@@ -18,8 +18,7 @@ namespace DiscordStatusGUI.Extensions
 
         private System.Timers.Timer _EventTimer;
 
-        public delegate void OnTextChangedEventHandler(OnTextChangedEventArgs e);
-        public event OnTextChangedEventHandler OnTextChanged;
+        public event EventHandler<TextChangedEventArgsEx> TextChanged;
 
         public string SafeReadText() => SafeReadText(Info.FullName);
         public string[] SafeReadLines() => SafeReadLines(Info.FullName);
@@ -49,7 +48,7 @@ namespace DiscordStatusGUI.Extensions
                 Info.Refresh();
                 if (prew != Info.LastWriteTimeUtc)
                 {
-                    OnTextChanged?.Invoke(new OnTextChangedEventArgs(Info, this));
+                    Static.InvokeAsync(TextChanged, new TextChangedEventArgsEx(Info), this);
                 }
                 prew = Info.LastWriteTimeUtc;
             };
@@ -63,15 +62,13 @@ namespace DiscordStatusGUI.Extensions
             _EventTimer.Stop();
         }
     }
-    public class OnTextChangedEventArgs
+    public class TextChangedEventArgsEx
     {
-        public OnTextChangedEventArgs(System.IO.FileInfo info, FileInfoEx sender)
+        public TextChangedEventArgsEx(System.IO.FileInfo info)
         {
             this.Info = info;
-            this.Sender = sender;
         }
 
-        public FileInfoEx Sender;
         public System.IO.FileInfo Info;
     }
 }

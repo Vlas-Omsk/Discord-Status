@@ -180,6 +180,9 @@
     <Compile Include="Views\Popups\SteamLogin.xaml.cs">
       <DependentUpon>SteamLogin.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Tabs\Embeds.xaml.cs">
+      <DependentUpon>Embeds.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tabs\GameStatus.xaml.cs">
       <DependentUpon>GameStatus.xaml</DependentUpon>
     </Compile>
@@ -258,6 +261,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Popups\SteamLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Tabs\Embeds.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

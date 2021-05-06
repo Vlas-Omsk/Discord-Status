@@ -31,7 +31,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         {
             await Task.Run(() =>
             {
-                OnWorkingStatusChanged?.Invoke("Connecting to Discord");
+                Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("Connecting to Discord"), this);
 
                 WebSocket = new WebSocket("wss://gateway.discord.gg/?encoding=json&v=" + Discord.DiscordApiVersion);
                 WebSocket.OnOpen += WSOnOpen;
@@ -132,7 +132,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         {
             while (!_DisconnectedManually && !IsConnected)
             {
-                AutoReconnect?.Invoke();
+                Static.InvokeAsync(AutoReconnect, EventArgs.Empty, this);
                 Connect();
                 Thread.Sleep(30000);
             }
@@ -215,7 +215,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
         private void AuthClear()
         {
-            OnWorkingStatusChanged?.Invoke("Authorization in Discord");
+            Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("Authorization in Discord"), this);
 
             var authJson = Json.FromAnonymous(new
             {
@@ -247,7 +247,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             var d = authJson.ToString();
             WebSocket?.Send(d);
 
-            OnWorkingStatusChanged?.Invoke("");
+            Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs(""), this);
         }
 
 
@@ -263,8 +263,8 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                     var json = new Json(data);
                     if (json["t"].Value.ToString() == "READY")
                     {
-                        OnWorkingStatusChanged?.Invoke("Authorization in Discord (READY)");
-                        OnUserInfoChanged?.Invoke("READY", json, new UserInfo()
+                        Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("Authorization in Discord (READY)"), this);
+                        Static.InvokeAsync(UserInfoChanged, new DiscordEventArgs<UserInfo>("READY", json, new UserInfo()
                         {
                             UserName = (json["d"]["user"]["username"].Value ?? "").ToString(),
                             Phone = (json["d"]["user"]["phone"].Value ?? "").ToString(),
@@ -272,13 +272,13 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             Email = (json["d"]["user"]["email"].Value ?? "").ToString(),
                             Discriminator = (json["d"]["user"]["discriminator"].Value ?? "").ToString(),
                             AvatarId = (json["d"]["user"]["avatar"].Value ?? "").ToString()
-                        });
-                        OnUserSettingsChanged?.Invoke("READY", json, json["d"]["user_settings"].Get<Json>());
+                        }));
+                        Static.InvokeAsync(UserSettingsChanged, new DiscordEventArgs<Json>("READY", json, json["d"]["user_settings"].Get<Json>()), this);
                     }
                     else if (json["t"].Value.ToString() == "USER_UPDATE")
                     {
-                        OnWorkingStatusChanged?.Invoke("User info changed (USER_UPDATE)");
-                        OnUserInfoChanged?.Invoke("USER_UPDATE", json, new UserInfo()
+                        Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("User info changed (USER_UPDATE)"), this);
+                        Static.InvokeAsync(UserInfoChanged, new DiscordEventArgs<UserInfo>("USER_UPDATE", json, new UserInfo()
                         {
                             UserName = (json["d"]["username"].Value ?? "").ToString(),
                             Phone = (json["d"]["phone"].Value ?? "").ToString(),
@@ -286,12 +286,12 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             Email = (json["d"]["email"].Value ?? "").ToString(),
                             Discriminator = (json["d"]["discriminator"].Value ?? "").ToString(),
                             AvatarId = (json["d"]["avatar"].Value ?? "").ToString()
-                        });
+                        }), this);
                     }
                     else if (json["t"].Value.ToString() == "USER_SETTINGS_UPDATE")
                     {
-                        OnWorkingStatusChanged?.Invoke("User settings changed (USER_SETTINGS_UPDATE)");
-                        OnUserSettingsChanged?.Invoke("USER_SETTINGS_UPDATE", json, json["d"].Get<Json>());
+                        Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("User settings changed (USER_SETTINGS_UPDATE)"), this);
+                        Static.InvokeAsync(UserSettingsChanged, new DiscordEventArgs<Json>("USER_SETTINGS_UPDATE", json, json["d"].Get<Json>()), this);
                     }
 
                     //s.Stop();
@@ -300,15 +300,11 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             });
         }
 
-        public delegate void EventHandler(string eventtype, object rawdata);
-        public delegate void EventHandler<T>(string eventtype, object rawdata, T data);
-        public event EventHandler<UserInfo> OnUserInfoChanged;
-        public event EventHandler<Json> OnUserSettingsChanged;
+        public event EventHandler<DiscordEventArgs<UserInfo>> UserInfoChanged;
+        public event EventHandler<DiscordEventArgs<Json>> UserSettingsChanged;
 
-        public delegate void OnWorkingStatusChangedEventHandler(string msg);
-        public event OnWorkingStatusChangedEventHandler OnWorkingStatusChanged;
-        public delegate void OnAutoReconnectEventHandler();
-        public event OnAutoReconnectEventHandler AutoReconnect;
+        public event EventHandler<WorkingStatusChangedEventArgs> WorkingStatusChanged;
+        public event EventHandler<EventArgs> AutoReconnect;
 
         private void InitKeepAliveTimer()
         {
@@ -324,6 +320,30 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             _KeepAliveTimer.AutoReset = true;
             _KeepAliveTimer.Enabled = true;
             _KeepAliveTimer.Start();
+        }
+    }
+
+    public class DiscordEventArgs<T>
+    {
+        public string EventType;
+        public object RawData;
+        public T Data;
+
+        public DiscordEventArgs(string eventtype, object rawdata, T data)
+        {
+            EventType = eventtype;
+            RawData = rawdata;
+            Data = data;
+        }
+    }
+
+    public class WorkingStatusChangedEventArgs
+    {
+        public string Message;
+
+        public WorkingStatusChangedEventArgs(string message)
+        {
+            Message = message;
         }
     }
 }

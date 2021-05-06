@@ -15,6 +15,14 @@ namespace DiscordStatusGUI.Models
         public UserControl Page { get; set; }
         public double Zoom { get; set; }
 
+        public T GetDataContext<T>()
+        {
+            var dc = Page.Dispatcher.Invoke(() => Page.DataContext);
+            if (dc is null)
+                return default;
+            else
+                return (T)dc;
+        }
 
         public VerticalTabItem(string imagepath = "", double zoom = 0.7, string text = "", UserControl page = null)
         {

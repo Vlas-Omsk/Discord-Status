@@ -36,11 +36,12 @@ namespace DiscordStatusGUI
         public static readonly double Version;
 
         public static ObservableCollection<VerticalTabItem> Tabs;
-        public static VerticalTabItem TabGameStatus => Tabs[0];
-        public static VerticalTabItem TabSettings => Tabs[1];
-        public static VerticalTabItem TabWindows => Tabs[2];
-        public static VerticalTabItem TabWarface => Tabs[3];
-        public static VerticalTabItem TabSteam => Tabs[4];
+        public static VerticalTabItem TabMessages => Tabs[0];
+        public static VerticalTabItem TabGameStatus => Tabs[1];
+        public static VerticalTabItem TabSettings => Tabs[2];
+        public static VerticalTabItem TabWindows => Tabs[3];
+        public static VerticalTabItem TabWarface => Tabs[4];
+        public static VerticalTabItem TabSteam => Tabs[5];
 
         public static UserControl CurrentPage
         {
@@ -58,24 +59,25 @@ namespace DiscordStatusGUI
         {
             Tabs = new ObservableCollection<VerticalTabItem>()
             {
-                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, Lang.GetResource("Static:Tabs:GameStatus"), new Views.Tabs.GameStatus()),
+                new VerticalTabItem("", 0, "Embeds", new Embeds()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/GameStatus.png", 0.6, Lang.GetResource("Static:Tabs:GameStatus"), new GameStatus()),
                 new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Settings.png", 0.5, Lang.GetResource("Static:Tabs:Settings"), new Views.Tabs.Settings()),
-                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Views.Tabs.Windows()),
-                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface RU", new Views.Tabs.Warface()),
-                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Steam.png", 0.9, "Steam", new Views.Tabs.Steam())
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Windows.png", 0.6, "Windows", new Windows()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Warface.png", 0.6, "Warface RU", new Warface()),
+                new VerticalTabItem("/DiscordStatusGUI;component/Resources/Tabs/Steam.png", 0.9, "Steam", new Steam())
             };
 
             Discord.Socket.AutoReconnect += Socket_AutoReconnect;
-            Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
+            Static.Discord.Socket.UserInfoChanged += Socket_OnUserInfoChanged;
         }
 
-        private static void Socket_OnUserInfoChanged(string eventtype, object rawdata, UserInfo data)
+        private static void Socket_OnUserInfoChanged(object sender, DiscordEventArgs<UserInfo> e)
         {
-            if (eventtype == "READY")
+            if (e.EventType == "READY")
                 Reconnect.IsVisible = false;
         }
 
-        private static void Socket_AutoReconnect()
+        private static void Socket_AutoReconnect(object sender, EventArgs e)
         {
             Reconnect.IsVisible = true;
         }
@@ -123,14 +125,14 @@ namespace DiscordStatusGUI
                 }
             });
 
-            Discord.Socket.OnUserSettingsChanged += Socket_OnUserSettingsChanged;
+            Discord.Socket.UserSettingsChanged += Socket_OnUserSettingsChanged;
         }
 
-        private static void Socket_OnUserSettingsChanged(string eventtype, object rawdata, PinkJson.Json data)
+        private static void Socket_OnUserSettingsChanged(object sender, DiscordEventArgs<PinkJson.Json> e)
         {
-            if (data.IndexByKey("custom_status") != -1)
+            if (e.Data.IndexByKey("custom_status") != -1)
             {
-                CustomStatusOverride.IsVisible = data["custom_status"].Value != null;
+                CustomStatusOverride.IsVisible = e.Data["custom_status"].Value != null;
             }
         }
         #endregion
@@ -183,7 +185,7 @@ namespace DiscordStatusGUI
             set
             {
                 _Activities = value;
-                OnActivitiesChanged?.Invoke();
+                InvokeAsync(ActivitiesChanged, EventArgs.Empty, null);
             }
         }
 
@@ -220,7 +222,8 @@ namespace DiscordStatusGUI
             }
             finally { }
 
-            return "You are idiot?";
+            return "";
+            //return "You are idiot?";
         }
 
         public static bool IsPrefixContainsInFields(Activity activity, string prefix)
@@ -240,13 +243,16 @@ namespace DiscordStatusGUI
                     return;
                 }
 
-                fi.SetValue(result, ReplaceFilds(val.ToString() + ""));
+                fi.SetValue(result, ReplaceFilds(val + ""));
             });
             return (Activity)result;
         }
 
         public static string ReplaceFilds(string value)
         {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
             value = value ?? "";
             var pattern = @"\{(.*?)\}";
             var matches = Regex.Matches(value, pattern);
@@ -276,7 +282,7 @@ namespace DiscordStatusGUI
         {
             Static.Discord.Socket.UpdateActivity(ReplaceFilds(Activities[_CurrentActivityIndex]));
             Activities[_CurrentActivityIndex].SavedState = Activities[_CurrentActivityIndex];
-            OnActivityChanged?.Invoke();
+            InvokeAsync(ActivityChanged, EventArgs.Empty, null);
         }
         public static ref Activity CurrentActivity { get => ref Activities[CurrentActivityIndex]; }
         public static ref Activity GetActivityByName(string profilename)
@@ -287,11 +293,8 @@ namespace DiscordStatusGUI
             return ref CurrentActivity;
         }
 
-        public delegate void OnActivitiesChangedEventHandler();
-        public static event OnActivitiesChangedEventHandler OnActivitiesChanged;
-
-        public delegate void OnActivityChangedChangedEventHandler();
-        public static event OnActivityChangedChangedEventHandler OnActivityChanged;
+        public static event EventHandler<EventArgs> ActivitiesChanged;
+        public static event EventHandler<EventArgs> ActivityChanged;
         #endregion
 
         public struct Accounts
@@ -359,10 +362,14 @@ namespace DiscordStatusGUI
 
             public static void SetTopStatus(string msg)
             {
-                ConsoleEx.WriteLine(ConsoleEx.Info, msg);
-
                 MainWindow?.Dispatcher.Invoke(() =>
                     MainWindow.toppanel.TopStatus.Content = msg);
+
+                if (!string.IsNullOrEmpty(msg))
+                {
+                    ConsoleEx.WriteLine(ConsoleEx.Info, msg);
+                    DelayedRun("ClearTopStatus", () => SetTopStatus(""), 15000);
+                }
             }
         }
 
@@ -594,19 +601,27 @@ namespace DiscordStatusGUI
             else if (!string.IsNullOrEmpty(Discord?.Token))
             {
                 Dialogs.MessageBoxShow(Lang.GetResource("Static:InvalidDiscordToken:Title"), Lang.GetResource("Static:InvalidDiscordToken:Text"), new ObservableCollection<ButtonItem>() { Dialogs.ButtonOk }, HorizontalAlignment.Right, null, "/DiscordStatusGUI;component/Resources/PixelCat/Lying2.png");
-                MainWindow.Dispatcher.Invoke(() =>
+                DelayedRun("DiscordLoginSuccessful", () => 
                 {
-                    CurrentPage = new Login();
-                });
-                DiscordUniversalStealer.Init();
+                    MainWindow.Dispatcher.Invoke(() =>
+                    {
+                        CurrentPage = new Login();
+                        Animations.VisibleOnZoom(CurrentPage).Begin();
+                    });
+                    DiscordUniversalStealer.Init();
+                }, 10);
             }
             else
             {
-                MainWindow.Dispatcher.Invoke(() =>
+                DelayedRun("DiscordLoginSuccessful", () =>
                 {
-                    CurrentPage = new Login();
-                });
-                DiscordUniversalStealer.Init();
+                    MainWindow.Dispatcher.Invoke(() =>
+                    {
+                        CurrentPage = new Login();
+                        Animations.VisibleOnZoom(CurrentPage).Begin();
+                    });
+                    DiscordUniversalStealer.Init();
+                }, 10);
             }
         }
 
@@ -675,6 +690,20 @@ namespace DiscordStatusGUI
                 DelayedRuns[id] = new ActionThreadPair(action, delay);
             else
                 DelayedRuns[id].Action = action;
+        }
+
+        public static void InvokeAsync<T>(EventHandler<T> handler, T args, object sender = null)
+        {
+            if (handler != null)
+            {
+                var eventListeners = handler.GetInvocationList();
+
+                for (int index = 0; index < eventListeners.Length; index++)
+                {
+                    var methodToInvoke = (EventHandler<T>)eventListeners[index];
+                    methodToInvoke.BeginInvoke(sender, args, null, null);
+                }
+            }
         }
     }
     

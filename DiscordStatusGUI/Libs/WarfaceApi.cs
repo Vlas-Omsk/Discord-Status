@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Xml;
 using WEBLib;
 
@@ -107,7 +108,7 @@ namespace DiscordStatusGUI.Libs
 
                     _GameLogFile = new FileInfoEx(GameDirectory.Substring(0, GameDirectory.LastIndexOf('\\')) + "\\Game.log");
                     _LastGameLogFileText = _GameLogFile.SafeReadText();
-                    _GameLogFile.OnTextChanged += _GameLogFile_OnTextChanged;
+                    _GameLogFile.TextChanged += _GameLogFile_OnTextChanged;
                     _GameLogFile.StartTimer();
                     ConsoleEx.WriteLine(ConsoleEx.Warning, "GameLogFile.OnTextChanged Started");
 
@@ -116,9 +117,9 @@ namespace DiscordStatusGUI.Libs
             }
         }
 
-        private static void _GameLogFile_OnTextChanged(OnTextChangedEventArgs e)
+        private static void _GameLogFile_OnTextChanged(object sender, TextChangedEventArgsEx e)
         {
-            var updLines = e.Sender.SafeReadText().SubStrDel(_LastGameLogFileText).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            var updLines = (sender as FileInfoEx).SafeReadText().SubStrDel(_LastGameLogFileText).Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             var IsScreenChanged = false;
             var PreviewMap = CurrentGameState.Map;
 
@@ -208,7 +209,7 @@ namespace DiscordStatusGUI.Libs
             }
             //Console.Title = config.ToString();
 
-            _LastGameLogFileText = e.Sender.SafeReadText();
+            _LastGameLogFileText = (sender as FileInfoEx).SafeReadText();
 
             if (IsScreenChanged)
             {
@@ -361,7 +362,7 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _Server = value;
-                OnPropertyChanged?.Invoke("Server");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("Server"), this);
             }
         }
         public string Screen
@@ -370,7 +371,7 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _Screen = value;
-                OnPropertyChanged?.Invoke("Screen");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("Screen"), this);
             }
         }
         public long Since
@@ -379,7 +380,7 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _Since = value;
-                OnPropertyChanged?.Invoke("Since");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("Since"), this);
             }
         }
         public string Map
@@ -388,7 +389,7 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _Map = value;
-                OnPropertyChanged?.Invoke("Map");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("Map"), this);
             }
         }
         public DateTime SinceMap
@@ -397,12 +398,11 @@ namespace DiscordStatusGUI.Libs
             set
             {
                 _SinceMap = value;
-                OnPropertyChanged?.Invoke("SinceMap");
+                Static.InvokeAsync(PropertyChanged, new PropertyChangedEventArgs("SinceMap"), this);
             }
         }
 
-        public delegate void OnPropertyChangedEventHandler(string property);
-        public event OnPropertyChangedEventHandler OnPropertyChanged;
+        public event EventHandler<PropertyChangedEventArgs> PropertyChanged;
     }
 
     public class WarfacePlayer
@@ -484,12 +484,11 @@ namespace DiscordStatusGUI.Libs
                     }
                 }
 
-                OnPlayerInfoChanged?.Invoke();
+                Static.InvokeAsync(PlayerInfoChanged, EventArgs.Empty, this);
             });
         }
 
-        public delegate void OnPlayerInfoChangedEventHandler();
-        public event OnPlayerInfoChangedEventHandler OnPlayerInfoChanged;
+        public event EventHandler<EventArgs> PlayerInfoChanged;
 
         public delegate void OnUserInfoChangedEventHandler(string property);
         public event OnUserInfoChangedEventHandler OnUserInfoChanged;

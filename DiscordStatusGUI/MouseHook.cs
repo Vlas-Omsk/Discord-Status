@@ -52,16 +52,16 @@ namespace DiscordStatusGUI
 
             if (Left != LeftOld)
                 if (Left == false)
-                    InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
+                    Static.InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
                 else
-                    InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
+                    Static.InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Left));
             if (Right != RightOld)
                 if (Right == false)
-                    InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
+                    Static.InvokeAsync(OnMouseButtonUp, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
                 else
-                    InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
+                    Static.InvokeAsync(OnMouseButtonDown, new MouseButtonEventArgsEx(Point.X, Point.Y, MouseButton.Right));
             if (Point.X != PointOld.X || Point.Y != PointOld.Y)
-                InvokeAsync(OnMouseMove, new MouseEventArgsEx(Point.X, Point.Y));
+                Static.InvokeAsync(OnMouseMove, new MouseEventArgsEx(Point.X, Point.Y));
 
             PointOld = Point;
             LeftOld = Left;
@@ -73,20 +73,6 @@ namespace DiscordStatusGUI
         public static event EventHandler<MouseButtonEventArgsEx> OnMouseButtonDown;
 
         public static event EventHandler<MouseEventArgsEx> OnMouseMove;
-
-        private static void InvokeAsync<T>(EventHandler<T> handler, T args)
-        {
-            if (handler != null)
-            {
-                var eventListeners = handler.GetInvocationList();
-
-                for (int index = 0; index < eventListeners.Length; index++)
-                {
-                    var methodToInvoke = (EventHandler<T>)eventListeners[index];
-                    methodToInvoke.BeginInvoke(null, args, null, null);
-                }
-            }
-        }
     }
 
     class MouseButtonEventArgsEx : MouseEventArgsEx

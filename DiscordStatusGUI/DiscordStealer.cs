@@ -40,7 +40,7 @@ namespace DiscordStatusGUI
                     Static.Window.SetTopStatus("(v2) Search discord token");
                     Static.MainWindow.Dispatcher.Invoke(() =>
                     {
-                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
+                        if (Static.CurrentPage != null && Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
                             (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = false;
                     });
                     bool isTokenFinded = false;
@@ -89,7 +89,7 @@ namespace DiscordStatusGUI
 
                     Static.MainWindow.Dispatcher.Invoke(() =>
                     {
-                        if (Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
+                        if (Static.CurrentPage != null && Static.CurrentPage.DataContext is ViewModels.Discord.LoginViewModel)
                             (Static.CurrentPage.DataContext as ViewModels.Discord.LoginViewModel).LoginButtonEnabled = true;
                     });
                 }

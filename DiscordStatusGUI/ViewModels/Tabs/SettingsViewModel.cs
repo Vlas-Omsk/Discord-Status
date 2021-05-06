@@ -169,32 +169,28 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
         public Settings SettingsView;
 
-        public Style _BlueButton { get; private set; }
-        public Style _GreenButton { get; private set; }
+        public static Style _BlueButton = Static.GetResource<Style>("BlueButton");
+        public static Style _GreenButton = Static.GetResource<Style>("GreenButton");
 
         public Command DiscordLoginCommand { get; private set; }
         public Command SteamLoginCommand { get; private set; }
 
         public SettingsViewModel()
         {
-            var resd = new ResourceDictionary() { Source = new Uri("pack://application:,,,/Themes/DiscordTheme.xaml") };
-            _BlueButton = (Style)resd["BlueButton"];
-            _GreenButton = (Style)resd["GreenButton"];
-
             DiscordLoginCommand = new Command(DiscordLogin);
             SteamLoginCommand = new Command(SteamLogin);
 
-            Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
+            Static.Discord.Socket.UserInfoChanged += Socket_OnUserInfoChanged;
             Static.Discord.Socket.AutoReconnect += Socket_AutoReconnect;
 
-            Libs.SteamApi.CurrentSteamProfile.OnPropertyChanged += (n) =>
+            Libs.SteamApi.CurrentSteamProfile.PropertyChanged += (s, e) =>
             {
-                if (n == "SteamLoginSecure")
+                if (e.PropertyName == "SteamLoginSecure")
                     OnPropertyChanged("SteamAccountButtonStyle");
             };
         }
 
-        private void Socket_AutoReconnect()
+        private void Socket_AutoReconnect(object sender, EventArgs e)
         {
             DiscordConnectedSwitcherEnable = true;
             SettingsView.HideUserInfoPlug();
@@ -228,16 +224,16 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         }
 
 
-        private void Socket_OnUserInfoChanged(string eventtype, object data, UserInfo userInfo)
+        private void Socket_OnUserInfoChanged(object sender, DiscordEventArgs<UserInfo> e)
         {
-            if (eventtype == "READY")
+            if (e.EventType == "READY")
             {
-                DiscordUserName = userInfo.UserName;
-                DiscordUserTag = userInfo.Discriminator;
-                DiscordUserEmail = userInfo.Email;
-                if (userInfo.AvatarId != null)
+                DiscordUserName = e.Data.UserName;
+                DiscordUserTag = e.Data.Discriminator;
+                DiscordUserEmail = e.Data.Email;
+                if (e.Data.AvatarId != null)
                     SettingsView.Dispatcher.Invoke(() =>
-                        DiscordUserAvatar = BitmapEx.ToImageSource(Libs.DiscordApi.Discord.GetUserAvatar(userInfo.Id, userInfo.AvatarId, 128)));
+                        DiscordUserAvatar = BitmapEx.ToImageSource(Libs.DiscordApi.Discord.GetUserAvatar(e.Data.Id, e.Data.AvatarId, 128)));
 
                 DiscordConnectedSwitcherEnable = true;
                 SettingsView.HideUserInfoPlug();

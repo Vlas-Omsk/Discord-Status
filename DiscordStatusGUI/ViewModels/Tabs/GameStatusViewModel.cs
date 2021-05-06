@@ -69,7 +69,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
         }
         public Activity SelectedProfile
         {
-            get => Static.CurrentActivity;
+            get => Static.Activities[Static.CurrentActivityIndex];
         }
 
         //public double MaxWidth
@@ -332,7 +332,7 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                     var s = Static.CurrentActivity.SavedState;
                     Static.CurrentActivity = (Activity)Static.CurrentActivity.SavedState;
                     Static.CurrentActivity.SavedState = s;
-                    OnActivityChanged();
+                    OnActivityChanged(null, EventArgs.Empty);
                     GameStatusView.IsChanged = false;
                 });
             }
@@ -359,31 +359,32 @@ namespace DiscordStatusGUI.ViewModels.Tabs
                 Static.Dialogs.DateTimePickerShow(dti, new ObservableCollection<Models.ButtonItem> { apply, cancel }, HorizontalAlignment.Right, Static.Dialogs.DateTimePickerHide);
             });
 
-            Static.Discord.Socket.OnUserInfoChanged += Socket_OnUserInfoChanged;
-            Static.OnActivityChanged += OnActivityChanged;
-            Static.OnActivitiesChanged += () =>
+            Static.Discord.Socket.UserInfoChanged += Socket_OnUserInfoChanged;
+            Static.ActivityChanged += OnActivityChanged;
+            Static.ActivitiesChanged += (s, e) =>
             {
                 OnPropertyChanged("Profiles");
+                OnPropertyChanged("SelectedProfile");
                 OnPropertyChanged("SelectedProfileIndex");
             };
         }
 
-        public void OnActivityChanged()
+        public void OnActivityChanged(object sender, EventArgs e)
         {
             OnPropertyChanged("SelectedProfileIndex");
             OnPropertyChanged("SelectedProfile");
             Options.ForEach(o => OnPropertyChanged(o));
         }
 
-        private void Socket_OnUserInfoChanged(string eventtype, object data, UserInfo userInfo)
+        private void Socket_OnUserInfoChanged(object sender, DiscordEventArgs<UserInfo> e)
         {
-            DiscordUserName = userInfo.UserName;
-            DiscordUserTag = userInfo.Discriminator;
-            if (userInfo.AvatarId != null)
+            DiscordUserName = e.Data.UserName;
+            DiscordUserTag = e.Data.Discriminator;
+            if (e.Data.AvatarId != null)
                 GameStatusView.Dispatcher.Invoke(() => 
-                    DiscordUserAvatar = BitmapEx.ToImageSource(Libs.DiscordApi.Discord.GetUserAvatar(userInfo.Id, userInfo.AvatarId, 128)));
+                    DiscordUserAvatar = BitmapEx.ToImageSource(Libs.DiscordApi.Discord.GetUserAvatar(e.Data.Id, e.Data.AvatarId, 128)));
 
-            if (eventtype == "READY")
+            if (e.EventType == "READY")
                 Static.UpdateDiscordActivity();
         }
     }

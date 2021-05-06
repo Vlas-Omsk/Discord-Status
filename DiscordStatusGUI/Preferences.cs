@@ -24,8 +24,15 @@ namespace DiscordStatusGUI
         public static string Discord_Token     { get => Static.Discord.Token;                         set => Static.Discord.Token = value; }
         public static int CurrentUserStatus    { get => (int)Static.Discord.Socket.CurrentUserStatus; set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabSettings.Page as Settings).DataContext as SettingsViewModel).SelectedUserStatusIndex = value); }
         public static bool IsDiscordConnected  { get => Static.Discord.Socket.IsConnected;            set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabSettings.Page as Settings).DataContext as SettingsViewModel).IsDiscordConnected = value); }
-        public static int WarfaceActivityIndex { get => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabWarface.Page as Warface).DataContext as WarfaceViewModel).SelectedProfileIndex); set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabWarface.Page as Warface).DataContext as WarfaceViewModel).SelectedProfileIndex = value); }
-        public static int SteamActivityIndex   { get => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabSteam.Page as Steam).DataContext as SteamViewModel).SelectedProfileIndex); set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabSteam.Page as Steam).DataContext as SteamViewModel).SelectedProfileIndex = value); }
+        public static int WarfaceActivityIndex { 
+            get => Static.TabWarface.GetDataContext<WarfaceViewModel>().SelectedProfileIndex; 
+            set => Static.TabWarface.GetDataContext<WarfaceViewModel>().SetProfileIndex(value);
+        }
+        public static int SteamActivityIndex
+        {
+            get => Static.TabSteam.GetDataContext<SteamViewModel>().SelectedProfileIndex;
+            set => Static.TabSteam.GetDataContext<SteamViewModel>().SetProfileIndex(value);
+        }
         public static int CurrentActivityIndex { get => Static.CurrentActivityIndex;                  set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabGameStatus.Page as GameStatus).DataContext as GameStatusViewModel).SelectedProfileIndex = value); }
         public static bool FastGameClientClose { get => WarfaceApi.FastGameClientClose;               set => Static.MainWindow.Dispatcher.Invoke(() => ((Static.TabWarface.Page as Warface).DataContext as WarfaceViewModel).IsFastGameClientClose = value); }
 
@@ -108,7 +115,6 @@ namespace DiscordStatusGUI
                     Static.Version,
                     CurrentUserStatus,
                     CurrentActivityIndex,
-                    FastGameClientClose,
                     Window = new
                     {
                         X, Y, Width, Height, State

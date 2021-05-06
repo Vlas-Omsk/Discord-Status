@@ -66,6 +66,11 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             get => _SavedState ?? (_SavedState = this);
             set => _SavedState = value;
         }
+
+        public override string ToString()
+        {
+            return ProfileName;
+        }
     }
 
 

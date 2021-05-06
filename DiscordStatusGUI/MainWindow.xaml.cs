@@ -49,7 +49,7 @@ namespace DiscordStatusGUI
         {
             InitializeNoBorderWindow();
 
-            Static.Discord.Socket.OnWorkingStatusChanged += Socket_OnWorkingStatusChanged;
+            Static.Discord.Socket.WorkingStatusChanged += Socket_OnWorkingStatusChanged;
 
             MouseHook.Create();
             Static.InitNotifications();
@@ -70,7 +70,6 @@ namespace DiscordStatusGUI
             {
                 UpdateManager.Init();
                 WarfaceApi.Init();
-                DiscordUniversalStealer.Init();
                 SteamApi.Init();
                 ProcessEx.Init();
             });
@@ -93,9 +92,9 @@ namespace DiscordStatusGUI
         }
 
 
-        private void Socket_OnWorkingStatusChanged(string msg)
+        private void Socket_OnWorkingStatusChanged(object sender, Libs.DiscordApi.WorkingStatusChangedEventArgs e)
         {
-            Static.Window.SetTopStatus(msg);
+            Static.Window.SetTopStatus(e.Message);
         }
 
         #region NoBorderWindow

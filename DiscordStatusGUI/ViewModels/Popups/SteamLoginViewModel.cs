@@ -36,9 +36,9 @@ namespace DiscordStatusGUI.ViewModels.Popups
         {
             ResearchSteamLoginSecureCommand = new Command(ResearchSteamLoginSecure);
 
-            SteamApi.CurrentSteamProfile.OnPropertyChanged += (n) =>
+            SteamApi.CurrentSteamProfile.PropertyChanged += (s, e) =>
             {
-                if (n == "SteamLoginSecure")
+                if (e.PropertyName == "SteamLoginSecure")
                     OnPropertyChanged("SteamLoginSecure");
             };
         }

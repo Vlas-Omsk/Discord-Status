@@ -275,12 +275,19 @@
                             <ComboBox x:Name="ProfilesComboBox" Grid.Row="1" VerticalContentAlignment="Center" Grid.Column="1" Style="{StaticResource ComboBoxDiscord}" ItemsSource="{Binding Profiles}" SelectedIndex="{Binding SelectedProfileIndex}" SelectedItem="{Binding SelectedProfile, Mode=OneWay}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Grid.Column="1" Text="{Binding ProfileName}" FontSize="15"/>
+                                        <TextBlock Text="{Binding ProfileName}" FontSize="15"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                                 <ComboBox.ItemContainerStyle>
                                     <Style TargetType="ComboBoxItem" BasedOn="{StaticResource ComboBoxItemDiscord}">
-                                        <Setter Property="Content" Value="{Binding ProfileName}"/>
+                                        <Setter Property="Content" Value="{Binding ProfileName}">
+                                            <!--<Setter.Value>
+                                                <MultiBinding Converter="{converters:MultiStringConverter}" ConverterParameter=" ">
+                                                    <Binding Path="ProfileName" Converter="{converters:StringConverter}" ConverterParameter="[Value.ReplaceFields]&#160;" IsAsync="True"/>
+                                                    <Binding Path="Name" Converter="{converters:StringConverter}" ConverterParameter="([Value.ReplaceFields])" IsAsync="True"/>
+                                                </MultiBinding>
+                                            </Setter.Value>-->
+                                        </Setter>
                                         <Setter Property="FontSize" Value="15"/>
                                     </Style>
                                 </ComboBox.ItemContainerStyle>

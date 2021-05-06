@@ -52,8 +52,8 @@ namespace DiscordStatusGUI.ViewModels.Tabs
 
             OnPropertyChanged("Properties");
 
-            WarfaceApi.CurrentGameState.OnPropertyChanged += (p) => UpdateDiscordActivityIf();
-            WarfaceApi.CurrentPlayer.OnPlayerInfoChanged += () => UpdateDiscordActivityIf();
+            WarfaceApi.CurrentGameState.PropertyChanged += (s, e) => UpdateDiscordActivityIf();
+            WarfaceApi.CurrentPlayer.PlayerInfoChanged += (s, e) => UpdateDiscordActivityIf();
             WarfaceApi.CurrentPlayer.OnUserInfoChanged += (p) => UpdateDiscordActivityIf();
 
             WarfaceApi.OnGameProcessStateChanged += OnGameProcessStateChanged;
