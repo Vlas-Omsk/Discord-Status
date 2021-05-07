@@ -13,7 +13,6 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using DiscordStatusGUI.Models;
 using DiscordStatusGUI.ViewModels.Dialogs;
 using System.Reflection;
 

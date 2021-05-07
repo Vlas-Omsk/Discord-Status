@@ -5,22 +5,79 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DiscordStatusGUI.Views.Tabs"
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
+             xmlns:tabs="clr-namespace:DiscordStatusGUI.ViewModels.Tabs"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="{StaticResource BackgroundBrush}">
+             d:DesignHeight="450" d:DesignWidth="800" Background="{StaticResource BackgroundBrush}" Loaded="UserControl_Loaded">
+    <UserControl.DataContext>
+        <tabs:EmbedsViewModel/>
+    </UserControl.DataContext>
     <UserControl.Content>
-        <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}">
-            <Grid MaxWidth="{StaticResource TabContentMaxWidth}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="72"/>
-                </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <TextBlock Margin="5" Foreground="White" TextAlignment="Center" Text="Embeds" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            <controls:SmoothScrollViewer Style="{StaticResource SmoothScrollViewerStyle}" Background="#2F3136" Grid.Row="1">
+                <ListView Background="Transparent" BorderThickness="0" Padding="0 4 0 0" ItemsSource="{Binding PrivateChannels}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="{x:Type ListViewItem}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Grid x:Name="root" Margin="8 1" Background="Transparent" Height="44" Cursor="Hand" PreviewMouseLeftButtonDown="item_PreviewMouseLeftButtonDown">
+                                            <Border Padding="8 0" x:Name="layout" Background="Transparent" CornerRadius="4">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border CornerRadius="24" Width="32" Height="32" Margin="0 0 12 0" VerticalAlignment="Center">
+                                                        <Border.Background>
+                                                            <ImageBrush ImageSource="{Binding Icon, IsAsync=True}"/>
+                                                        </Border.Background>
+                                                    </Border>
+                                                    <TextBlock x:Name="label" Grid.Column="1" VerticalAlignment="Center" FontWeight="Medium" LineHeight="20" FontSize="16" Foreground="#8e9297" Text="{Binding Name, IsAsync=True}" TextTrimming="WordEllipsis"/>
+                                                </Grid>
+                                            </Border>
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="label" Property="Foreground" Value="#dcddde"/>
+                                                <Setter TargetName="layout" Property="Background" Value="#284F545C"/>
+                                            </Trigger>
+                                            <Trigger Property="Tag" Value="True">
+                                                <Setter TargetName="label" Property="Foreground" Value="#fff"/>
+                                                <Setter TargetName="layout" Property="Background" Value="#3D4F545C"/>
+                                            </Trigger>
+                                            <MultiTrigger>
+                                                <MultiTrigger.Conditions>
+                                                    <Condition Property="Tag" Value="False"/>
+                                                    <Condition Property="IsSelected" Value="True"/>
+                                                </MultiTrigger.Conditions>
+                                                <Setter TargetName="label" Property="Foreground" Value="#fff"/>
+                                                <Setter TargetName="layout" Property="Background" Value="#284F545C"/>
+                                            </MultiTrigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </controls:SmoothScrollViewer>
 
-            </Grid>
-        </controls:SmoothScrollViewer>
+            <Rectangle Grid.ColumnSpan="2" Fill="#2F3136">
+                <Rectangle.Effect>
+                    <DropShadowEffect ShadowDepth="2" Direction="-90" Color="#040405" Opacity="0.2" />
+                </Rectangle.Effect>
+            </Rectangle>
+
+            <TextBlock Grid.Column="1" Margin="5" Foreground="White" TextAlignment="Center" Text="Embeds" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+        </Grid>
     </UserControl.Content>
 </UserControl>

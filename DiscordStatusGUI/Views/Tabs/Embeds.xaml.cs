@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DiscordStatusGUI.Extensions;
 
 namespace DiscordStatusGUI.Views.Tabs
 {
@@ -23,6 +24,32 @@ namespace DiscordStatusGUI.Views.Tabs
         public Embeds()
         {
             InitializeComponent();
+        }
+
+        ListViewItem ListViewItem;
+
+        private void item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ListViewItem = (ListViewItem)((Grid)sender).TemplatedParent;
+            ListViewItem.Tag = "True";
+        }
+
+        private void item_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (ListViewItem != null)
+            {
+                ListViewItem.Tag = "False";
+            }
+        }
+
+        Color FromHex(string hex)
+        {
+            return (Color)ColorConverter.ConvertFromString(hex);
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            App.Current.MainWindow.PreviewMouseLeftButtonUp += item_PreviewMouseLeftButtonUp;
         }
     }
 }

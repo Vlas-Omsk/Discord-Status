@@ -12,11 +12,13 @@ using System.Threading;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
-    class DiscordSocket
+    public class DiscordSocket
     {
         public WebSocket WebSocket;
         public bool IsConnected => WebSocket?.IsAlive ?? false;
         public UserStatus CurrentUserStatus;
+        public PrivateChannels PrivateChannels = new PrivateChannels();
+        public UsersCache UsersCache;
 
         private bool _DisconnectedManually = false;
         private System.Timers.Timer _KeepAliveTimer;
@@ -274,6 +276,10 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             AvatarId = (json["d"]["user"]["avatar"].Value ?? "").ToString()
                         }));
                         Static.InvokeAsync(UserSettingsChanged, new DiscordEventArgs<Json>("READY", json, json["d"]["user_settings"].Get<Json>()), this);
+                        UsersCache = new UsersCache(json["d"]["users"].Get<JsonArray>(), _Discord);
+                        Static.InvokeAsync(UsersCacheChanged, new DiscordEventArgs<UsersCache>("READY", json, UsersCache), this);
+                        PrivateChannels = new PrivateChannels(json["d"]["private_channels"].Get<JsonArray>(), UsersCache);
+                        Static.InvokeAsync(PrivateChannelsChanged, new DiscordEventArgs<PrivateChannels>("READY", json, PrivateChannels), this);
                     }
                     else if (json["t"].Value.ToString() == "USER_UPDATE")
                     {
@@ -300,6 +306,8 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             });
         }
 
+        public event EventHandler<DiscordEventArgs<UsersCache>> UsersCacheChanged;
+        public event EventHandler<DiscordEventArgs<PrivateChannels>> PrivateChannelsChanged;
         public event EventHandler<DiscordEventArgs<UserInfo>> UserInfoChanged;
         public event EventHandler<DiscordEventArgs<Json>> UserSettingsChanged;
 

@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DiscordStatusGUI.Models
+namespace DiscordStatusGUI.Views.Dialogs
 {
     /// <summary>
     /// Логика взаимодействия для Notification.xaml

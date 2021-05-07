@@ -108,9 +108,13 @@
     <Compile Include="Extensions\SecureStringExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
     <None Include="Extensions\XmlNodeEx.cs" />
+    <Compile Include="Libs\DiscordApi\Activity.cs" />
+    <Compile Include="Libs\DiscordApi\ActivityType.cs" />
     <Compile Include="Libs\DiscordApi\Discord.cs" />
     <Compile Include="Libs\DiscordApi\DiscordSocket.cs" />
     <Compile Include="Libs\DiscordApi\DiscordStructures.cs" />
+    <Compile Include="Libs\DiscordApi\PrivateChannel.cs" />
+    <Compile Include="Libs\DiscordApi\UserInfo.cs" />
     <Compile Include="Libs\GitHashes\EntityChange.cs" />
     <Compile Include="Libs\GitHashes\Hashes.cs" />
     <Compile Include="Libs\GitHashes\StreamFormatReader.cs" />
@@ -122,7 +126,8 @@
     <Compile Include="Libs\WebBrowserTools.cs" />
     <Compile Include="Locales\Lang.cs" />
     <Compile Include="Models\ButtonItem.cs" />
-    <Compile Include="Models\Notification.xaml.cs">
+    <Compile Include="Libs\DiscordApi\UsersCache.cs" />
+    <Compile Include="Views\Dialogs\Notification.xaml.cs">
       <DependentUpon>Notification.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\PropertiesModel.cs" />
@@ -142,6 +147,7 @@
     <Compile Include="ViewModels\Discord\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\Popups\SteamLoginViewModel.cs" />
+    <Compile Include="ViewModels\Tabs\EmbedsViewModel.cs" />
     <Compile Include="ViewModels\Tabs\GameTemplateViewModel.cs" />
     <Compile Include="ViewModels\Tabs\SteamViewModel.cs" />
     <Compile Include="ViewModels\Tabs\WindowsViewModel.cs" />
@@ -220,7 +226,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Models\Notification.xaml">
+    <Page Include="Views\Dialogs\Notification.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

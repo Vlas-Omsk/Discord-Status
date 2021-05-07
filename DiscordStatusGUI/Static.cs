@@ -21,6 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using DiscordStatusGUI.Locales;
+using DiscordStatusGUI.Views.Dialogs;
 
 namespace DiscordStatusGUI
 {

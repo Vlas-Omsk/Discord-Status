@@ -18,12 +18,26 @@ using System.Security;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
-    class Discord
+    public class Discord
     {
         //private static readonly string _TempFolder = ProcessEx.GetOutput("cmd", "/c echo %TEMP%").Trim();
         private const string _DiscordAppUserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36";
         public const string DiscordApiVersion = "6";
         public string Language = Locales.Lang.CurrentWebLanguage;
+
+        public static Bitmap GetImageByUrl(string url)
+        {
+            try
+            {
+                System.Net.HttpWebRequest request =
+                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create(
+                            url);
+                using (System.Net.WebResponse response = request.GetResponse())
+                using (Stream responseStream = response.GetResponseStream())
+                    return new System.Drawing.Bitmap(responseStream);
+            }
+            catch { return new Bitmap(1, 1); }
+        }
 
         public struct AppImages
         {
@@ -32,16 +46,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
 
             public static Bitmap GetImageById(string id, string appId)
             {
-                try
-                {
-                    System.Net.HttpWebRequest request =
-                            (System.Net.HttpWebRequest)System.Net.WebRequest.Create(
-                                "https://cdn.discordapp.com/app-assets/" + appId + "/" + id);
-                    using (System.Net.WebResponse response = request.GetResponse())
-                    using (Stream responseStream = response.GetResponseStream())
-                        return new System.Drawing.Bitmap(responseStream);
-                }
-                catch { return new Bitmap(1, 1); }
+                return GetImageByUrl("https://cdn.discordapp.com/app-assets/" + appId + "/" + id);
             }
 
             public static string GetImageIdByName(string name, string appId)
