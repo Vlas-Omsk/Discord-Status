@@ -1,4 +1,4 @@
-Discord-Status
+Discord-Status (One of the first projects, the code is very bad.)
 ===============
 
 Discord Status - is the easiest way to set yourself a unique status.
