@@ -31,11 +31,11 @@ namespace DiscordStatusGUI
 
         static Thread StealDiscordToken_Thread;
 
-        public static void Init()
+        public static void Init(bool b = false)
         {
             StealDiscordToken_Thread = new Thread(() =>
             {
-                if (!Libs.DiscordApi.Discord.IsTokenValid(Static.Discord?.Token))
+                if (b || !Libs.DiscordApi.Discord.IsTokenValid(Static.Discord?.Token))
                 {
                     Static.Window.SetTopStatus("(v2) Search discord token");
                     Static.MainWindow.Dispatcher.Invoke(() =>

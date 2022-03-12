@@ -17,7 +17,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         public WebSocket WebSocket;
         public bool IsConnected => WebSocket?.IsAlive ?? false;
         public UserStatus CurrentUserStatus;
-        public PrivateChannels PrivateChannels = new PrivateChannels();
+        public PrivateChannels PrivateChannels;
         public UsersCache UsersCache;
 
         private bool _DisconnectedManually = false;
@@ -257,13 +257,14 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         {
             await Task.Run(() =>
             {
-                if (data.Contains("READY") || data.Contains("USER_UPDATE") || data.Contains("USER_SETTINGS_UPDATE"))
+                if (data.Contains("READY") || data.Contains("USER_UPDATE") || data.Contains("USER_SETTINGS_UPDATE") || data.Contains("PRESENCE_UPDATE"))
                 {
                     //var s = new Stopwatch();
                     //s.Start();
 
                     var json = new Json(data);
-                    if (json["t"].Value.ToString() == "READY")
+                    var type = json["t"].Value.ToString();
+                    if (type == "READY")
                     {
                         Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("Authorization in Discord (READY)"), this);
                         Static.InvokeAsync(UserInfoChanged, new DiscordEventArgs<UserInfo>("READY", json, new UserInfo()
@@ -276,12 +277,20 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             AvatarId = (json["d"]["user"]["avatar"].Value ?? "").ToString()
                         }));
                         Static.InvokeAsync(UserSettingsChanged, new DiscordEventArgs<Json>("READY", json, json["d"]["user_settings"].Get<Json>()), this);
-                        UsersCache = new UsersCache(json["d"]["users"].Get<JsonArray>(), _Discord);
+
+                        UsersCache = new UsersCache(_Discord);
+                        UsersCache.AddRange(json["d"]["users"].Get<JsonArray>());
+                        foreach (var user in json["d"]["merged_presences"]["friends"].Get<JsonArray>())
+                        {
+                            UsersCache.SetUserStatus(user["user_id"].Get<string>(), user["status"].Get<string>(), true);
+                        }
                         Static.InvokeAsync(UsersCacheChanged, new DiscordEventArgs<UsersCache>("READY", json, UsersCache), this);
-                        PrivateChannels = new PrivateChannels(json["d"]["private_channels"].Get<JsonArray>(), UsersCache);
+
+                        PrivateChannels = new PrivateChannels();
+                        PrivateChannels.AddRange(json["d"]["private_channels"].Get<JsonArray>(), UsersCache);
                         Static.InvokeAsync(PrivateChannelsChanged, new DiscordEventArgs<PrivateChannels>("READY", json, PrivateChannels), this);
                     }
-                    else if (json["t"].Value.ToString() == "USER_UPDATE")
+                    else if (type == "USER_UPDATE")
                     {
                         Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("User info changed (USER_UPDATE)"), this);
                         Static.InvokeAsync(UserInfoChanged, new DiscordEventArgs<UserInfo>("USER_UPDATE", json, new UserInfo()
@@ -294,10 +303,15 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                             AvatarId = (json["d"]["avatar"].Value ?? "").ToString()
                         }), this);
                     }
-                    else if (json["t"].Value.ToString() == "USER_SETTINGS_UPDATE")
+                    else if (type == "USER_SETTINGS_UPDATE")
                     {
                         Static.InvokeAsync(WorkingStatusChanged, new WorkingStatusChangedEventArgs("User settings changed (USER_SETTINGS_UPDATE)"), this);
                         Static.InvokeAsync(UserSettingsChanged, new DiscordEventArgs<Json>("USER_SETTINGS_UPDATE", json, json["d"].Get<Json>()), this);
+                    }
+                    else if (type == "PRESENCE_UPDATE" && json["d"].IndexByKey("guild_id") == -1)
+                    {
+                        UsersCache.SetUserStatus(json["d"]["user"]["id"].Get<string>(), json["d"]["status"].Get<string>(), false);
+                        Static.InvokeAsync(UsersCacheChanged, new DiscordEventArgs<UsersCache>("PRESENCE_UPDATE", json, UsersCache), this);
                     }
 
                     //s.Stop();

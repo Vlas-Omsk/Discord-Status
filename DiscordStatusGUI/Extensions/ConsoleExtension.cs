@@ -28,8 +28,8 @@ namespace DiscordStatusGUI.Extensions
 
         private static bool isConsole = false;
         private static string
-            whiteColor = new Color(System.Drawing.Color.White).ToAnsiForegroundEscapeCode(),
-            darkGrayColor = new Color(System.Drawing.Color.DarkGray).ToAnsiForegroundEscapeCode();
+            whiteColor = ((Color)System.Drawing.Color.White).ToAnsiForegroundEscapeCode(),
+            darkGrayColor = ((Color)System.Drawing.Color.DarkGray).ToAnsiForegroundEscapeCode();
         private static string
             lastcontent = null,
             lastdatetime = null;

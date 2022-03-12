@@ -40,6 +40,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         online,
         idle,
         dnd,
-        invisible
+        invisible,
+        offline
     }
 }

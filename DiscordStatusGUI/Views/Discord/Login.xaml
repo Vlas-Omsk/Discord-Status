@@ -32,7 +32,14 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="{locales:Lang Views:Discord:Login:Skip}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,10,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding SkipLoginCommand}"/>
+            <Grid HorizontalAlignment="Right" Margin="0,10,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Detect" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,10,0" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding DetectCommand}"/>
+                <TextBlock Grid.Column="1" Text="{locales:Lang Views:Discord:Login:Skip}" HorizontalAlignment="Right" VerticalAlignment="Top" FontWeight="Bold" Style="{DynamicResource LinkTextBlock}" MouseLeftButtonUp="{converters:EventBinding SkipLoginCommand}"/>
+            </Grid>
             <TextBlock Grid.Row="1" Text="{locales:Lang Views:Discord:Login:Description}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="22,42,22,0" Foreground="#FFB8B8B8" TextWrapping="Wrap" TextAlignment="Center"/>
             <Grid Grid.Row="2" Margin="23,11,23,0">
                 <Grid.ColumnDefinitions>

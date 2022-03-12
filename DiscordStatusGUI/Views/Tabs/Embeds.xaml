@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DiscordStatusGUI.Views.Tabs"
              xmlns:controls="clr-namespace:DiscordStatusGUI.Controls"
+             xmlns:converters="clr-namespace:DiscordStatusGUI.Converters"
              xmlns:tabs="clr-namespace:DiscordStatusGUI.ViewModels.Tabs"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="{StaticResource BackgroundBrush}" Loaded="UserControl_Loaded">
@@ -41,7 +42,56 @@
                                                             <ImageBrush ImageSource="{Binding Icon, IsAsync=True}"/>
                                                         </Border.Background>
                                                     </Border>
-                                                    <TextBlock x:Name="label" Grid.Column="1" VerticalAlignment="Center" FontWeight="Medium" LineHeight="20" FontSize="16" Foreground="#8e9297" Text="{Binding Name, IsAsync=True}" TextTrimming="WordEllipsis"/>
+                                                    <Grid Margin="0,20,12,0">
+                                                        <!-- TODO: Merge this with Settings.xaml -->
+                                                        <Ellipse Visibility="{Binding IsGroup, Converter={converters:BoolToVisibilityConverter}, ConverterParameter=True}" Width="16" Height="16" Fill="#2F3136" HorizontalAlignment="Right" Margin="0,0,-3,0"/>
+                                                        <Ellipse Visibility="{Binding IsOnline, Converter={converters:BoolToVisibilityConverter}}" Width="10" Height="10" Fill="#FF43B513" HorizontalAlignment="Right"/>
+                                                        <Path Visibility="{Binding IsIdle, Converter={converters:BoolToVisibilityConverter}}" Width="10" Height="10" Fill="#FFFAA61A" HorizontalAlignment="Right">
+                                                            <Path.Data>
+                                                                <CombinedGeometry GeometryCombineMode="Exclude">
+                                                                    <CombinedGeometry.Geometry1>
+                                                                        <EllipseGeometry Center="5,5" RadiusX="5" RadiusY="5"/>
+                                                                    </CombinedGeometry.Geometry1>
+                                                                    <CombinedGeometry.Geometry2>
+                                                                        <EllipseGeometry Center="2.5,2.5" RadiusX="3.75" RadiusY="3.75"/>
+                                                                    </CombinedGeometry.Geometry2>
+                                                                </CombinedGeometry>
+                                                            </Path.Data>
+                                                        </Path>
+                                                        <Path Visibility="{Binding IsDnd, Converter={converters:BoolToVisibilityConverter}}" Width="10" Height="10" Fill="#FFF04747" HorizontalAlignment="Right">
+                                                            <Path.Data>
+                                                                <CombinedGeometry GeometryCombineMode="Exclude">
+                                                                    <CombinedGeometry.Geometry1>
+                                                                        <EllipseGeometry Center="5,5" RadiusX="5" RadiusY="5"/>
+                                                                    </CombinedGeometry.Geometry1>
+                                                                    <CombinedGeometry.Geometry2>
+                                                                        <RectangleGeometry Rect="1.25,3.75,7.50,2.5"/>
+                                                                    </CombinedGeometry.Geometry2>
+                                                                </CombinedGeometry>
+                                                            </Path.Data>
+                                                        </Path>
+                                                        <Ellipse Visibility="{Binding IsInvisible, Converter={converters:BoolToVisibilityConverter}}" Width="10" Height="10" Fill="#423189" HorizontalAlignment="Right"/>
+                                                        <Path Visibility="{Binding IsOffline, Converter={converters:BoolToVisibilityConverter}}" Width="10" Height="10" Fill="#FF747F8D" HorizontalAlignment="Right">
+                                                            <Path.Data>
+                                                                <CombinedGeometry GeometryCombineMode="Exclude">
+                                                                    <CombinedGeometry.Geometry1>
+                                                                        <EllipseGeometry Center="5,5" RadiusX="5" RadiusY="5"/>
+                                                                    </CombinedGeometry.Geometry1>
+                                                                    <CombinedGeometry.Geometry2>
+                                                                        <EllipseGeometry Center="5,5" RadiusX="2.5" RadiusY="2.5"/>
+                                                                    </CombinedGeometry.Geometry2>
+                                                                </CombinedGeometry>
+                                                            </Path.Data>
+                                                        </Path>
+                                                    </Grid>
+                                                    <Grid Grid.Column="1" VerticalAlignment="Center">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
+                                                        <TextBlock x:Name="label" FontWeight="Medium" LineHeight="20" FontSize="16" Foreground="#8e9297" Text="{Binding Name, IsAsync=True}" TextTrimming="WordEllipsis"/>
+                                                        <TextBlock Visibility="{Binding IsGroup, Converter={converters:BoolToVisibilityConverter}}" Grid.Row="1" FontWeight="Medium" LineHeight="16" FontSize="12" Foreground="#8e9297" Text="{Binding RecipientCount}" TextTrimming="WordEllipsis"/>
+                                                    </Grid>
                                                 </Grid>
                                             </Border>
                                         </Grid>
@@ -77,6 +127,9 @@
                 </Rectangle.Effect>
             </Rectangle>
 
+            <TextBox x:Name="EmailField" FontSize="14" Padding="7,5" Height="28" Margin="10,0" BorderThickness="0" Background="#FF25272B" Style="{StaticResource RoundedTextBox}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+            </TextBox>
+            
             <TextBlock Grid.Column="1" Margin="5" Foreground="White" TextAlignment="Center" Text="Embeds" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         </Grid>
     </UserControl.Content>

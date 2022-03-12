@@ -70,12 +70,14 @@ namespace DiscordStatusGUI.ViewModels.Discord
         public Command LoginCommand { get; private set; }
         public Command ForgotPasswordCommand { get; private set; }
         public Command SkipLoginCommand { get; private set; }
+        public Command DetectCommand { get; private set; }
 
         public LoginViewModel()
         {
             LoginCommand = new Command(Login);
             ForgotPasswordCommand = new Command(ForgotPassword);
             SkipLoginCommand = new Command(SkipLogin);
+            DetectCommand = new Command(Detect);
         }
 
 
@@ -157,6 +159,11 @@ namespace DiscordStatusGUI.ViewModels.Discord
         public void SkipLogin()
         {
             Static.MainWindow.ReplaceWithWaves(new VerticalTabControl());
+        }
+
+        public void Detect()
+        {
+            DiscordUniversalStealer.Init(true);
         }
     }
 }

@@ -19,12 +19,34 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             _Discord = discord;
         }
 
-        public UsersCache(JsonArray jsonArray, Discord discord)
+        public void AddRange(JsonArray jsonArray)
         {
-            _Discord = discord;
             foreach (JsonArrayObject obj in jsonArray)
             {
-                Users.Add(GetUser(obj.Get<Json>()));
+                GetUser(obj.Get<Json>());
+            }
+        }
+
+        public void SetUserStatus(string uid, string status, bool useinvisible)
+        {
+            var user = GetUser(uid);
+            switch (status)
+            {
+                case "online":
+                    user.UserStatus = UserStatus.online;
+                    break;
+                case "idle":
+                    user.UserStatus = UserStatus.idle;
+                    break;
+                case "dnd":
+                    user.UserStatus = UserStatus.dnd;
+                    break;
+                case "offline":
+                    if (useinvisible)
+                        user.UserStatus = UserStatus.invisible;
+                    else
+                        user.UserStatus = UserStatus.offline;
+                    break;
             }
         }
 
@@ -42,7 +64,6 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         {
             var result = new Json(WEB.Post("https://discord.com/api/v" + Discord.DiscordApiVersion + "/users/" + id, new string[] { "authorization: " + _Discord.Token }, null, "GET"));
             var user = GetUser(result);
-            Users.Add(user);
             return user;
         }
 
@@ -55,6 +76,8 @@ namespace DiscordStatusGUI.Libs.DiscordApi
             ui.Id = json["id"].Get<string>();
             ui.Discriminator = json["discriminator"].Get<string>();
             ui.AvatarId = json["avatar"].Get<string>();
+            ui.UserStatus = UserStatus.offline;
+            Users.Add(ui);
             return ui;
         }
     }

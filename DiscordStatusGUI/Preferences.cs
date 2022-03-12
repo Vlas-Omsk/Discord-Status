@@ -161,7 +161,7 @@ namespace DiscordStatusGUI
 
                     IsDiscordConnected = (bool)propjson["Accounts"]["Discord"]["IsDiscordConnected"].Value;
                 }
-                catch (Exception ex)
+                catch
                 {
                     var name = "preferences";
                     int i = 1;

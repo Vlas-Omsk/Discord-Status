@@ -21,7 +21,7 @@ namespace DiscordStatusGUI.Converters
             System.Globalization.CultureInfo culture)
         {
             var b = System.Convert.ToBoolean(parameter) ? !(bool)value : (bool)value;
-            return b ? Visibility.Visible : Visibility.Hidden;
+            return b ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

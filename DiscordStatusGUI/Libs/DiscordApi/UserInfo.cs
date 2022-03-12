@@ -8,7 +8,7 @@ using DiscordStatusGUI.Extensions;
 
 namespace DiscordStatusGUI.Libs.DiscordApi
 {
-    public struct UserInfo
+    public class UserInfo
     {
         public string UserName;
         public string Phone;
@@ -16,6 +16,7 @@ namespace DiscordStatusGUI.Libs.DiscordApi
         public string Email;
         public string Discriminator;
         public string AvatarId;
+        public UserStatus UserStatus;
 
         public ImageSource _Avatar;
         public ImageSource Avatar
@@ -26,13 +27,9 @@ namespace DiscordStatusGUI.Libs.DiscordApi
                     return _Avatar;
 
                 if (AvatarId == null)
-                {
                     _Avatar = BitmapEx.ToImageSource(Properties.Resources.DefaultAvatar);
-                }
                 else
-                {
                     _Avatar = BitmapEx.ToImageSource(Discord.GetImageByUrl($"https://cdn.discordapp.com/avatars/{Id}/{AvatarId}.png?size=128"));
-                }
                 _Avatar.Freeze();
                 return _Avatar;
             }

@@ -11,7 +11,6 @@ using System.Threading;
 using WEBLib;
 using WebSocketSharp;
 using DiscordStatusGUI.Extensions;
-using PinkJson;
 using System.Security.Cryptography;
 using System.Security.RightsManagement;
 using System.Security;
